@@ -1,0 +1,39 @@
+# Ответы на ревью плана независимых пакетов
+
+Разработка остановлена после Tasks 1–2: baseline 22edf10, layout 07cfc4f, catalogs a9de789. Последний runtime suite: 20 tests passed. Здесь исправляются спецификация и план, не продолжается реализация новых задач. [Ревью](2026-10-11-engineering-standards-independent-packages-review.md) и [новая редакция плана](2026-10-11-engineering-standards-independent-packages.md).
+
+1. **Accepted содержание. Принято, исправлен план.** Task 3 выделяет инвентаризацию, формулировки и содержательное review владельца. Первое принятие минимум трёх правил core/TypeScript/Svelte SPA — gate реального vertical slice и релиза. Пока в runtime все пять исходных правил proposed; релиз не состоялся. Автор не переводит их в accepted от собственного имени.
+
+2. **Lint coverage. Принято, исправлен контракт Task 9.** Каждый enabled rule имеет mapping на accepted нормативный ID либо explicit tooling-only classification с rationale в README. Proposed нормативное правило не становится обязательным через config. Будущий тест проверяет coverage реального enabled rules набора, а не только наличие mapping файла.
+
+3. **Размер CLI задачи и записи. Принято частично.** Task 5 теперь только paths/managed, Task 6 — pure renderer, Task 7 — discovery/commands/bin. Staging и manifest-last упрощают commit, но не заменяют сохранение исходных файлов/recovery. Check различает drift после fault injection; операция не называется multi-file atomic. Повторные lstat/identity checks и O_NOFOLLOW снижают риск, не дают полной защиты от злонамеренного concurrent local writer. Ограничение доверенной локальной ФС описано явно, macOS case test обязателен. Runtime writer пока отсутствует: эти гарантии ещё предстоит реализовать и проверить.
+
+4. **Symlink границы. Принято, политики разделены.** Существующий loadCatalog уже начинает с realpath(packageRoot), поэтому root symlink не запрещён реализацией; внутренние document links запрещены. Доработка Task 2 добавит regression fixture. Node-resolved physical package root может быть вне consumer; write/entrypoint paths ограничены consumer, без symlink компонентов. В документах устранено смешение этих двух корней.
+
+5. **Package discovery. Принято, добавлена отдельная Task 7 часть.** createRequire(root/package.json), resolve exported manifest/package metadata, safe npm name, realpath, сверка source package/version с exact selection. Tasks 1–2 должны получить ./package.json export. Сейчас этот export ещё не добавлен; дальнейшая runtime доработка не маскируется исправлением плана.
+
+6. **Namespace/provenance. Принято.** Формат requirement ID и per-package namespace ownership зафиксированы, profile IDs иерархические, profile/module/requirement получают source package/version. Плоские profile IDs в текущем неопубликованном каталоге требуют доработки перед resolver; уже созданные ID требований CORE-ARCH-001, FRONTEND-ARCH-001, TS-TYPES-001, SVELTE-STATE-001, SVELTE-SPA-ARCH-001 соответствуют выбранной форме. Сама Schema ещё не проверяет namespace ownership.
+
+7. **Двойные ranges. Уточнение: в текущем коде дублирования нет.** У spec packages нет peerDependencies, compatibility находится в manifest.requires. Этот контракт сохраняется. Peers config-пакетов описывают инструменты, а не semantic profile graph. Не добавляем profile peers ради дублирующей проверки. Package.version в manifest остаётся контролируемым производным: release sync + parity test исключают drift.
+
+8. **Schema/CLI. Принято.** Сейчас CLI действительно имеет exact runtime dependency на core и использует Ajv 8.20.0. План меняется на встроенный snapshot canonical core схем со schema-parity check, без runtime profile dependency. Неизвестный schemaVersion диагностируется до Ajv как UNSUPPORTED_SCHEMA. Это pending runtime remediation Task 2, а не уже выполненная смена dependencies.
+
+9. **Полные контракты. Принято, дописаны.** Entrypoints — relative POSIX string paths; decision — HTTPS либо existing relative Markdown; canonical JSON сортирует keys/set-like arrays и rejects duplicates; SHA-256 текстов нормализует CRLF/CR в LF, но не пробелы; diagnostics каталог задаёт стабильные code/message. CRLF-only checkout не делает инструкцию ручной правкой и не переписывается check.
+
+10. **Public access/Node. Часть уже реализована.** publishConfig.access public присутствует во всех восьми packages и проверяется layout test. Engines пока нет. План предусматривает Node 22.13.0 и 24.14.0 tests до объявления диапазона ^22.13.0 || ^24.0.0. Пока Node 22 не запускался, его поддержка не заявляется реализованной.
+
+11. **Release engine. Принято, самописный planner убран из плана.** Changesets handles independent versions/changelogs; наш validator проверяет semantic catalogs и release gates. fixed/linked пусты, public access явно. Для 0.x breaking задаётся minor changeset и проверяется реальный результат; не предполагаем неподтверждённый magic flag. Trusted publishing/provenance включены в отдельный будущий publication этап. PR jobs contents:read, без secrets/pull_request_target. [Changesets config](https://changesets.dev/guide/config), [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/).
+
+12. **Dogfooding/защита. Принято как отдельные проверки Task 11.** Root configs импортируют свои tooling packages; CONTRIBUTING/SECURITY/CODEOWNERS предусмотрены. Required verify и PR protection на main настраиваются после реального успешного CI и согласования policy. Защита сейчас не настроена; не переносим ограничение приватного asc-admin на публичный ресурс. [GitHub protected branches](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches).
+
+13. **Работа с содержанием. Принято, выделена из loader реализации.** Task 3 задаёт пять per-package inventories и отдельные reviewable commits, rationale/applicability/verification и local-only решения. Core/TypeScript/stack первыми, frontend/Svelte содержательно расширяются после среза. Матрица ASC -> general ID/local-only нужна для последующего consumer PR и не делает все ASC conventions универсальными. Текущие пять proposed текстов — только первоначальные кандидаты, не завершённая инвентаризация.
+
+14. **Язык. Решение для просмотра владельцем.** English для published normative docs, README и диагностики; русский допустим в рабочих spec/plan/review. Соответствует уже созданным публичным candidate текстам. Переводы не вводим как второй нормативный источник. Продолжение остановлено, поэтому владелец может изменить это решение до следующей реализации.
+
+15. **Vertical first. Принято с сохранением утверждённого package layout.** Восемь skeleton пакетов уже созданы и не удаляются. После нормативного review первым проверяется реальный core/TypeScript/stack срез resolver -> renderer -> check в tarball consumer; явные frontend/Svelte зависимости стека также устанавливаются, но не обязаны иметь active content на этом первом срезе. Новая Task 8 предшествует expanded configs и release engine. Accepted fixtures недостаточны для приёмки реальных нормативных пакетов.
+
+16. **Lockfiles/TS/canonical docs. Принято.** Все consumer fixtures, не только configs, используют committed locks и explicit cache preparation; offline исполнение без cache не обещается. TS 5 обязателен. Canonical spec/plan в engineering-standards feature branch; локальные authored copies в asc-admin заменяются указателями, пользовательский review не удаляется. Старый однопакетный план остаётся только указателем, без старых executable задач.
+
+## Точка остановки
+
+Новых runtime commits после a9de789 нет. Tasks 1–2 не объявляются выполненными по уточнённым контрактам: exports, engines, namespaces, schemas и отдельный symlink test находятся в remediation списке. Дальнейшие Tasks 3–11 не запускались. Эта итерация заканчивается docs-review commit и сохранением работы; публикация и merge не выполняются.

@@ -2,6 +2,8 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans or superpowers:subagent-driven-development to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
+**Status:** Разработка остановлена владельцем после первоначальных Tasks 1–2. Эта редакция исправляет план по [ревью](2026-10-11-engineering-standards-independent-packages-review.md); дальнейшая реализация не начата. Номера будущих задач изменены, выполненные Tasks 1–2 требуют перечисленных ниже доработок, а не повторного создания пакетов.
+
 **Goal:** Создать публичный монорепозиторий с восемью независимо версионируемыми пакетами, проверяемыми профилями, конфигурациями и безопасным генератором инструкций.
 
 **Architecture:** Корни пакетов вложены по области применения, но каждый имеет собственную версию и публичные exports. Пять пакетов спецификаций содержат Markdown и манифесты; ESLint, Prettier и CLI — отдельные пакеты. CLI проверяет явно установленный набор, собирает профиль чистыми функциями и обновляет только собственные неизменённые файлы.
@@ -18,7 +20,7 @@
 - Общая архитектура — core; frontend-архитектура — frontend; конкретные FSD-соглашения — Svelte SPA. `docs/architecture` описывает сам репозиторий стандартов.
 - Будущие backend/Go/Vue и модули не создаются как пустые пакеты. Механизм модулей проверяется fixtures, не несогласованными настоящими спецификациями.
 - Спецификации не зависят от CLI/линтеров; CLI не устанавливает все профили транзитивно. Нет postinstall, сетевых обновлений или требований применять конкретный агент/Superpowers.
-- Требования имеют стабильные ID, `required|recommended`, `proposed|accepted|deprecated`. Только принятые применимые требования активны; proposed не включаются в обязательные проверки.
+- Требования имеют стабильные ID, `required|recommended`, `proposed|accepted|deprecated`. Только принятые применимые требования активны; proposed не включаются в обязательные проверки. Релиз 0.1.0 с пустым активным набором запрещён: принятие содержания владельцем — отдельный gate.
 - Потребители фиксируют точные package versions и lockfile; requires между пакетами задаёт semver ranges. Не выбирать новые версии автоматически.
 - Не читать/писать за пределами реального корня; не стирать пользовательские файлы. `check` и dry-run не изменяют проект.
 - Breaking change после 1.0 повышает major, в 0.x — minor с миграцией; editorial — patch. Теги раздельные: `standards-svelte@0.1.0`.
@@ -26,11 +28,11 @@
 
 ## Review Focus
 
-1. Несовместимые package versions или несколько версий профиля: отказ, а не неявный выбор — Task 3.
-2. Symlink и обход корня через документ/entrypoint/managed manifest: не читать и не писать наружу — Tasks 2, 5.
+1. Несовместимые package versions или несколько версий профиля: отказ, а не неявный выбор — Task 4.
+2. Symlink и обход корня через документ/entrypoint/managed manifest: не читать и не писать наружу — Tasks 2, 5, 7.
 3. Ручная правка и сбой между writes: не потерять исходные файлы и не сообщить ложный успех — Task 5.
-4. Потребитель без workspace links и без исходного checkout: все exports и bin работают из tarballs — Tasks 4, 6.
-5. Независимый релиз с неопубликованной зависимостью: проверять группу и неизменность несвязанных пакетов — Task 6.
+4. Потребитель без workspace links и без исходного checkout: все exports и bin работают из tarballs — Tasks 8, 9, 10.
+5. Независимый релиз с неопубликованной зависимостью: проверять группу и неизменность несвязанных пакетов — Task 10.
 
 ## Размещение и границы этапа
 
@@ -51,25 +53,32 @@
 
 ## Контракты
 
-- Manifest каждого пакета спецификаций: `{ schemaVersion: 1, package: { name, version }, requires: [{ name, range }], requirements, profiles, modules, implementations }`.
-- Requirement: `{ id, title, level, status, document, verification, requires, refines, replaces, conflicts }`. `verification`: `automatic|manual|combined`; Markdown содержит нормативный текст, обоснование, применимость и способ проверки. Deprecated содержит условия перехода и замену.
-- Profile: `{ id, kind, requires, requirements }`; kind: `core|domain|technology|stack`. Profile requires содержит ID профилей; package requires содержит имена и ranges.
-- Module: `{ id, requirements, document }`; implementation: `{ id, module, requiresProfiles, requiresModules, requirements, document }`.
-- Project selection `engineering-standards.json`: `{ schemaVersion: 1, packages: [{ name, version }], profiles, modules, exceptions, entrypoints }`. Module selection: `{ id, implementation }`; exception: `{ requirement, reason, decision }`.
-- Managed manifest `.engineering-standards/managed.json`: `{ schemaVersion: 1, generatorVersion, packages: [{ name, version }], profiles, selectionHash, files: [{ path, sha256 }] }`.
-- `Resolved`: `{ packages, profiles, modules, requirements, exceptions }`, с детерминированным порядком и только активными accepted requirements. Исключённые требования обозначаются как исключения, а не обязательные правила.
-- `Report`: `{ ok, diagnostics, changes, exceptions }`; diagnostics содержит безопасные code/message без содержимого файлов. Чистые функции возвращают данные; invalid input вызывает диагностическую ошибку. CLI возвращает exit 0/1.
+- Manifest спецификаций: schemaVersion 1, package { name, version, namespace }, requires [{ name, range }], requirements, profiles, modules, implementations. namespace задаёт префикс требований пакета; среди selected catalogs один namespace принадлежит одному npm-имени, это проверяет resolver. Только manifest является источником profile compatibility; peerDependencies для профилей не создаются. Tooling peers описывают версии ESLint/TypeScript/Svelte/Prettier, это другой контракт.
+- Requirement: { id, title, level, status, document, verification, requires, refines, replaces, conflicts }. ID соответствует ^[A-Z][A-Z0-9]_(?:-[A-Z0-9]+)_-[0-9]{3}$; namespace принадлежит пакету: CORE, FRONTEND, TS, SVELTE, SVELTE-SPA. Отдельные модули регистрируют собственный namespace. Удалённые ID не переиспользуются.
+- Profile: { id, kind, requires, requirements }. Канонические ID: core, domains/frontend, technologies/typescript, technologies/svelte, stacks/frontend/svelte-spa. Сокращённые старые ID в пока неопубликованном каталоге заменить, не создавать неявных aliases. Все каталоги проверяются на уникальность ID и namespace ownership.
+- Module: { id, requirements, document }; implementation: { id, module, requiresProfiles, requiresModules, requirements, document }. ID будущих модулей namespaced как modules/authentication; модульные требования не смешиваются с общими архитектурными правилами области.
+- Selection engineering-standards.json: { schemaVersion: 1, packages: [{ name, version }], profiles, modules, exceptions, entrypoints }. Версии точные; module selection { id, implementation }. Entrypoints — массив относительных POSIX-путей строками, например AGENTS.md и CLAUDE.md, без абсолютных путей, '..' и дубликатов/регистровых aliases.
+- Exception: { requirement, reason, decision }; reason содержит непробельный текст, decision — HTTPS URL либо существующий относительный Markdown-путь внутри проекта, не произвольный ID. Ссылки в Markdown не разыменовываются по сети CLI.
+- Resolved: { packages, profiles, modules, requirements, exceptions }. Каждый profile/module/requirement имеет source: { package, version }; package — точное npm-имя. Ссылки обходятся по canonical ID, одинаковый профиль с двумя source versions отклоняется. Deprecated/proposed не активны.
+- Managed manifest: schemaVersion 1, generatorVersion, packages [{ name, version }], profiles, selectionHash, files [{ path, sha256 }]. selectionHash — SHA-256 канонического JSON: рекурсивно сортировать object keys, set-like arrays по name/ID/path, без whitespace; дубликаты сначала отклоняются. Документы генерируются UTF-8/LF; hash содержимого нормализует CRLF/CR в LF, остальные символы/пробелы сохраняет. Check не переписывает CRLF-файлы.
+- Report: { ok, diagnostics, changes, exceptions }; diagnostics [{ code, message }]. Версионируемый каталог кодов — packages/tooling/standards-cli/docs/diagnostics.md. Минимум: UNSUPPORTED_SCHEMA, MANIFEST_SCHEMA, MANIFEST_VERSION, DUPLICATE_ID, PACKAGE_METADATA, PACKAGE_MISSING, PACKAGE_VERSION, PROFILE_MISSING, DEPENDENCY_CYCLE, REQUIREMENT_CONFLICT, INVALID_EXCEPTION, UNSAFE_PATH, CASE_COLLISION, DOCUMENT_READ, DOCUMENT_STRUCTURE, MANAGED_CONFLICT, MANAGED_DRIFT, WRITE_FAILED. Не выводить сырые parse/fs errors и содержимое входных файлов.
+- Node discovery: createRequire(resolve(root, 'package.json')).resolve('<pkg>/manifest.json') и resolve('<pkg>/package.json'); safe npm-name validation перед составлением specifier, затем realpath обоих и совпадение физического package root. Package JSON и manifest сверяются с exact Selection version. Все spec packages экспортируют оба subpaths. Нет fallback на зависимости CLI или ближайшую другую версию.
+- Package roots, обнаруженные Node, могут быть symlinks наружу в npm workspaces/pnpm; canonical root становится границей read-only загрузки. Внутренние document/metadata paths не выходят за него. Цели записи и entrypoints потребителя имеют отдельную строгую политику: symlinks по пути запрещены.
+- Ajv 8 валидирует schemaVersion 1. Проверять schemaVersion до Ajv, неизвестная версия даёт UNSUPPORTED_SCHEMA. CLI публикует встроенный проверенный snapshot схем core: build/check сравнивает его с каноном, lifecycle-install scripts нет; runtime dependency CLI на profile core убрать при доработке Task 2. Схемы CLI не меняются от случайной версии установленного профиля.
+- Публичные нормативные тексты, README, диагностика и инструкции — English. Рабочие дизайн/план/ревью допустимы по-русски; нормативные переводы пока не поддерживаются. Это явное решение текущей редакции для просмотра владельцем.
+- Proposed runtime support: Node ^22.13.0 || ^24.0.0, проверка на точных 22.13.0 и 24.14.0 до объявления engines; TypeScript 5 обязателен в fixtures. Пока поддержка Node 22 не проверена, не считать её реализованной.
 
 ### Task 1: Восемь независимых workspaces
 
 **Files:** Root `package.json`, `.gitignore`, `README.md`, `AGENTS.md`, `LICENSE`; для каждого корня из таблицы — `package.json`, `README.md`, `CHANGELOG.md`, `LICENSE`; `tests/integration/layout.test.js`.
 
-**Interfaces:** Root workspaces явно перечисляет восемь путей из таблицы. Specification exports: `./manifest.json`; core также `./schemas/manifest.json`, `./schemas/project.json`. Config exports и bin оформляются Tasks 4/5 до упаковки. Промежуточные пакеты не публикуются.
+**Interfaces:** Root workspaces явно перечисляет восемь путей из таблицы. Specification exports: `./manifest.json`, `./package.json`; core также `./schemas/manifest.json`, `./schemas/project.json`. Config exports и bin оформляются Tasks 4/5 до упаковки. Промежуточные пакеты не публикуются.
 
 - [ ] Написать `private root and independent package identities`: `assert.equal(root.private, true)`, `assert.equal(root.version, undefined)`, `assert.equal(new Set(names).size, 8)`, `assert.equal(pkg.version, '0.1.0')`. Проверить own changelog/LICENSE, allowlist files, отсутствие lifecycle scripts и tooling dependencies у спецификаций.
 - [ ] Запустить `node --test tests/integration/layout.test.js`; Expected: FAIL отсутствующих package-манифестов.
 - [ ] Создать вложенные npm workspaces и документацию границ. README описывает независимые версии и будущие модули; AGENTS — процесс этого репозитория без копирования требований ASC.
 - [ ] Повторить layout test; Expected: PASS. Создать lockfile `npm install --package-lock-only --ignore-scripts`; Expected: exit 0, приватный root не является release-артефактом.
+- [ ] Доработка после ревью: package layout тест проверяет public access (уже реализован), оба metadata exports, engines после реального прогона минимального Node. Не выполнять scaffold повторно.
 - [ ] Закоммитить только файлы задачи с issue-префиксом.
 
 ### Task 2: Манифесты и безопасная загрузка нормативных документов
@@ -82,21 +91,95 @@
 - [ ] Запустить `node --test packages/tooling/standards-cli/tests/catalog.test.js`; Expected: FAIL отсутствующей реализации.
 - [ ] Реализовать Schema-валидацию и realpath boundary check. Добавить компактные тексты общих/frontend/TS/Svelte/stack требований со стабильными ID; новые нормативные тексты остаются proposed до содержательного ревью. Accepted fixtures не подменяют их согласование. Шаблоны задают текст, rationale, applicability, verification; module template — состояния, отказы, acceptance.
 - [ ] Повторить catalog и layout tests; Expected: PASS. Проверить Schema и template exports в core allowlist.
+- [ ] Доработка после ревью: explicit schema version diagnostics, namespaces и canonical profile IDs, bundled schema parity и удаление runtime dependency CLI на core; package-root symlink fixture проходит, internal document escape отклоняется. Добавить RED→GREEN tests перед runtime правками.
 - [ ] Закоммитить только файлы задачи.
 
-### Task 3: Совместимость и композиция профилей/модулей
+### Task 3: Нормативное содержание и его принятие
+
+**Files:** Нормативные Markdown и manifest.json в пяти пакетах спецификаций; docs/architecture/requirements-inventory.md; docs/architecture/content-approval.md. Никакие приватные тексты ASC не копируются целиком.
+
+**Interfaces:** Каждое правило inventory имеет исходную тему, applicability, target package/ID, proposed текст, rationale, verification и local-only основание при исключении. Accepted статус задаётся только после содержательного ревью владельца, с PR/decision ссылкой. Автор не утверждает собственные новые требования автоматически.
+
+Отдельные содержательные подзадачи, каждая со своим inventory, текстом,
+rationale, verification, review и коммитом:
+
+- **3.1 Core:** `packages/core/architecture`, `security`, `workflow`; темы публичных границ, проверки приёмки, ревью и секретов. Первым принимается CORE-ARCH-001 или согласованная замена без повторного использования ID.
+- **3.2 TypeScript:** `packages/technologies/typescript/docs`; strict и runtime-boundaries. TS-TYPES-001 проходит отдельное ревью до первого среза.
+- **3.3 Svelte SPA:** `packages/stacks/frontend/svelte-spa/docs`; композиция и выбранные FSD-границы. SVELTE-SPA-ARCH-001 проходит отдельное ревью до первого среза.
+- **3.4 Frontend:** `packages/domains/frontend/architecture`, `accessibility`, `forms`; state ownership и состояния взаимодействия. Выполняется после Task 8, с отдельным owner approval.
+- **3.5 Svelte:** `packages/technologies/svelte/docs`; derived state и lifecycle. Выполняется после Task 8, с отдельным owner approval.
+
+Каждый набор проверяется своим catalog validation и review checklist;
+accepted статусы подтверждаются владельцем, не наличием зелёного Schema-теста.
+
+- [ ] Для core отдельно инвентаризировать границы/приёмку/ревью/секреты; для TypeScript — strict и runtime-boundaries; для Svelte SPA — композицию и explicit FSD boundary. Каждый набор получает свой reviewable commit. Для frontend и Svelte создать отдельные наборы содержания и review commits после вертикального среза, не считать их готовыми по одной строке плана.
+- [ ] Подготовить inventory «тема ASC -> универсальный ID или local-only»: prefer-guard, arrow-body-style, padding preferences, alias names, auth/API бизнес-контракты и требование Superpowers остаются локальными, пока отдельно не согласован универсальный профиль. Матрица не объявляет все conventions ASC общепринятыми.
+- [ ] Владелец проводит review конкретных формулировок core/TypeScript/Svelte SPA; автор фиксирует принятые/отклонённые решения. Expected: минимум 3 accepted требования распределены между этими тремя пакетами; без owner approval вертикальный срез не называется принятым стандартом и release блокируется.
+- [ ] После approval изменить только подтверждённые statuses; прогнать catalog/resolver проверки actual catalogs и проверить отсутствие proposed среди активных. Expected: выбранный реальный профиль имеет минимум 3 активных ID, а не только accepted fixtures. Саму человеческую прозу не тестировать substring-assertions.
+- [ ] Закоммитить нормативное принятие отдельно от инфраструктуры; сохранить явную ссылку на review. Остальные пакеты могут содержать proposed правила, но 0.1.0 не объявляется пустым каркасом с принятой спецификацией.
+
+### Task 4: Совместимость и композиция профилей/модулей
 
 **Files:** `packages/tooling/standards-cli/lib/selection/{validate,resolve}.js`, `packages/tooling/standards-cli/tests/selection.test.js`, `tests/fixtures/catalog/`.
 
-**Interfaces:** Consumes catalogs Task 2. `validateSelection(value) -> Selection`; `resolveSelection(catalogs, selection) -> Resolved`. Требует exact selected versions, удовлетворения package requires ranges и явного наличия необходимых пакетов. Profile traversal собирает declared зависимости; module dependencies обязаны быть выбраны явно.
+**Interfaces:** Consumes catalogs Task 2 и provenance/namespace контракты выше. `validateSelection(value) -> Selection`; `resolveSelection(catalogs, selection) -> Resolved`. Требует exact selected versions, удовлетворения package requires ranges и явного наличия необходимых пакетов. Profile traversal собирает declared зависимости; module dependencies обязаны быть выбраны явно.
 
-- [ ] Написать `composes svelte-spa deterministically`: `assert.deepEqual(result.profiles, ['core', 'frontend', 'svelte', 'svelte-spa', 'typescript'])`; перестановка catalogs сохраняет результат, требования не дублируются. Отказы: несовместимый range, missing package, duplicate profile/version, цикл, unknown ID, конфликт и exception без reason/decision. Fixture выбранного модуля включает только совместимый вариант; `assert.ok(!ids.includes('fixture-unselected'))`, `assert.ok(!ids.includes('fixture-proposed'))`.
+- [ ] Написать `composes svelte-spa deterministically`: `assert.deepEqual(result.profiles, ['core', 'domains/frontend', 'stacks/frontend/svelte-spa', 'technologies/svelte', 'technologies/typescript'])`; перестановка catalogs сохраняет результат, требования не дублируются. Отказы: несовместимый range, missing package, duplicate profile/version, цикл, unknown ID, конфликт и exception без reason/decision. Fixture выбранного модуля включает только совместимый вариант; `assert.ok(!ids.includes('fixture-unselected'))`, `assert.ok(!ids.includes('fixture-proposed'))`.
 - [ ] Запустить `node --test packages/tooling/standards-cli/tests/selection.test.js`; Expected: FAIL отсутствующего resolver.
 - [ ] Реализовать semver-проверку пакетов, глобальную уникальность ID, детерминированный обход зависимостей и explicit exceptions. Формальные связи проверяются автоматически; противоречия в прозе — ревью. Deprecated/proposed не становятся активными обязательными правилами.
 - [ ] Повторить selection/catalog tests; Expected: PASS всех сценариев, корректное исключение присутствует в result.exceptions.
+- [ ] Добавить несовпадающую source version одного canonical profile и проверить PACKAGE_VERSION; при перестановке catalogs source attribution не меняется.
 - [ ] Закоммитить только файлы задачи.
 
-### Task 4: Импортируемые конфигурации отдельными пакетами
+### Task 5: Безопасные пути и managed-реестр
+
+**Files:** packages/tooling/standards-cli/lib/files/{safe-path,managed}.js; tests/{paths,managed}.test.js внутри CLI; docs/filesystem-safety.md.
+
+**Interfaces:** safePath(root, relativePath, { allowMissing }) -> Promise<string>; readManaged(root) -> Promise<Managed|null>; planManaged(root, desiredFiles, provenance) -> Promise<WritePlan>; commitManaged(root, writePlan, io) -> Promise<void>. io — файловый адаптер с production default, для fault injection только в tests. WritePlan содержит preflight originals/staged content, а не произвольные пути из недоверенного manifest.
+
+- [ ] Написать tests traversal, symlink components, malformed manifest, unknown managed target, manual edit, CRLF/LF и case alias. Пример отказа не меняет оригинал: assert.equal(await readFile(target, 'utf8'), original). Case-insensitive test на macOS сначала подтверждает свойство ФС реальной пробой; Linux тест проверяет явную CASE_COLLISION политику на normalized portable paths.
+- [ ] Запустить node --test packages/tooling/standards-cli/tests/paths.test.js packages/tooling/standards-cli/tests/managed.test.js; Expected: RED отсутствующих новых managed операций.
+- [ ] Preflight всех фиксированных owned paths, staged files в том же каталоге, exclusive create, rename документов, manifest последним; сохранять original backups для восстановления и отказа sync на неопознанной частичной записи. Повторять lstat/parent identity checks перед записью/rename, использовать O_NOFOLLOW где доступно. Fault injection подменяет parent на symlink между preflight и commit, операция отказывает до внешней записи.
+- [ ] Проверить сбой второго rename: check сообщает MANAGED_DRIFT; backups исходных файлов доступны, recovery не затирает новую пользовательскую правку. Expected: тесты PASS и нет ложного обещания multi-file atomicity. Повторный lstat не устраняет все races: модель доверяет локальной ФС без злонамеренного конкурентного владельца; это ограничение явно описать, не заявлять абсолютную TOCTOU-защиту.
+- [ ] Закоммитить только managed/path deliverable; не добавлять renderer или команды в эту задачу.
+
+### Task 6: Чистый renderer инструкций
+
+**Files:** packages/tooling/standards-cli/lib/documents/render.js; tests/render.test.js внутри CLI.
+
+**Interfaces:** renderInstructions(resolved, documents, generatorVersion) -> string; consumes Resolved Task 4, без IO/Node discovery. Вывод UTF-8/LF, полный normative текст, IDs, source package/version, generatorVersion и exceptions.
+
+- [ ] Написать tests: реальные accepted IDs из Task 3 присутствуют; proposed и невыбранные отсутствуют; exception явно обозначено, не как обязательное требование; порядок стабилен при входной перестановке; package version отличается от generator version.
+- [ ] Запустить node --test packages/tooling/standards-cli/tests/render.test.js; Expected: RED отсутствующего renderer.
+- [ ] Реализовать только чистый renderer и deterministic provenance. Исключённые требования и ручные проверки не выдавать за автоматически доказанное соответствие.
+- [ ] Повторить render/catalog/selection suite; Expected: PASS и непустой real profile, подтверждённый owner review.
+- [ ] Закоммитить renderer отдельно от managed IO.
+
+### Task 7: Package discovery, команды и bin
+
+**Files:** packages/tooling/standards-cli/lib/catalog/discover.js; lib/commands/{init,sync,check}.js; bin/engineering-standards.js; tests/{discovery,cli}.test.js; docs/diagnostics.md; CLI package.json.
+
+**Interfaces:** discoverCatalogs(root, selection) -> Promise<Catalog[]> через createRequire по контракту выше; initProject(root, selection, { dryRun }), syncProject(root, { dryRun }), checkProject(root) -> Promise<Report>. Bin engineering-standards init|sync|check [--dry-run], root cwd.
+
+- [ ] Написать tests missing package, exact version mismatch, unsupported schema, npm-workspace/pnpm-style external root symlink, exported package metadata, init non-overwrite, sync/manual edit, check/dry-run read-only и отсутствие entrypoint links. Assert.deepEqual(afterCheckFiles, beforeCheckFiles); реальные команды дают 0/1, сообщения не содержат private marker.
+- [ ] Запустить node --test packages/tooling/standards-cli/tests/discovery.test.js packages/tooling/standards-cli/tests/cli.test.js; Expected: RED отсутствующих команд.
+- [ ] Скомпоновать Tasks 4–6. Init читает существующий selection; при отсутствии предлагает пример без записи. AGENTS/CLAUDE links добавляет человек. Validate HTTPS/local decision references и stable diagnostics; не делать сетевых запросов и install.
+- [ ] Повторить suite; Expected: PASS включая symlink root пакета вне consumer, с запретом internal document escape и consumer writes outside root. Read tracked инструкции после удаления fixture node_modules; нельзя выдавать это за успешный CLI check без dependencies.
+- [ ] Закоммитить commands/bin отдельно.
+
+### Task 8: Вертикальный срез на реальном tarball consumer
+
+**Files:** tests/integration/vertical-slice.test.js; tests/fixtures/vertical/{package.json,package-lock.json,engineering-standards.json,AGENTS.md}; docs/architecture/vertical-acceptance.md.
+
+**Interfaces:** Реальные spec artifacts core/TypeScript/Svelte SPA, CLI и явно необходимые dependency profiles frontend/Svelte. Первые 3 принятых требования фокусируются на core/TypeScript/stack; не удалять зависимости стека ради трёх пакетов.
+
+- [ ] Написать failing external-consumer test: npm pack -> locked install -> resolver -> init renderer -> check. Assert generated accepted IDs >= 3; manual edit приводит к MANAGED_CONFLICT, missing selected package к PACKAGE_MISSING. Workspace checkout не участвует в resolution.
+- [ ] Запустить node --test tests/integration/vertical-slice.test.js; Expected: RED при отсутствии lock/consumer integration.
+- [ ] Создать committed fixture lockfile с зафиксированными tool dependencies; local tarballs устанавливать через --offline и --ignore-scripts после явной cache preparation. Без заполненного cache offline test обязан отказать, не обращаться к registry неявно. Тестировать на Node 22.13.0/24.14.0, npm consumer и symlink-backed consumer.
+- [ ] Повторить vertical test и npm test; Expected: PASS, не пустая инструкция из реальных accepted catalogs. Дополнить frontend/Svelte нормативные review commits из Task 3 после успешного среза.
+- [ ] Закоммитить срез и acceptance evidence до расширенных configs и release automation.
+
+### Task 9: Импортируемые конфигурации отдельными пакетами
 
 **Files:** `packages/tooling/eslint-config/{javascript,typescript,svelte-spa}.js`, `packages/tooling/prettier-config/{index,svelte}.js`, package.json обоих пакетов; `tests/integration/configs.test.js`, `tests/fixtures/{typescript,svelte-spa}/`.
 
@@ -104,35 +187,24 @@
 
 - [ ] Добавить fixtures: valid TS/Svelte проходят; negative examples отклоняются с ожидаемым ruleId, не parse/install error. `assert.equal(validMessages.length, 0)`; `assert.ok(invalidMessages.some((item) => { return item.ruleId === 'no-undef'; }))` для JS fixture. Prettier повторно форматирует без изменения и сохраняет явно заданный inline-пробел. Импортировать публичные exports из установленных tarballs вне workspaces.
 - [ ] Запустить `node --test tests/integration/configs.test.js`; Expected: FAIL отсутствующих exports.
-- [ ] Проверить официальную документацию совместимости, закрепить проверенные peer ranges и fixture lockfile; добавить небольшой набор correctness checks и форматирование. Не переносить весь ASC ESLint и prefer-guard. Проверки инструментов допускаются отдельно от proposed нормативных требований, но нельзя объявлять их утверждённым стандартом без ревью.
+- [ ] Проверить официальную документацию совместимости, закрепить проверенные peer ranges и fixture lockfile; добавить небольшой набор correctness checks и форматирование. Не переносить весь ASC ESLint и prefer-guard. Tooling-only correctness checks имеют явную маркировку и не выдаются за принятое нормативное требование.
 - [ ] Повторить configs tests; Expected: PASS valid и подтверждённый ожидаемый отказ negative. Проверить pack обоих config-пакетов без private fixtures.
+- [ ] Проверить rule-contract coverage: каждый enabled rule сопоставлен с accepted нормативным ID либо explicit tooling-only записью в README/mapping; proposed normative rule не включается. TS 5 и Svelte fixture lockfile обязательны. Корневые ESLint/Prettier configs импортируют собственные пакеты для dogfooding.
 - [ ] Закоммитить только файлы задачи.
 
-### Task 5: Генератор инструкций и безопасные CLI команды
+### Task 10: Changesets и проверка release artifacts
 
-**Files:** `packages/tooling/standards-cli/lib/documents/render.js`, `lib/files/{safe-path,managed}.js`, `lib/commands/{init,sync,check}.js`, `bin/engineering-standards.js`, `tests/{render,managed,cli}.test.js` внутри CLI; package.json CLI; `tests/fixtures/consumer/`.
+**Files:** .changeset/config.json, .changeset/*.md; scripts/releases/{validate,sync-metadata}.js; tests/integration/{releases,artifacts}.test.js; docs/architecture/releases.md.
 
-**Interfaces:** `renderInstructions(resolved, documents, generatorVersion) -> string`; `initProject(root, selection, { dryRun }) -> Promise<Report>`; `syncProject(root, { dryRun }) -> Promise<Report>`; `checkProject(root) -> Promise<Report>`. Bin `engineering-standards <init|sync|check> [--dry-run]`, root cwd. Init читает заранее созданный selection; при отсутствии показывает пример и не пишет. Пакеты резолвятся из установленного набора потребителя, не из dependencies CLI.
+**Interfaces:** Changesets отвечает за independent versions/changelogs, fixed/linked пусты, access public, baseBranch main, private root не версионируется. Самописный planRelease удалён из плана. validateRelease({ releases, manifests, availableVersions }) -> diagnostics проверяет наши semantic metadata/accepted gates, не повторяет versioning engine. Sync package.version в manifest детерминирован после Changesets version; check отклоняет drift, compatibility ranges не генерируются слепо из runtime dependencies.
 
-- [ ] Написать тесты init/document/manifest, повторного init без overwrite, dry-run, идемпотентного sync и read-only check: `assert.deepEqual(afterCheckFiles, beforeCheckFiles)`. Проверить точные версии всех пакетов отдельно от generatorVersion; изменение selection требует sync. Manual edit, malformed manifest, unowned target, `..`, symlink docs/entrypoint, отсутствующая ссылка агента и fault injection между writes не теряют исходные файлы. `assert.equal(await readFile(target, 'utf8'), original)` после отказа. AGENTS/CLAUDE не переписываются; tracked документ читается после удаления node_modules fixture.
-- [ ] Запустить `node --test packages/tooling/standards-cli/tests/render.test.js packages/tooling/standards-cli/tests/managed.test.js packages/tooling/standards-cli/tests/cli.test.js`; Expected: FAIL отсутствующей реализации.
-- [ ] Реализовать renderer с нормативным текстом/ID/provenance, безопасный preflight всех путей, hash checks, exclusive init и staged sync с rollback. При невозможности восстановления сообщить затронутые пути без ложного успеха. Генерировать `docs/engineering-standards.md` и managed manifest; manual entrypoint links проверять, не вставлять автоматически. Не делать сетевых запросов.
-- [ ] Повторить CLI/catalog/selection suite; Expected: PASS. Проверить реальные exit 0 для согласованного check и 1 для drift; dry-run не пишет, diagnostics не содержат marker секрета.
-- [ ] Закоммитить только файлы задачи.
+- [ ] Написать tests на временной копии workspace, реально выполняющие Changesets: editorial patch, explicit minor для breaking 0.x, major после 1.0; unrelated config version неизменна; несовместимый dependent range требует его change/release; missing published dependency вне группы даёт отказ. Не предполагать специальную 0.x настройку без доказательства — применить minor changeset и проверить реальное поведение выбранной версии.
+- [ ] Запустить node --test tests/integration/releases.test.js tests/integration/artifacts.test.js; Expected: RED отсутствующей release integration.
+- [ ] Закрепить проверенную Changesets версию; добавить semantic preflight, manifest version synchronization и отдельные package tags. Каждая спецификация/конфиг/CLI упаковывается и импортируется в locked consumer; fixtures не публикуются.
+- [ ] Повторить releases/artifacts/vertical suite; Expected: PASS, провал на пустом active set, mismatched manifest version или non-public access. Для будущего publication workflow предусмотреть npm trusted publishing/provenance; bootstrap первой публикации отдельно согласовать, credentials не копировать.
+- [ ] Закоммитить candidate automation, без npm publish. Источники: https://changesets.dev/guide/config и https://docs.npmjs.com/trusted-publishers/.
 
-### Task 6: Независимые версии и полные package artifacts
-
-**Files:** `scripts/releases/{plan,validate}.js`, `tests/integration/{releases,artifacts}.test.js`, `docs/architecture/releases.md`; migrations в соответствующих пакетах по необходимости.
-
-**Interfaces:** `planRelease({ previous, current, changes }) -> { releases }`, changes: `{ package, kind: 'editorial'|'breaking' }`; `validateRelease({ releases, manifests, availableVersions }) -> diagnostics`. previous/current содержат package metadata; availableVersions — явно полученный набор опубликованных версий для проверки, не install/latest. Релиз должен иметь manifest version/changelog/tag согласованными.
-
-- [ ] Добавить тест независимого bump: `assert.equal(next['standards-svelte'], '0.1.1')` для editorial, `assert.equal(next['eslint-config'], previous['eslint-config'])`. Breaking `0.1.0 -> 0.2.0`, `1.2.3 -> 2.0.0`. Dependent с подходящим range не выпускается; изменение range требует явного dependent change. Reject dependency unavailable outside release group, duplicate release и missing changelog. Упаковать все восемь пакетов: exports/bin/docs/LICENSE доступны, tests/fixtures/.env отсутствуют; consumer работает без checkout/workspace links.
-- [ ] Запустить `node --test tests/integration/releases.test.js tests/integration/artifacts.test.js`; Expected: FAIL отсутствующей release-валидации или package contract.
-- [ ] Реализовать независимый release plan, проверку графа и allowlists; tag каждого пакета отдельно. Описать точную установку набора, requires ranges, исключения, инструкции агента и миграции; будущие auth/API/state пакеты — только roadmap. Registry metadata preflight может читать сеть, CLI потребителя — нет.
-- [ ] Повторить releases/artifacts tests и `npm test`; Expected: PASS, несвязанные версии не изменены. Проверить README-пример на tarball consumer с lockfile.
-- [ ] Закоммитить только файлы задачи.
-
-### Task 7: CI и передача первого release candidate
+### Task 11: CI и передача первого release candidate
 
 **Files:** `.github/workflows/{ci,release-candidate}.yml`, `scripts/{check-documents,check-public-content}.js`, `tests/integration/public-content.test.js`, root scripts, `docs/architecture/release-checklist.md`.
 
@@ -142,10 +214,12 @@
 - [ ] Запустить `node --test tests/integration/public-content.test.js`; Expected: FAIL отсутствующих проверок.
 - [ ] Реализовать document/public-content checks и CI: npm ci, tests, lint, formatting, docs и tarball fixtures. Закрепить Actions по проверенным SHA на этапе настройки. Вручную проверить материалы/лицензии; автоматический scanner не доказывает отсутствие всех секретов.
 - [ ] Запустить `npm ci`, `npm test`, `npm run lint`, `npm run format:check`, `npm run check:docs`, `npm run check:public`, `npm run pack:check`; Expected: exit 0 каждого шага. Перед PR провести whole-branch review по spec/plan; проверить CI PR. Содержательное ревью новых требований, npm authorization и одобрение release group — явные незавершённые условия публикации.
+- [ ] Добавить CONTRIBUTING.md, SECURITY.md и CODEOWNERS (@antonsmolko). PR workflow: permissions contents: read, без pull_request_target и secrets; release OIDC permission только в отдельно одобренном publication job. CI проверяет собственные config imports, Node matrix, locked/offline-prepared consumers и macOS case-insensitive scenario.
+- [ ] После появления реального зелёного verify проверить branch-protection API и согласовать настройку main: PR required, verify required, запрет force-push/delete. Не менять защиту основной ветки в ходе этой остановленной итерации и не заявлять её настроенной.
 - [ ] Закоммитить задачу и передать feature PR на ревью; не merge, не publish и не менять consumer asc-admin в этом PR.
 
-## Самопроверка и дальнейшие этапы
+## Проверка плана и остановка
 
-Классификация и границы — Tasks 1/2; совместимость/модули — Task 3; конфигурации — Task 4; безопасные инструкции — Task 5; package artifacts/независимость релизов — Task 6; CI/лицензии/публичность — Task 7. Review Focus имеет тесты в указанных задачах. Контракты Selection/Resolved/Report и manifest versions едины для producer/consumer задач. Реальные auth/API/state/authorization спецификации, авторизованная публикация и asc-admin integration остаются отдельными этапами; они не считаются выполненными этим PR.
+Tasks 1–2 выполнены по предыдущей редакции и имеют зелёный baseline; новые contracts требуют их ограниченной доработки. Порядок продолжения: эти доработки -> содержание/owner acceptance Task 3 -> resolver Task 4 -> managed Task 5 -> renderer Task 6 -> команды Task 7 -> реальный vertical slice Task 8 -> configs/content expansion Task 9 -> Changesets Task 10 -> CI Task 11.
 
-Рекомендуемый метод — inline (`executing-plans`) с итоговым независимым ревью: resolver и CLI последовательно зависят от формата каталогов. Альтернатива — subagent-driven с отдельным implementer/reviewer на каждую задачу. Реализация начинается после просмотра этого плана и выбора метода выполнения.
+Ни одно review замечание не считается реализованным в runtime только из-за исправления плана. [Ответы по всем пунктам](2026-10-11-engineering-standards-independent-packages-review-response.md) различают existing code, исправленный контракт и будущую проверку. Дополнения к spec представлены для просмотра; разработка остаётся остановленной по запросу владельца. Canonical документы в engineering-standards; локальные asc-admin spec/plan заменяются ссылками, оригинал пользовательского review сохраняется.
