@@ -18,6 +18,42 @@
       "refines": [],
       "replaces": [],
       "conflicts": []
+    },
+    {
+      "id": "CORE-WORKFLOW-001",
+      "title": "Acceptance evidence",
+      "level": "required",
+      "status": "proposed",
+      "document": "workflow/acceptance-evidence.md",
+      "verification": "combined",
+      "requires": [],
+      "refines": [],
+      "replaces": [],
+      "conflicts": []
+    },
+    {
+      "id": "CORE-WORKFLOW-002",
+      "title": "Review decisions",
+      "level": "required",
+      "status": "proposed",
+      "document": "workflow/review-decisions.md",
+      "verification": "manual",
+      "requires": [],
+      "refines": [],
+      "replaces": [],
+      "conflicts": []
+    },
+    {
+      "id": "CORE-SECURITY-001",
+      "title": "Protect published materials",
+      "level": "required",
+      "status": "proposed",
+      "document": "security/published-materials.md",
+      "verification": "combined",
+      "requires": [],
+      "refines": [],
+      "replaces": [],
+      "conflicts": []
     }
   ],
   "profiles": [
@@ -25,7 +61,12 @@
       "id": "core",
       "kind": "core",
       "requires": [],
-      "requirements": ["CORE-ARCH-001"]
+      "requirements": [
+        "CORE-ARCH-001",
+        "CORE-WORKFLOW-001",
+        "CORE-WORKFLOW-002",
+        "CORE-SECURITY-001"
+      ]
     }
   ],
   "modules": [],
