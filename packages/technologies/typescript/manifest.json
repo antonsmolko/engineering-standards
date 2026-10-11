@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "package": {
+    "name": "@antonsmolko/standards-typescript",
+    "version": "0.1.0"
+  },
+  "requires": [
+    {
+      "name": "@antonsmolko/standards-core",
+      "range": "^0.1.0"
+    }
+  ],
+  "requirements": [
+    {
+      "id": "TS-TYPES-001",
+      "title": "Validate external values",
+      "level": "required",
+      "status": "proposed",
+      "document": "docs/runtime-boundaries.md",
+      "verification": "combined",
+      "requires": [],
+      "refines": [],
+      "replaces": [],
+      "conflicts": []
+    }
+  ],
+  "profiles": [
+    {
+      "id": "typescript",
+      "kind": "technology",
+      "requires": [
+        "core"
+      ],
+      "requirements": [
+        "TS-TYPES-001"
+      ]
+    }
+  ],
+  "modules": [],
+  "implementations": []
+}

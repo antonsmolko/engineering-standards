@@ -1,0 +1,28 @@
+{
+  "name": "@antonsmolko/standards-frontend",
+  "version": "0.1.0",
+  "type": "module",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/antonsmolko/engineering-standards.git",
+    "directory": "packages/domains/frontend"
+  },
+  "files": [
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "manifest.json",
+    "docs",
+    "migrations",
+    "architecture",
+    "accessibility",
+    "forms"
+  ],
+  "exports": {
+    "./manifest.json": "./manifest.json"
+  }
+}

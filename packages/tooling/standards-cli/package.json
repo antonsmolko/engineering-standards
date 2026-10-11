@@ -1,0 +1,29 @@
+{
+  "name": "@antonsmolko/standards-cli",
+  "version": "0.1.0",
+  "type": "module",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/antonsmolko/engineering-standards.git",
+    "directory": "packages/tooling/standards-cli"
+  },
+  "files": [
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "manifest.json",
+    "docs",
+    "migrations",
+    "lib",
+    "bin"
+  ],
+  "dependencies": {
+    "@antonsmolko/standards-core": "0.1.0",
+    "ajv": "8.20.0",
+    "semver": "7.8.5"
+  }
+}
