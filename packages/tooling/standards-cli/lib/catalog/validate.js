@@ -49,6 +49,14 @@ export const validateManifest = (value) => {
         "Requirement IDs must belong to the declaring package namespace.",
       );
     }
+
+    if (
+      ["requires", "refines", "replaces", "conflicts"].some((relation) => {
+        return requirement[relation].includes(requirement.id);
+      })
+    ) {
+      fail("MANIFEST_REFERENCE", "Requirements must not reference themselves.");
+    }
   }
 
   for (const item of [
@@ -62,6 +70,44 @@ export const validateManifest = (value) => {
     }
 
     ids.add(item.id);
+  }
+
+  const requirementIds = new Set(
+    value.requirements.map((item) => {
+      return item.id;
+    }),
+  );
+  const prefixes = {
+    core: "core",
+    domain: "domains/",
+    technology: "technologies/",
+    stack: "stacks/",
+  };
+
+  for (const profile of value.profiles) {
+    if (
+      profile.kind === "core"
+        ? profile.id !== "core"
+        : !profile.id.startsWith(prefixes[profile.kind])
+    ) {
+      fail(
+        "MANIFEST_SCHEMA",
+        "Profile kind must match its canonical identifier.",
+      );
+    }
+  }
+
+  for (const owner of value.profiles) {
+    if (
+      owner.requirements.some((id) => {
+        return !requirementIds.has(id);
+      })
+    ) {
+      fail(
+        "MANIFEST_REFERENCE",
+        "Selected requirements must be declared in this package.",
+      );
+    }
   }
 
   return value;

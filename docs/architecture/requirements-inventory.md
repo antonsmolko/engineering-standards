@@ -7,12 +7,12 @@ matrix is a review aid, not a second source of obligations.
 
 ## Core review set
 
-| Topic                           | Proposed ID and document                                                 | Applicability                           | Rationale and verification                                                 |
-| ------------------------------- | ------------------------------------------------------------------------ | --------------------------------------- | -------------------------------------------------------------------------- |
-| Public boundaries               | [CORE-ARCH-001](../../packages/core/architecture/public-contract.md)     | Modules with external consumers         | Limit private coupling; review contracts, imports and behavior tests       |
-| Completion evidence             | [CORE-WORKFLOW-001](../../packages/core/workflow/acceptance-evidence.md) | Software and artifact changes           | Avoid unsupported completion claims; compare acceptance and current checks |
-| Review dispositions             | [CORE-WORKFLOW-002](../../packages/core/workflow/review-decisions.md)    | Public contracts and required standards | Require independent decisions; review revision and finding dispositions    |
-| Secrets and distribution rights | [CORE-SECURITY-001](../../packages/core/security/published-materials.md) | Distributed artifacts and fixtures      | Prevent private-data publication; inspect packed files and licenses        |
+| Topic                           | Proposed ID and document                                                 | Applicability                           | Rationale and verification                                                                                         |
+| ------------------------------- | ------------------------------------------------------------------------ | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| Public boundaries               | [CORE-ARCH-001](../../packages/core/architecture/public-contract.md)     | Modules with external consumers         | Limit private coupling; review contracts, imports and behavior tests                                               |
+| Completion evidence             | [CORE-WORKFLOW-001](../../packages/core/workflow/acceptance-evidence.md) | Software and artifact changes           | Avoid unsupported completion claims; compare acceptance and current checks                                         |
+| Review dispositions             | [CORE-WORKFLOW-002](../../packages/core/workflow/review-decisions.md)    | Public contracts and required standards | Record independent review or explicit solo review with limitations, revision, dispositions and maintainer decision |
+| Secrets and distribution rights | [CORE-SECURITY-001](../../packages/core/security/published-materials.md) | Distributed artifacts and fixtures      | Prevent private-data publication; inspect packed files and licenses                                                |
 
 ## TypeScript review set
 

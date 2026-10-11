@@ -59,6 +59,14 @@ Task 9 выделен в Task 9.1, чтобы Task 7 не зависел от е
 
 ## Контракты
 
+После review PR #3: local validator проверяет canonical profile syntax/kind,
+profile requirements из собственного catalog и отсутствие self-links в четырёх
+requirement relations (MANIFEST_REFERENCE). Cross-package existence/cycles остаются
+Task 4, не заявляются реализованными. Требование может не входить ни в один профиль:
+это допустимый неактивный catalog entry для будущего выбора/модуля, не active rule.
+Lifecycle status/level хранятся только в manifest, document headers содержат ID.
+SVELTE-SPA-ARCH-001 пока verification manual; combined требует реального checker.
+
 - Manifest спецификаций: schemaVersion 1, package { name, version, namespace }, requires [{ name, range }], requirements, profiles, modules, implementations. namespace задаёт префикс требований пакета; среди selected catalogs один namespace принадлежит одному npm-имени, это проверяет resolver. Только manifest является источником profile compatibility; peerDependencies для профилей не создаются. Tooling peers описывают версии ESLint/TypeScript/Svelte/Prettier, это другой контракт.
 - Requirement: { id, title, level, status, document, verification, requires, refines, replaces, conflicts }. Формат ID — `<NAMESPACE>-<CATEGORY>-<NNN>`; pattern — `^[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)*-[A-Z0-9]+-[0-9]{3}$`. CATEGORY — ровно один непустой ASCII-токен без дефиса, NNN — ровно три цифры; namespace может содержать дефисные токены. Разбор справа: последний токен — номер, предпоследний — категория, все предыдущие вместе — полный namespace. Ownership проверяется точным равенством разобранного namespace и package.namespace, не startsWith и не longest-prefix среди selected catalogs. Поэтому `SVELTE-SPA-ARCH-001` имеет namespace `SVELTE-SPA`, category `ARCH`, number `001` и никогда не принадлежит `SVELTE`. Набор выбранных пакетов не меняет результат разбора. Namespace принадлежит одному npm-имени: CORE, FRONTEND, TS, SVELTE, SVELTE-SPA. Отдельные модули регистрируют собственный namespace. Существующие ID не переименовываются; удалённые ID не переиспользуются.
 - Profile: { id, kind, requires, requirements }. Канонические ID: core, domains/frontend, technologies/typescript, technologies/svelte, stacks/frontend/svelte-spa. Сокращённые старые ID в пока неопубликованном каталоге заменить, не создавать неявных aliases. Все каталоги проверяются на уникальность ID и namespace ownership.
@@ -78,7 +86,7 @@ Task 9 выделен в Task 9.1, чтобы Task 7 не зависел от е
 
 **Files:** Root `package.json`, `.gitignore`, `README.md`, `AGENTS.md`, `LICENSE`; для каждого корня из таблицы — `package.json`, `README.md`, `CHANGELOG.md`, `LICENSE`; `tests/integration/layout.test.js`.
 
-**Interfaces:** Root workspaces явно перечисляет восемь путей из таблицы. Specification exports: `./manifest.json`, `./package.json`; core также `./schemas/manifest.json`, `./schemas/project.json`. Config exports и bin оформляются Tasks 4/5 до упаковки. Промежуточные пакеты не публикуются.
+**Interfaces:** Root workspaces явно перечисляет восемь путей из таблицы. Specification exports: `./manifest.json`, `./package.json`; core также `./schemas/manifest.json`, `./schemas/project.json`. Bin оформляется Task 7, config exports — Task 9, tooling connection — Task 9.1. Промежуточные пакеты не публикуются.
 
 - [x] Написать `private root and independent package identities`: `assert.equal(root.private, true)`, `assert.equal(root.version, undefined)`, `assert.equal(new Set(names).size, 8)`, `assert.equal(pkg.version, '0.1.0')`. Проверить own changelog/LICENSE, allowlist files, отсутствие lifecycle scripts и tooling dependencies у спецификаций.
 - [x] Запустить `node --test tests/integration/layout.test.js`; Expected: FAIL отсутствующих package-манифестов.

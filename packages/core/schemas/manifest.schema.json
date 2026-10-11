@@ -124,7 +124,7 @@
         "properties": {
           "id": {
             "type": "string",
-            "minLength": 1
+            "pattern": "^(?:core|(?:domains|technologies)/[a-z][a-z0-9]*(?:-[a-z0-9]+)*|stacks/[a-z][a-z0-9]*(?:-[a-z0-9]+)*/[a-z][a-z0-9]*(?:-[a-z0-9]+)*)$(?![\\s\\S])"
           },
           "kind": {
             "enum": ["core", "domain", "technology", "stack"]
@@ -133,7 +133,7 @@
             "type": "array",
             "items": {
               "type": "string",
-              "minLength": 1
+              "pattern": "^(?:core|(?:domains|technologies)/[a-z][a-z0-9]*(?:-[a-z0-9]+)*|stacks/[a-z][a-z0-9]*(?:-[a-z0-9]+)*/[a-z][a-z0-9]*(?:-[a-z0-9]+)*)$(?![\\s\\S])"
             },
             "uniqueItems": true
           },

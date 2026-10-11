@@ -20,6 +20,12 @@ is not a supported isolation guarantee.
 
 The CLI commands, resolver and managed-file writer are not implemented yet.
 
+Local validation enforces canonical profile ID syntax and matching kind,
+locally declared profile requirements, and rejects direct requirement self-links.
+Cross-package existence and graph cycles belong to the planned resolver.
+Unselected catalog requirements are allowed, but are not activated by declaration.
+Lifecycle status and level come only from manifest.json, not Markdown labels.
+
 See [the planned project workflow](docs/workflow.md) for the purpose of the
 generated document, the difference between init and sync, names-only package
 selection, optional confirmed dependency/tool setup, and terminal diff previews.

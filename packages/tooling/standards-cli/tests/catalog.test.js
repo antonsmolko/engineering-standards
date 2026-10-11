@@ -61,6 +61,84 @@ const fixture = async (t, change = () => {}) => {
   return root;
 };
 
+for (const id of [
+  "Weird Profile",
+  "frontend",
+  "domains/Frontend",
+  "core/extra",
+  "domains/frontend\n",
+]) {
+  test(`rejects noncanonical profile ID ${JSON.stringify(id)}`, () => {
+    const value = manifest();
+    value.profiles[0].id = id;
+    assert.throws(
+      () => {
+        validateManifest(value);
+      },
+      { code: "MANIFEST_SCHEMA" },
+    );
+  });
+}
+
+test("rejects a profile kind that disagrees with its canonical ID", () => {
+  const value = manifest();
+  value.profiles[0].kind = "stack";
+  assert.throws(
+    () => {
+      validateManifest(value);
+    },
+    { code: "MANIFEST_SCHEMA" },
+  );
+});
+
+test("rejects a malformed required profile identifier before graph resolution", () => {
+  const value = manifest();
+  value.profiles[0].requires = ["does/not-exist"];
+  assert.throws(
+    () => {
+      validateManifest(value);
+    },
+    { code: "MANIFEST_SCHEMA" },
+  );
+});
+
+test("rejects a profile referencing an undeclared local requirement", () => {
+  const value = manifest();
+  value.profiles[0].requirements.push("CORE-NOPE-999");
+  assert.throws(
+    () => {
+      validateManifest(value);
+    },
+    { code: "MANIFEST_REFERENCE" },
+  );
+});
+
+for (const relation of ["requires", "refines", "replaces", "conflicts"]) {
+  test(`rejects a requirement referencing itself through ${relation}`, () => {
+    const value = manifest();
+    value.requirements[0][relation] = [value.requirements[0].id];
+    assert.throws(
+      () => {
+        validateManifest(value);
+      },
+      { code: "MANIFEST_REFERENCE" },
+    );
+  });
+}
+
+test("leaves cross-package graph resolution to the resolver", () => {
+  const value = manifest();
+  value.profiles[0].requires = ["technologies/typescript"];
+  value.requirements[0].refines = ["TS-TYPES-001"];
+  assert.equal(validateManifest(value), value);
+});
+
+test("allows a declared requirement that no profile selects", () => {
+  const value = manifest();
+  value.profiles[0].requirements = [];
+  assert.equal(validateManifest(value), value);
+});
+
 test("loads a valid manifest and its normative document", async (t) => {
   const root = await fixture(t);
   const catalog = await loadCatalog(root);

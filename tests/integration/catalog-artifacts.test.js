@@ -6,6 +6,7 @@ import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import test from "node:test";
+import { installOffline } from "../helpers/install-offline.js";
 
 const packages = [
   ["packages/core", "standards-core", "CORE", "core"],
@@ -86,19 +87,7 @@ test("packed catalogs export consumer metadata and CLI loads them without worksp
   }
 
   // npm ci prepares the cache explicitly; this install must not fetch from the registry.
-  execFileSync(
-    "npm",
-    [
-      "install",
-      "--offline",
-      "--ignore-scripts",
-      "--no-audit",
-      "--no-fund",
-      "--package-lock=false",
-      ...tarballs,
-    ],
-    { cwd: consumer, encoding: "utf8", timeout: 30000 },
-  );
+  installOffline(consumer, tarballs);
   const require = createRequire(join(consumer, "package.json"));
   const cliRoot = join(consumer, "node_modules/@antonsmolko/standards-cli");
   const { loadCatalog } = await import(

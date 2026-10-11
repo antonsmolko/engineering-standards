@@ -1,6 +1,6 @@
 # FSD module boundaries
 
-ID: SVELTE-SPA-ARCH-001. Status: proposed; review before making this mandatory.
+ID: SVELTE-SPA-ARCH-001.
 
 ## Requirement
 
@@ -32,13 +32,16 @@ API client, routing library, alias spelling or `index.ts` for every helper.
 
 ## Verification
 
-Review module placement and the project layer map. Run an import-boundary check
-that resolves both relative paths and aliases and verifies public entrypoints.
-Negative fixtures MUST include an upward dependency, a private lower-slice
-import and a peer-slice import; valid fixtures MUST include a public lower-slice
-import and an internal same-slice import. Review recorded exceptions separately.
-These checks are a proposed verification contract; this package does not yet
-ship the checker.
+Currently verify by manual review of module placement, the project layer map,
+relative/aliased import targets and declared public entrypoints. Reject upward
+dependencies, private lower-slice imports and peer-slice imports without recorded
+exceptions; allow public lower-slice imports and internal same-slice imports.
+Review recorded exceptions separately. Engist check does not verify source imports.
+
+A future import-boundary checker may add automatic coverage after it is shipped
+and tested with these positive/negative cases. Changing verification to combined
+requires a separately reviewed tooling implementation; no such checker is
+provided or required by this version.
 
 ## References
 

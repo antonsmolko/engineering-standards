@@ -1,6 +1,6 @@
 # Public module contracts
 
-ID: CORE-ARCH-001. Status: proposed; review before making this mandatory.
+ID: CORE-ARCH-001.
 
 ## Requirement
 

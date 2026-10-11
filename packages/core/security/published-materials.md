@@ -1,6 +1,6 @@
 # Protect published materials
 
-ID: CORE-SECURITY-001. Status: proposed; owner review required.
+ID: CORE-SECURITY-001.
 
 ## Requirement
 

@@ -34,7 +34,10 @@ slice; future modules have separate design and acceptance gates.
 The owner reviews the complete proposed text and identifies accepted IDs in a
 PR review or another explicit decision. Record that decision's link and the
 reviewed revision here. A follow-up acceptance commit changes only confirmed
-manifest statuses and matching document labels, then validates actual catalogs.
+manifest statuses, then validates actual catalogs. Lifecycle status and level
+live only in manifest.json; normative document headers retain stable IDs, not
+duplicate labels. Generated instructions attribute lifecycle metadata from the
+manifest, not from prose. Readers of source documents consult the catalog.
 Changes after review must be assessed again rather than inheriting approval.
 
 At least one accepted, applicable requirement from each of core, TypeScript and

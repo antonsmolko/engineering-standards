@@ -175,6 +175,14 @@ permissions, назначения и правила вычисления дос�
 текст, обоснование, область применения и способ проверки. ID не меняется
 при перемещении документа и не используется повторно после удаления правила.
 
+Lifecycle status и required/recommended level хранятся только в manifest.json;
+Markdown-шапка содержит ID без дублирования этих полей. Renderer берёт metadata
+из catalog. Локальная валидация проверяет syntax/kind canonical profile IDs,
+наличие profile requirements в собственном пакете и запрещает self-links.
+Cross-package references и cycles проверяет resolver выбранного набора.
+Непокрытые профилями требования допускаются как неактивные catalog entries:
+одно наличие в manifest не делает их обязательными для проекта.
+
 Раздельно указываются:
 
 - уровень обязательности: `required` или `recommended`;

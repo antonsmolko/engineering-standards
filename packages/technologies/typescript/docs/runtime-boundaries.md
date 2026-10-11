@@ -1,6 +1,6 @@
 # Validate external values
 
-ID: TS-TYPES-001. Status: proposed; review before making this mandatory.
+ID: TS-TYPES-001.
 
 ## Requirement
 

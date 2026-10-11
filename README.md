@@ -18,4 +18,9 @@ tests. Initial requirements remain proposed. CLI commands and lint/format
 configurations are not implemented yet; workflow examples describe the intended
 behavior rather than available commands.
 
+Run `npm ci --ignore-scripts` with registry access to explicitly prepare the npm
+cache, then `npm test`. Consumer installation stays offline; an empty cache
+produces preparation guidance. Repository-local formatting tooling/dogfooding
+remains pending: no reproducible npm formatting command is claimed yet.
+
 Specifications are organized by scope: core, domains, technologies, stacks and optional modules. ESLint, Prettier and CLI tooling are separate packages. There is no repository-wide release version.

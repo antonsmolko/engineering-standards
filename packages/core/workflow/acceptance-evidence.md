@@ -1,6 +1,6 @@
 # Acceptance evidence
 
-ID: CORE-WORKFLOW-001. Status: proposed; owner review required.
+ID: CORE-WORKFLOW-001.
 
 ## Requirement
 

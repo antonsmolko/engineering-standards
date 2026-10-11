@@ -1,6 +1,6 @@
 # Strict compiler checking
 
-ID: TS-CONFIG-001. Status: proposed; owner review required.
+ID: TS-CONFIG-001.
 
 ## Requirement
 
