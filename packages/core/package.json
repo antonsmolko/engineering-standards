@@ -1,0 +1,32 @@
+{
+  "name": "@antonsmolko/standards-core",
+  "version": "0.1.0",
+  "type": "module",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/antonsmolko/engineering-standards.git",
+    "directory": "packages/core"
+  },
+  "files": [
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "manifest.json",
+    "docs",
+    "migrations",
+    "architecture",
+    "security",
+    "workflow",
+    "schemas",
+    "templates"
+  ],
+  "exports": {
+    "./manifest.json": "./manifest.json",
+    "./schemas/manifest.json": "./schemas/manifest.schema.json",
+    "./schemas/project.json": "./schemas/project.schema.json"
+  }
+}

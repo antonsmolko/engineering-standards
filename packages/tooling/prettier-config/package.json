@@ -1,0 +1,23 @@
+{
+  "name": "@antonsmolko/prettier-config",
+  "version": "0.1.0",
+  "type": "module",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/antonsmolko/engineering-standards.git",
+    "directory": "packages/tooling/prettier-config"
+  },
+  "files": [
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "manifest.json",
+    "docs",
+    "migrations",
+    "*.js"
+  ]
+}
