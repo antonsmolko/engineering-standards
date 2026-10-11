@@ -1,7 +1,9 @@
-# Engist: npm workspaces, Lerna и Changesets
+# Engist: npm workspaces, Changesets и корневые scripts
 
 Статус: область работ согласована в чате; письменный дизайн ожидает ревью
-владельца. База — merge PR #3 (`7d4e3f9`). Реализация инструментов ещё не начата.
+владельца. После ревью PR #4 владелец согласовал отложить Lerna/Nx и уточнить
+lockfile, совместимость и формат тегов. База — merge PR #3 (`7d4e3f9`).
+Реализация инструментов ещё не начата.
 
 ## Цель и границы
 
@@ -21,89 +23,123 @@
 | Инструмент | Ответственность | Что не делает |
 | --- | --- | --- |
 | npm workspaces | Установка, lockfile, локальные ссылки между пакетами | Не задаёт семантическую совместимость стандартов |
-| Lerna / Nx | Порядок задач, независимый параллелизм, явные зависимости задач | Не управляет версиями и публикацией |
+| Корневые npm scripts | Последовательность проверок и подготовка артефактов | Не образуют второй versioning engine |
 | Changesets | Независимые версии и changelog выбранных пакетов | Не читает semantic requires из manifest.json |
 
 Workspaces уже настроены: восемь корней явно перечислены в package.json.
 Не заменять их glob `packages/*`: пакеты вложены по доменам и технологиям.
 Корневой пакет остаётся private, без собственной release-версии.
 
-Lerna использует существующие workspaces, а не собственные bootstrap/link/add.
-В lerna.json указывается независимая модель; команды lerna version/publish
-не используются. Зависимости разработки закрепляются точными версиями и
-lockfile после проверки совместимости с Node 22.13.0 и 24.14.0.
-Версия Nx, которую использует Lerna, также должна разрешаться воспроизводимо.
+Зависимости разработки закрепляются точными версиями и lockfile после проверки
+совместимости с Node 22.13.0 и 24.14.0. Несовместимую с этой границей версию
+инструмента не внедрять: выбрать совместимую или отдельно согласовать смену
+engines. Lerna/Nx в этом этапе не устанавливаются.
 
 ## Граф задач
 
 Есть три разных графа: npm dependencies, семантические связи каталогов
 manifest.requires и зависимости задач. Их нельзя считать одним графом.
-Lerna делегирует выполнение Nx; зависимости задач задаются явно в nx.json
-и конфигурации проектов, а не выводятся из связей нормативных требований.
+Текущая проверка canonical schemas core и bundled snapshots CLI читает два
+JSON и сравнивает их напрямую в tests/integration/schemas.test.js. Проверки
+не производят входные данные друг для друга: это связь данных, а не зависимость
+выполнения задач. Parity test сохраняется без искусственного core → CLI pipeline
+и без runtime dependency CLI на core. Автоматический schema sync не нужен для
+этого этапа; check не переписывает snapshots.
 
-Первое реальное межпакетное ребро: проверка канонических схем core предшествует
-проверке bundled snapshots CLI. При несовпадении snapshots проверка отказывает,
-а не молча переписывает их. CLI сохраняет отсутствие runtime dependency на core.
-Отдельная явная команда обновления snapshots копирует только известные схемы;
-изменения остаются доступны для Git review. Это не lifecycle-скрипт установки.
-
-Markdown/JSON-пакетам не добавляется фиктивная компиляция. Проверки пакетов
-включают применимые metadata/schema/catalog проверки; CLI дополнительно имеет
-свои тесты. Корневые интеграционные тесты остаются обязательными: нельзя заменить
-их только lerna run test и потерять tarball-consumer coverage.
+Все восемь пакетов пока без собственных scripts. Пять specification-пакетов
+проверяются существующими layout/schema/catalog-artifact tests; CLI дополнительно
+имеет catalog tests. ESLint/Prettier пока являются skeleton-пакетами: проверяются
+layout и артефакты, не несуществующие config exports. Эти проверки остаются
+корневыми. Не создавать восемь одинаковых пакетных check targets, фиктивную
+компиляцию или менять package.json публикуемых пакетов ради оркестратора.
 
 Публичные корневые команды для этого этапа:
 
 - `npm test`: существующий полный набор node:test, без сокращения покрытия.
-- `npm run check`: пакетные проверки через Lerna, затем полный набор npm test.
+- `npm run check`: полный npm test и новые read-only metadata/lockfile/локальные
+  semantic compatibility проверки; без повторного запуска одного suite.
 - `npm run pack:check`: сначала check, затем упаковка всех восьми пакетов
   и проверка allowlist/metadata/exports в изолированных временных consumers.
 - `npm run changeset`: создание описания изменения средствами Changesets.
-- `npm run version:check`: read-only проверка release plan и metadata без bump.
+- `npm run version:check`: read-only проверка release plan, metadata/lockfile
+  и локальной совместимости текущих и projected workspace versions без bump.
 - `npm run version:prepare`: локальное применение Changesets version и
-  синхронизация manifest.package.version с package.json, без publish/tag/push.
+  синхронизация manifest.package.version и lockfile, без publish/tag/push.
 
 Корневая оболочка последовательно соединяет этапы и останавливается при ошибке;
-внутри пакетного этапа Lerna параллелит только независимые задачи. Проверки
-отдельного пакета не вызывают корневой check, чтобы не получить рекурсию.
+независимые тесты выполняются средствами node:test. Вызовы scripts не должны
+создавать рекурсию: check не вызывает pack:check, который зависит от check.
 Упаковка начинается только после успешных предварительных проверок.
 Существующие тесты, самостоятельно создающие tarballs, сохраняются.
 
-Для schema-check и CLI-check порядок тестируется реальным запуском task runner,
-а не проверкой текста nx.json. Ошибка core должна исключать запуск зависимой
-CLI-задачи; независимые задачи могут выполняться параллельно.
+### Почему Lerna/Nx отложены
 
-Кэширование в этом этапе выключено. В частности, интеграционные установки,
-pack и изменения версий не должны пропускаться из-за cache hit.
-Включение кэша для чистых проверок возможно отдельно после описания всех inputs
-и outputs. Remote cache, Nx Cloud, affected-only CI и распределённое выполнение
-сейчас не подключаются. Успех scoped run не заменяет полный check перед PR.
+Сегодня нет сборок или генерации, результаты которых нужны другим пакетным
+задачам. Дополнительный task runner не даёт необходимого порядка, а его
+конфигурация, транзитивные зависимости и платформенные установки требуют
+обслуживания. Workspaces отвечают за зависимости, node:test — за параллелизм
+тестов, корневые scripts — за короткую последовательность этапов.
+
+Вернуться к Lerna/Nx отдельным изменением, когда появятся настоящие prerequisites
+и измеримая потребность в scoped runs, кэше или более сложном параллелизме.
+Само число пакетов или условные два ребра не служат критерием внедрения.
+При таком внедрении проверить Linux/macOS install с --ignore-scripts, platform
+optionalDependencies, поддерживаемые Node, daemon/cloud/telemetry настройки,
+ignored служебные каталоги и полноту inputs/outputs. Сейчас нет nx.json,
+lerna.json, remote cache, Nx Cloud или affected-only CI.
 
 ## Независимые версии
 
 Changesets настраивается с `fixed: []`, `linked: []`, `access: public`,
 `baseBranch: main`; приватные пакеты не версионируются и не тегируются.
 Public access описывает будущие артефакты, а не разрешает публикацию сейчас.
-Changesets — единственный механизм изменения версий/changelog; Lerna в нём
-не участвует. Не создавать параллельный самописный versioning engine.
+Changesets — единственный механизм изменения версий/changelog.
+Не создавать параллельный самописный versioning engine. Будущие теги используют
+полное npm-имя: `@antonsmolko/standards-svelte@0.1.0`. Создание тегов сейчас
+не выполняется; имя tag-команды проверяется у выбранной версии Changesets.
 
 Для breaking изменений 0.x автор выбирает minor changeset с описанием миграции;
 после 1.0 — major. Редакционные изменения без смены смысла — patch.
 Изменение одного пакета не поднимает версии несвязанных пакетов.
 
 У спецификаций package.json и manifest.package.version должны совпадать.
-version:check обнаруживает drift; version:prepare после Changesets version
-детерминированно обновляет только версии известных specification manifests.
+version:check обнаруживает metadata/lockfile drift. Последовательность
+version:prepare:
+
+1. Проверить чистоту worktree, metadata/lockfile и release plan до записи.
+   Для каждого manifest.requires на пакет внутри workspace проверить диапазон
+   относительно projected версии после release plan. Это отдельный preflight,
+   не слепой вызов check текущего набора: явно обновлённый range может уже
+   требовать планируемую версию. Такой переход допустим только при совместимом
+   полном projected наборе; проверка текущего состояния сообщает его drift.
+2. Выполнить Changesets version и детерминированно обновить версии известных
+   specification manifests из package.json.
+3. Обновить workspace metadata lockfile через
+   `npm install --package-lock-only --ignore-scripts --offline --no-audit --no-fund`.
+4. Повторно проверить metadata, lockfile и локальные semantic ranges.
+
+Offline cache подготавливается заранее; cache miss даёт отказ без сетевого
+fallback. Версия-only drift не объявляется гарантированным падением npm ci:
+согласованность проверяется явно и тестом npm ci на временной копии.
 Диапазоны manifest.requires не переписываются из npm dependencies и не меняются
 автоматически: корректировку совместимости автор оформляет явным изменением.
 Подготовка версии меняет локальные tracked файлы и требует чистого worktree;
 при сбое возвращает nonzero и перечисляет завершённые шаги без слепого rollback.
 
-Проверки semantic compatibility всей группы, наличия опубликованных зависимостей
-и accepted-content gates остаются полноценным release preflight Task 10.
-version:check этого этапа не объявляется разрешением выпуска. Здесь добавляются
-базовые проверки release plan, независимости версий и согласованности metadata;
-нет обращений к registry для доказательства готовности release group.
+Локальная проверка использует semver.satisfies без сети. Например, core 0.2.0
+несовместим с TypeScript requires ^0.1.0: version:check и предварительная
+проверка version:prepare отказывают до записи без явного изменения range.
+Неизвестный workspace-пакету внешний requires не считается подтверждённым:
+его опубликованность/совместимость проверяет полный release preflight Task 10.
+Accepted-content gates тоже остаются там. version:check не разрешает выпуск.
+
+Branch-relative Changesets status запускается с явным --since ref. Для него
+нужны доступный base ref и история до merge base: CI fetch-depth 1 недостаточен.
+Полная история либо явный fetch нужного ref с достаточной глубиной обязательны.
+Точный режим status закрепляется тестами выбранной версии; локальный metadata
+check не должен случайно требовать remote ref. Status выполняется до version,
+а после version используются metadata/lockfile/range checks, не проверка наличия
+уже потреблённых changesets.
 
 В рабочей ветке все восемь package versions остаются 0.1.0. Реальный bump
 проверяется только на временных fixtures. Для инфраструктурного PR без изменения
@@ -113,12 +149,16 @@ version:check этого этапа не объявляется разрешен
 
 1. Полный существующий набор тестов проходит на точных Node 22.13.0 и 24.14.0;
    новый check не исключает интеграционные проверки.
-2. Реальный Lerna/Nx запуск подтверждает порядок core → CLI, отказ зависимой
-   задачи при upstream failure и ненулевой exit code корневой команды.
+2. Корневая orchestration останавливается при ошибке check до упаковки;
+   проверяются exit code и отсутствие последующих побочных действий, не Nx.
 3. Реальный Changesets version во временном workspace проверяет patch одного
    пакета, minor breaking 0.x и major после 1.0; несвязанные версии неизменны.
-4. Подготовка версии синхронизирует manifest metadata; read-only проверка
-   обнаруживает рассогласование и не меняет файлы. Повторный sync идемпотентен.
+4. Подготовка версии синхронизирует manifest metadata
+   и lockfile; read-only проверка обнаруживает drift без записи. Metadata sync
+   идемпотентен; npm ci на временной копии принимает подготовленный lockfile.
+   Fixture core 0.1 → 0.2 при зависимом ^0.1.0 отказывает до записи; fixture с
+   явной корректировкой range проходит. Проверяются cache miss и отсутствующий
+   base ref при branch-relative status с понятной диагностикой.
 5. pack:check проверяет артефакты всех восьми пакетов; существующие public exports
    импортируются вне workspaces. Отсутствующие config exports и bin не выдаются
    за реализованные. Private root и tests/fixtures не попадают в артефакты.
@@ -139,7 +179,7 @@ exports, переименования npm-пакетов и подключени
 Открытые уточнения discovery и повторного init из ревью PR #3 сохраняются
 до отдельного согласования перед реализацией Tasks 4/7.
 После согласования этого письменного дизайна составляется отдельный план;
-установка Lerna/Changesets и реализация начинаются после его согласования.
+установка Changesets и реализация начинаются после его согласования.
 
 ## Официальные источники
 
@@ -147,3 +187,5 @@ exports, переименования npm-пакетов и подключени
 - [Lerna: legacy package management](https://lerna.js.org/docs/legacy-package-management)
 - [Lerna: task pipeline configuration](https://lerna.js.org/docs/concepts/task-pipeline-configuration)
 - [Changesets configuration](https://changesets.dev/guide/config)
+- [Changesets CLI](https://changesets.dev/guide/cli)
+- [npm install](https://docs.npmjs.com/cli/v11/commands/npm-install/)
