@@ -253,7 +253,9 @@ tooling schema при необходимости требует отдельно
 [дизайну monorepo tooling](../specs/2026-10-11-engist-monorepo-tooling-design.md).
 Lerna/Nx отложены до реальных prerequisites и измеримой потребности.
 Этап включает локальные current/projected manifest.requires checks,
-синхронизацию workspace lockfile после version и требования к base ref/history
+прямую проверку равенства всех workspace versions в package-lock.json и
+package.json до/после version:prepare, синхронизацию lockfile после version
+и требования к base ref/history
 для branch-relative status. Полный release preflight ниже остаётся Task 10;
 ни инфраструктурный дизайн, ни его merge не означают завершение Task 10.
 
@@ -285,7 +287,7 @@ Lerna/Nx отложены до реальных prerequisites и измерим�
 
 Текущее состояние после возобновления:
 
-- Tasks 1–2: metadata exports, namespaces/canonical profile IDs, explicit schema-version diagnostics, bundled schema parity, отсутствие runtime dependency CLI на core и root-symlink regression реализованы. 55 тестов проходят на Node 22.13.0 и 24.14.0; проверка включает пакеты, установленные из tarballs через явно offline install после npm ci, и names-only selection schema. Это проверка каталога и схемы, не будущих commands/config fixtures.
+- Tasks 1–2: metadata exports, namespaces/canonical profile IDs, explicit schema-version diagnostics, bundled schema parity, отсутствие runtime dependency CLI на core и root-symlink regression реализованы. Baseline после PR #3 — 70 тестов (прежнее число 55 устарело); предыдущие прогоны проверили его на Node 22.13.0 и 24.14.0. Эти исторические результаты не заменяют свежий прогон при продолжении. Проверка включает пакеты, установленные из tarballs через явно offline install после npm ci, и names-only selection schema. Это проверка каталога и схемы, не будущих commands/config fixtures.
 - Task 3.1: core boundaries/workflow/security тексты и inventory подготовлены в отдельном commit, все proposed.
 - Task 3.2: runtime-boundaries и strict-checking TypeScript подготовлены в отдельном commit, оба proposed.
 - Task 3.3: explicit FSD composition/boundaries подготовлены в отдельном commit, proposed.

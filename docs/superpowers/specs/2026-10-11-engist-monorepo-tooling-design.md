@@ -2,13 +2,16 @@
 
 Статус: область работ согласована в чате; письменный дизайн ожидает ревью
 владельца. После ревью PR #4 владелец согласовал отложить Lerna/Nx и уточнить
-lockfile, совместимость и формат тегов. База — merge PR #3 (`7d4e3f9`).
-Реализация инструментов ещё не начата.
+lockfile, совместимость и формат тегов. База — merge PR #4 (`125de92`).
+Два уточнения повторного ревью PR #4 внесены ниже; утверждение исправленного
+письменного дизайна владельцем ещё не зафиксировано. Реализация инструментов
+ещё не начата.
 
 ## Цель и границы
 
-Настроить управление восемью независимыми пакетами: установку зависимостей,
-выполнение задач с явным порядком и подготовку независимых версий/changelog.
+Настроить управление восемью независимыми пакетами: установку зависимостей
+через npm workspaces, последовательность проверок и упаковки через корневые
+npm scripts и подготовку независимых версий/changelog через Changesets.
 Существующая структура пакетов и их публичные имена сохраняются.
 
 Это отдельный инфраструктурный PR по issue #1. Он выделяет начальную настройку
@@ -107,6 +110,12 @@ version:check обнаруживает metadata/lockfile drift. Последов
 version:prepare:
 
 1. Проверить чистоту worktree, metadata/lockfile и release plan до записи.
+   Для каждого из восьми корней, перечисленных в root package.json.workspaces,
+   запись package-lock.json.packages[workspacePath] должна существовать, а её
+   version должна точно совпадать с package.json этого workspace. Это проверка
+   самой workspace-записи, не link-записи node_modules; отсутствие записи или
+   несовпадение версии дают отказ до записи. То же равенство проверяется
+   read-only командами check/version:check и повторно после version:prepare.
    Для каждого manifest.requires на пакет внутри workspace проверить диапазон
    относительно projected версии после release plan. Это отдельный preflight,
    не слепой вызов check текущего набора: явно обновлённый range может уже
@@ -120,7 +129,9 @@ version:prepare:
 
 Offline cache подготавливается заранее; cache miss даёт отказ без сетевого
 fallback. Версия-only drift не объявляется гарантированным падением npm ci:
-согласованность проверяется явно и тестом npm ci на временной копии.
+согласованность проверяется прямым сравнением всех workspace versions.
+Тест npm ci на временной копии дополнительно проверяет установку, но не заменяет
+это сравнение.
 Диапазоны manifest.requires не переписываются из npm dependencies и не меняются
 автоматически: корректировку совместимости автор оформляет явным изменением.
 Подготовка версии меняет локальные tracked файлы и требует чистого worktree;
@@ -154,8 +165,16 @@ check не должен случайно требовать remote ref. Status �
 3. Реальный Changesets version во временном workspace проверяет patch одного
    пакета, minor breaking 0.x и major после 1.0; несвязанные версии неизменны.
 4. Подготовка версии синхронизирует manifest metadata
-   и lockfile; read-only проверка обнаруживает drift без записи. Metadata sync
-   идемпотентен; npm ci на временной копии принимает подготовленный lockfile.
+   и lockfile. До и после version:prepare для всех восьми workspace-записей
+   package-lock.json явно проверяется равенство version с соответствующим
+   package.json; отсутствующая запись тоже даёт отказ. Negative fixture содержит
+   устаревшую version только в workspace-записи lockfile; package.json и manifest
+   остаются согласованными, чтобы metadata drift не маскировал ошибку lockfile:
+   check/version:check и preflight version:prepare отказывают без изменения
+   файлов, даже если npm ci проходит. Проверка охватывает specification,
+   configuration и CLI workspaces, а не только manifests. Metadata sync
+   идемпотентен; npm ci на временной копии дополнительно принимает подготовленный
+   lockfile.
    Fixture core 0.1 → 0.2 при зависимом ^0.1.0 отказывает до записи; fixture с
    явной корректировкой range проходит. Проверяются cache miss и отсутствующий
    base ref при branch-relative status с понятной диагностикой.
@@ -184,8 +203,6 @@ exports, переименования npm-пакетов и подключени
 ## Официальные источники
 
 - [npm workspaces](https://docs.npmjs.com/cli/v11/using-npm/workspaces/)
-- [Lerna: legacy package management](https://lerna.js.org/docs/legacy-package-management)
-- [Lerna: task pipeline configuration](https://lerna.js.org/docs/concepts/task-pipeline-configuration)
 - [Changesets configuration](https://changesets.dev/guide/config)
 - [Changesets CLI](https://changesets.dev/guide/cli)
 - [npm install](https://docs.npmjs.com/cli/v11/commands/npm-install/)
