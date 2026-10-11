@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "package": {
+    "name": "@antonsmolko/standards-frontend",
+    "version": "0.1.0"
+  },
+  "requires": [
+    {
+      "name": "@antonsmolko/standards-core",
+      "range": "^0.1.0"
+    }
+  ],
+  "requirements": [
+    {
+      "id": "FRONTEND-ARCH-001",
+      "title": "Explicit UI state ownership",
+      "level": "required",
+      "status": "proposed",
+      "document": "architecture/state-ownership.md",
+      "verification": "combined",
+      "requires": [],
+      "refines": [],
+      "replaces": [],
+      "conflicts": []
+    }
+  ],
+  "profiles": [
+    {
+      "id": "frontend",
+      "kind": "domain",
+      "requires": [
+        "core"
+      ],
+      "requirements": [
+        "FRONTEND-ARCH-001"
+      ]
+    }
+  ],
+  "modules": [],
+  "implementations": []
+}

@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "package": {
+    "name": "@antonsmolko/standards-core",
+    "version": "0.1.0"
+  },
+  "requires": [],
+  "requirements": [
+    {
+      "id": "CORE-ARCH-001",
+      "title": "Public module contracts",
+      "level": "required",
+      "status": "proposed",
+      "document": "architecture/public-contract.md",
+      "verification": "combined",
+      "requires": [],
+      "refines": [],
+      "replaces": [],
+      "conflicts": []
+    }
+  ],
+  "profiles": [
+    {
+      "id": "core",
+      "kind": "core",
+      "requires": [],
+      "requirements": [
+        "CORE-ARCH-001"
+      ]
+    }
+  ],
+  "modules": [],
+  "implementations": []
+}
