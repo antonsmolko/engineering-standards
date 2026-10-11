@@ -2,7 +2,8 @@
   "schemaVersion": 1,
   "package": {
     "name": "@antonsmolko/standards-frontend",
-    "version": "0.1.0"
+    "version": "0.1.0",
+    "namespace": "FRONTEND"
   },
   "requires": [
     {
@@ -26,14 +27,10 @@
   ],
   "profiles": [
     {
-      "id": "frontend",
+      "id": "domains/frontend",
       "kind": "domain",
-      "requires": [
-        "core"
-      ],
-      "requirements": [
-        "FRONTEND-ARCH-001"
-      ]
+      "requires": ["core"],
+      "requirements": ["FRONTEND-ARCH-001"]
     }
   ],
   "modules": [],

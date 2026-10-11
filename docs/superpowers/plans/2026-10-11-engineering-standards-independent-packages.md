@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans or superpowers:subagent-driven-development to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Status:** Разработка остановлена владельцем после первоначальных Tasks 1–2. Эта редакция исправляет план по [ревью](2026-10-11-engineering-standards-independent-packages-review.md); дальнейшая реализация не начата. Номера будущих задач изменены, выполненные Tasks 1–2 требуют перечисленных ниже доработок, а не повторного создания пакетов.
+**Status:** PR #2 с исправленным планом вмержен; владелец явно возобновил работу. Выполняются ограниченные доработки Tasks 1–2 и подготовка proposed содержания Task 3. Принятие конкретных нормативных формулировок остаётся отдельным gate владельца; согласование плана не меняет их статус автоматически.
 
 **Goal:** Создать публичный монорепозиторий с восемью независимо версионируемыми пакетами, проверяемыми профилями, конфигурациями и безопасным генератором инструкций.
 
@@ -74,12 +74,12 @@
 
 **Interfaces:** Root workspaces явно перечисляет восемь путей из таблицы. Specification exports: `./manifest.json`, `./package.json`; core также `./schemas/manifest.json`, `./schemas/project.json`. Config exports и bin оформляются Tasks 4/5 до упаковки. Промежуточные пакеты не публикуются.
 
-- [ ] Написать `private root and independent package identities`: `assert.equal(root.private, true)`, `assert.equal(root.version, undefined)`, `assert.equal(new Set(names).size, 8)`, `assert.equal(pkg.version, '0.1.0')`. Проверить own changelog/LICENSE, allowlist files, отсутствие lifecycle scripts и tooling dependencies у спецификаций.
-- [ ] Запустить `node --test tests/integration/layout.test.js`; Expected: FAIL отсутствующих package-манифестов.
-- [ ] Создать вложенные npm workspaces и документацию границ. README описывает независимые версии и будущие модули; AGENTS — процесс этого репозитория без копирования требований ASC.
-- [ ] Повторить layout test; Expected: PASS. Создать lockfile `npm install --package-lock-only --ignore-scripts`; Expected: exit 0, приватный root не является release-артефактом.
-- [ ] Доработка после ревью: package layout тест проверяет public access (уже реализован), оба metadata exports, engines после реального прогона минимального Node. Не выполнять scaffold повторно.
-- [ ] Закоммитить только файлы задачи с issue-префиксом.
+- [x] Написать `private root and independent package identities`: `assert.equal(root.private, true)`, `assert.equal(root.version, undefined)`, `assert.equal(new Set(names).size, 8)`, `assert.equal(pkg.version, '0.1.0')`. Проверить own changelog/LICENSE, allowlist files, отсутствие lifecycle scripts и tooling dependencies у спецификаций.
+- [x] Запустить `node --test tests/integration/layout.test.js`; Expected: FAIL отсутствующих package-манифестов.
+- [x] Создать вложенные npm workspaces и документацию границ. README описывает независимые версии и будущие модули; AGENTS — процесс этого репозитория без копирования требований ASC.
+- [x] Повторить layout test; Expected: PASS. Создать lockfile `npm install --package-lock-only --ignore-scripts`; Expected: exit 0, приватный root не является release-артефактом.
+- [x] Доработка после ревью: package layout тест проверяет public access (уже реализован), оба metadata exports, engines после реального прогона минимального Node. Не выполнять scaffold повторно.
+- [x] Закоммитить только файлы задачи с issue-префиксом.
 
 ### Task 2: Манифесты и безопасная загрузка нормативных документов
 
@@ -93,13 +93,13 @@
 Schema и parser используют один контракт выше; shape validation предшествует
 ownership validation.
 
-- [ ] Добавить тесты валидного manifest, duplicate ID, invalid status, metadata version mismatch, отсутствующего документа/обоснования, ссылки `../outside.md` и документа-symlink наружу. Для marker внешнего файла: `assert.ok(!error.message.includes(marker))`.
-- [ ] Запустить `node --test packages/tooling/standards-cli/tests/catalog.test.js`; Expected: FAIL отсутствующей реализации.
-- [ ] Реализовать Schema-валидацию и realpath boundary check. Добавить компактные тексты общих/frontend/TS/Svelte/stack требований со стабильными ID; новые нормативные тексты остаются proposed до содержательного ревью. Accepted fixtures не подменяют их согласование. Шаблоны задают текст, rationale, applicability, verification; module template — состояния, отказы, acceptance.
-- [ ] Повторить catalog и layout tests; Expected: PASS. Проверить Schema и template exports в core allowlist.
-- [ ] Доработка после ревью: explicit schema version diagnostics, namespaces и canonical profile IDs, bundled schema parity и удаление runtime dependency CLI на core; package-root symlink fixture проходит, internal document escape отклоняется. Добавить RED→GREEN tests перед runtime правками.
-- [ ] Добавить RED→GREEN проверки ID: все пять текущих manifest IDs, включая `CORE-ARCH-001` и `SVELTE-SPA-ARCH-001`, принимаются; `core-ARCH-001`, `CORE_ARCH_001`, `CORE-ARCH-01`, `CORE-ARCH-0001`, `CORE--ARCH-001` и `CORE-001` отклоняются. Parser assertions: `assert.deepEqual(parseRequirementId('SVELTE-STATE-001'), { namespace: 'SVELTE', category: 'STATE', number: '001' })` и `assert.deepEqual(parseRequirementId('SVELTE-SPA-ARCH-001'), { namespace: 'SVELTE-SPA', category: 'ARCH', number: '001' })`. Manifest с package.namespace `SVELTE` и ID `SVELTE-SPA-ARCH-001` даёт REQUIREMENT_NAMESPACE даже без выбранного SPA-пакета; package.namespace `SVELTE-SPA` с этим же ID проходит.
-- [ ] Закоммитить только файлы задачи.
+- [x] Добавить тесты валидного manifest, duplicate ID, invalid status, metadata version mismatch, отсутствующего документа/обоснования, ссылки `../outside.md` и документа-symlink наружу. Для marker внешнего файла: `assert.ok(!error.message.includes(marker))`.
+- [x] Запустить `node --test packages/tooling/standards-cli/tests/catalog.test.js`; Expected: FAIL отсутствующей реализации.
+- [x] Реализовать Schema-валидацию и realpath boundary check. Добавить компактные тексты общих/frontend/TS/Svelte/stack требований со стабильными ID; новые нормативные тексты остаются proposed до содержательного ревью. Accepted fixtures не подменяют их согласование. Шаблоны задают текст, rationale, applicability, verification; module template — состояния, отказы, acceptance.
+- [x] Повторить catalog и layout tests; Expected: PASS. Проверить Schema и template exports в core allowlist.
+- [x] Доработка после ревью: explicit schema version diagnostics, namespaces и canonical profile IDs, bundled schema parity и удаление runtime dependency CLI на core; package-root symlink fixture проходит, internal document escape отклоняется. Добавить RED→GREEN tests перед runtime правками.
+- [x] Добавить RED→GREEN проверки ID: все пять текущих manifest IDs, включая `CORE-ARCH-001` и `SVELTE-SPA-ARCH-001`, принимаются; `core-ARCH-001`, `CORE_ARCH_001`, `CORE-ARCH-01`, `CORE-ARCH-0001`, `CORE--ARCH-001` и `CORE-001` отклоняются. Parser assertions: `assert.deepEqual(parseRequirementId('SVELTE-STATE-001'), { namespace: 'SVELTE', category: 'STATE', number: '001' })` и `assert.deepEqual(parseRequirementId('SVELTE-SPA-ARCH-001'), { namespace: 'SVELTE-SPA', category: 'ARCH', number: '001' })`. Manifest с package.namespace `SVELTE` и ID `SVELTE-SPA-ARCH-001` даёт REQUIREMENT_NAMESPACE даже без выбранного SPA-пакета; package.namespace `SVELTE-SPA` с этим же ID проходит.
+- [x] Закоммитить только файлы задачи.
 
 ### Task 3: Нормативное содержание и его принятие
 
@@ -230,4 +230,4 @@ accepted статусы подтверждаются владельцем, не 
 
 Tasks 1–2 выполнены по предыдущей редакции и имеют зелёный baseline; новые contracts требуют их ограниченной доработки. Порядок продолжения: эти доработки -> содержание/owner acceptance Task 3 -> resolver Task 4 -> managed Task 5 -> renderer Task 6 -> команды Task 7 -> реальный vertical slice Task 8 -> configs/content expansion Task 9 -> Changesets Task 10 -> CI Task 11.
 
-Ни одно review замечание не считается реализованным в runtime только из-за исправления плана. [Ответы по всем пунктам](2026-10-11-engineering-standards-independent-packages-review-response.md) различают existing code, исправленный контракт и будущую проверку. Дополнения к spec представлены для просмотра; разработка остаётся остановленной по запросу владельца. Canonical документы в engineering-standards; локальные asc-admin spec/plan заменяются ссылками, оригинал пользовательского review сохраняется.
+Ни одно review замечание не считается реализованным в runtime только из-за исправления плана. [Ответы по всем пунктам](2026-10-11-engineering-standards-independent-packages-review-response.md) описывают состояние на момент остановленной review-итерации. Работа возобновлена после merge PR #2; фактические доработки и проверки фиксируются в следующих commits/PR. Canonical документы в engineering-standards; оригинал пользовательского review сохраняется. Owner approval нормативных текстов и разрешение публикации по-прежнему отдельные условия.

@@ -2,7 +2,8 @@
   "schemaVersion": 1,
   "package": {
     "name": "@antonsmolko/standards-svelte",
-    "version": "0.1.0"
+    "version": "0.1.0",
+    "namespace": "SVELTE"
   },
   "requires": [
     {
@@ -26,14 +27,10 @@
   ],
   "profiles": [
     {
-      "id": "svelte",
+      "id": "technologies/svelte",
       "kind": "technology",
-      "requires": [
-        "core"
-      ],
-      "requirements": [
-        "SVELTE-STATE-001"
-      ]
+      "requires": ["core"],
+      "requirements": ["SVELTE-STATE-001"]
     }
   ],
   "modules": [],

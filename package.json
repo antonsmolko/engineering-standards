@@ -2,6 +2,12 @@
   "name": "engineering-standards",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": "^22.13.0 || ^24.0.0"
+  },
+  "devDependencies": {
+    "semver": "7.8.5"
+  },
   "workspaces": [
     "packages/core",
     "packages/domains/frontend",

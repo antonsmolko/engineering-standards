@@ -2,7 +2,8 @@
   "schemaVersion": 1,
   "package": {
     "name": "@antonsmolko/standards-core",
-    "version": "0.1.0"
+    "version": "0.1.0",
+    "namespace": "CORE"
   },
   "requires": [],
   "requirements": [
@@ -24,9 +25,7 @@
       "id": "core",
       "kind": "core",
       "requires": [],
-      "requirements": [
-        "CORE-ARCH-001"
-      ]
+      "requirements": ["CORE-ARCH-001"]
     }
   ],
   "modules": [],

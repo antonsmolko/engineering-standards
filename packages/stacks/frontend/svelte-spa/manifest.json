@@ -2,7 +2,8 @@
   "schemaVersion": 1,
   "package": {
     "name": "@antonsmolko/standards-svelte-spa",
-    "version": "0.1.0"
+    "version": "0.1.0",
+    "namespace": "SVELTE-SPA"
   },
   "requires": [
     {
@@ -34,16 +35,14 @@
   ],
   "profiles": [
     {
-      "id": "svelte-spa",
+      "id": "stacks/frontend/svelte-spa",
       "kind": "stack",
       "requires": [
-        "frontend",
-        "typescript",
-        "svelte"
+        "domains/frontend",
+        "technologies/typescript",
+        "technologies/svelte"
       ],
-      "requirements": [
-        "SVELTE-SPA-ARCH-001"
-      ]
+      "requirements": ["SVELTE-SPA-ARCH-001"]
     }
   ],
   "modules": [],

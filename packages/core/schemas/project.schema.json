@@ -20,10 +20,7 @@
             "minLength": 1
           }
         },
-        "required": [
-          "name",
-          "version"
-        ]
+        "required": ["name", "version"]
       }
     },
     "profiles": {
@@ -49,10 +46,7 @@
             "minLength": 1
           }
         },
-        "required": [
-          "id",
-          "implementation"
-        ]
+        "required": ["id", "implementation"]
       }
     },
     "exceptions": {
@@ -74,11 +68,7 @@
             "pattern": "\\S"
           }
         },
-        "required": [
-          "requirement",
-          "reason",
-          "decision"
-        ]
+        "required": ["requirement", "reason", "decision"]
       }
     },
     "entrypoints": {
