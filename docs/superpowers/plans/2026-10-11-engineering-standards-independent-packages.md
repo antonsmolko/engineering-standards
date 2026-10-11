@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans or superpowers:subagent-driven-development to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Status:** PR #2 с исправленным планом вмержен; владелец явно возобновил работу. Выполняются ограниченные доработки Tasks 1–2 и подготовка proposed содержания Task 3. Принятие конкретных нормативных формулировок остаётся отдельным gate владельца; согласование плана не меняет их статус автоматически.
+**Status:** PR #2 с исправленным планом вмержен; владелец явно возобновил работу. Доработки Tasks 1–2 выполнены; proposed содержание Tasks 3.1–3.3 подготовлено отдельными коммитами. Принятие конкретных нормативных формулировок остаётся отдельным gate владельца; согласование плана не меняет их статус автоматически.
 
 **Goal:** Создать публичный монорепозиторий с восемью независимо версионируемыми пакетами, проверяемыми профилями, конфигурациями и безопасным генератором инструкций.
 
@@ -227,6 +227,14 @@ accepted статусы подтверждаются владельцем, не 
 - [ ] Закоммитить задачу и передать feature PR на ревью; не merge, не publish и не менять consumer asc-admin в этом PR.
 
 ## Проверка плана и остановка
+
+Текущее состояние после возобновления:
+
+- Tasks 1–2: metadata exports, namespaces/canonical profile IDs, explicit schema-version diagnostics, bundled schema parity, отсутствие runtime dependency CLI на core и root-symlink regression реализованы. 42 теста проходят на Node 22.13.0 и 24.14.0; проверка включает пакеты, установленные из tarballs через явно offline install после npm ci. Это проверка каталога, не будущих commands/config fixtures.
+- Task 3.1: core boundaries/workflow/security тексты и inventory подготовлены в отдельном commit, все proposed.
+- Task 3.2: runtime-boundaries и strict-checking TypeScript подготовлены в отдельном commit, оба proposed.
+- Task 3.3: explicit FSD composition/boundaries подготовлены в отдельном commit, proposed.
+- Owner content approval: pending, см. [decision record](../../architecture/content-approval.md). Всего девять proposed требований, ноль accepted. Tasks 3.4–3.5 и 4–11 не выполнены; следующий шаг — содержательное ревью владельца, не релиз.
 
 Tasks 1–2 выполнены по предыдущей редакции и имеют зелёный baseline; новые contracts требуют их ограниченной доработки. Порядок продолжения: эти доработки -> содержание/owner acceptance Task 3 -> resolver Task 4 -> managed Task 5 -> renderer Task 6 -> команды Task 7 -> реальный vertical slice Task 8 -> configs/content expansion Task 9 -> Changesets Task 10 -> CI Task 11.
 
