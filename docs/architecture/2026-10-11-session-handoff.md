@@ -9,8 +9,10 @@
 
 Репозиторий: [antonsmolko/engineering-standards](https://github.com/antonsmolko/engineering-standards).
 База этой передачи — main после merge
-[PR #4](https://github.com/antonsmolko/engineering-standards/pull/4),
-commit `125de9298afe718c1e2a4937ec1d16ca7d08394f`.
+[PR #6](https://github.com/antonsmolko/engineering-standards/pull/6),
+commit `fa46ee698099e5714d6a94339fe4c5f41da75629`.
+Первоначальный снимок был сделан после PR #4; этот handoff актуализирован
+после PR #6 и подтягивания main в ветку PR #5.
 Основная задача: [issue #1](https://github.com/antonsmolko/engineering-standards/issues/1).
 
 Прочитать по порядку:
@@ -53,9 +55,18 @@ commit `125de9298afe718c1e2a4937ec1d16ca7d08394f`.
 ## Что уже сделано
 
 [PR #2](https://github.com/antonsmolko/engineering-standards/pull/2),
-[PR #3](https://github.com/antonsmolko/engineering-standards/pull/3) и PR #4
+[PR #3](https://github.com/antonsmolko/engineering-standards/pull/3), PR #4 и PR #6
 вмержены. Tasks 1–2: workspaces, metadata exports, JSON schemas, namespaces,
 canonical profile IDs и безопасная загрузка каталогов реализованы.
+
+В PR #6 исправлены два оставшихся уточнения повторного ревью PR #4:
+дизайн явно требует сравнения version всех восьми workspace-записей
+package-lock.json с package.json до/после version:prepare и negative fixture
+с устаревшей lockfile-записью при согласованных package.json/manifest.
+Успех npm ci не заменяет это сравнение. Цель описывает корневые scripts,
+ссылки на Lerna удалены из текущих источников. Общий план синхронизирован,
+устаревший baseline 55 обновлён до 70. Это правки документации; сами проверки
+check/version:check/version:prepare и negative fixture ещё не реализованы.
 
 Пять specification-пакетов содержат manifests и Markdown. CLI содержит
 catalog loader/validator и bundled schema snapshots с parity tests; он не
@@ -75,7 +86,7 @@ vertical slice, а не accepted-only fixtures.
 ## Чего ещё нет
 
 Lerna, Nx и Changesets не установлены. Новые check/pack/version scripts только
-описаны. PR #4 — дизайн, а не выполненная настройка инструментов.
+описаны. PR #4 и PR #6 описывают дизайн, а не выполненную настройку инструментов.
 
 Не реализованы resolver, managed IO/renderer, discovery, команды init/sync/check,
 bin Engist, installer/setup, config exports ESLint/Prettier, вертикальный срез,
@@ -84,21 +95,14 @@ Tooling config-пакеты пока skeletons. Не объявлять Tasks 4�
 
 ## Ближайшие действия
 
-1. Два небольших замечания повторного ревью PR #4 остаются в документации:
-   - Явно требовать равенство версии каждой workspace-записи package-lock.json
-     и её package.json до/после version:prepare, включая negative fixture с
-     устаревшей записью. npm ci может пройти при version-only drift, поэтому
-     его exit 0 сам по себе не доказывает синхронизацию.
-   - Уточнить цель под корневые scripts и убрать ссылки на Lerna из текущих
-     источников либо маркировать их как материалы будущего внедрения.
-   Предыдущие шесть замечаний закрыты ревьюером; эти два проверены как валидные,
-   но ещё не исправлены. См. [ревью PR #4](https://github.com/antonsmolko/engineering-standards/pull/4).
-2. Сверить письменный дизайн с владельцем после этих уточнений. Merge PR #4
-   не трактовать как разрешение выполнять ещё не написанный implementation plan.
-3. Составить отдельный implementation plan monorepo tooling и согласовать его
-   и способ выполнения. Не реализовывать инструментальную часть по одному
+1. Согласовать с владельцем исправленный письменный дизайн monorepo tooling.
+   Merge PR #4/#6 не трактовать как разрешение выполнять ещё не написанный
+   implementation plan. Повторно исправлять закрытые в PR #6 уточнения не нужно.
+2. После утверждения дизайна составить отдельный implementation plan monorepo
+   tooling и согласовать его и способ выполнения. Не реализовывать
+   инструментальную часть по одному
    общему Task 10: новый этап выделен раньше него и не заменяет release gates.
-4. Выполнить согласованный план с RED → GREEN behavior tests и проверками
+3. Выполнить согласованный план с RED → GREEN behavior tests и проверками
    настоящих Changesets во временных workspaces; рабочие версии не повышать.
 
 В дизайне version:prepare: clean worktree → projected compatibility preflight
@@ -122,7 +126,6 @@ Tooling config-пакеты пока skeletons. Не объявлять Tasks 4�
   invalid JSON; перед Task 7 согласовать изменение и синхронизировать документы.
 - Будущее workflow-руководство попадает в files allowlist CLI; перед публикацией
   решить, оставлять ли честно маркированную документацию ещё отсутствующих команд.
-- В общем плане осталось старое число 55 тестов; фактический baseline — 70.
 
 Init — выбор настроек и отдельно подтверждённая установка; sync — первая
 генерация и обновление. Sync/check offline, не меняют dependency files.
