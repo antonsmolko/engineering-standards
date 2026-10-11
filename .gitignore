@@ -1,0 +1,6 @@
+node_modules/
+.worktrees/
+.superpowers/
+*.tgz
+.env*
+.DS_Store
