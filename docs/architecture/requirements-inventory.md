@@ -14,6 +14,16 @@ matrix is a review aid, not a second source of obligations.
 | Review dispositions             | [CORE-WORKFLOW-002](../../packages/core/workflow/review-decisions.md)    | Public contracts and required standards | Require independent decisions; review revision and finding dispositions    |
 | Secrets and distribution rights | [CORE-SECURITY-001](../../packages/core/security/published-materials.md) | Distributed artifacts and fixtures      | Prevent private-data publication; inspect packed files and licenses        |
 
+## TypeScript review set
+
+| Topic                     | Proposed ID and document                                                          | Applicability                       | Rationale and verification                                                                          |
+| ------------------------- | --------------------------------------------------------------------------------- | ----------------------------------- | --------------------------------------------------------------------------------------------------- |
+| External-data boundaries  | [TS-TYPES-001](../../packages/technologies/typescript/docs/runtime-boundaries.md) | TypeScript consuming untrusted data | Static declarations cannot validate runtime data; review adapters and malformed-input failure tests |
+| Effective strict checking | [TS-CONFIG-001](../../packages/technologies/typescript/docs/strict-checking.md)   | Authored TypeScript production code | Avoid permissive or unused configuration; inspect effective settings and real compiler errors       |
+
+Both remain proposed. Runtime validation is independent of a consumer's guard
+names; strict checking is independent of formatting preferences.
+
 ## Local-only topics
 
 | Topic                                                   | Disposition             | Reason                                                                                       |

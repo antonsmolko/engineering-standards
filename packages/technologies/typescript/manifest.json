@@ -23,6 +23,18 @@
       "refines": [],
       "replaces": [],
       "conflicts": []
+    },
+    {
+      "id": "TS-CONFIG-001",
+      "title": "Strict compiler checking",
+      "level": "required",
+      "status": "proposed",
+      "document": "docs/strict-checking.md",
+      "verification": "combined",
+      "requires": [],
+      "refines": [],
+      "replaces": [],
+      "conflicts": []
     }
   ],
   "profiles": [
@@ -30,7 +42,7 @@
       "id": "technologies/typescript",
       "kind": "technology",
       "requires": ["core"],
-      "requirements": ["TS-TYPES-001"]
+      "requirements": ["TS-TYPES-001", "TS-CONFIG-001"]
     }
   ],
   "modules": [],
