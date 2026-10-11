@@ -120,6 +120,33 @@ test("rejects package metadata mismatch", async (t) => {
   await assert.rejects(loadCatalog(root), { code: "PACKAGE_METADATA" });
 });
 
+test("rejects null package metadata with a stable diagnostic", async (t) => {
+  const root = await fixture(t);
+
+  await writeFile(join(root, "package.json"), "null");
+  await assert.rejects(loadCatalog(root), { code: "PACKAGE_METADATA" });
+});
+
+for (const linked of [false, true]) {
+  test(`sanitizes a ${linked ? "dangling-linked" : "missing"} package root`, async (t) => {
+    const root = await fixture(t);
+    const missing = join(root, "private-marker-missing");
+    const candidate = linked ? join(root, "private-marker-linked") : missing;
+
+    if (linked) {
+      await symlink(missing, candidate);
+    }
+
+    await assert.rejects(loadCatalog(candidate), (error) => {
+      assert.equal(error.code, "CATALOG_READ");
+      assert.ok(!error.message.includes("private-marker"));
+      assert.ok(!error.message.includes(root));
+
+      return true;
+    });
+  });
+}
+
 test("rejects a missing normative document", async (t) => {
   const root = await fixture(t, (value) => {
     value.requirements[0].document = "missing.md";

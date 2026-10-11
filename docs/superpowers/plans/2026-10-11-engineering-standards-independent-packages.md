@@ -230,7 +230,7 @@ accepted статусы подтверждаются владельцем, не 
 
 Текущее состояние после возобновления:
 
-- Tasks 1–2: metadata exports, namespaces/canonical profile IDs, explicit schema-version diagnostics, bundled schema parity, отсутствие runtime dependency CLI на core и root-symlink regression реализованы. 42 теста проходят на Node 22.13.0 и 24.14.0; проверка включает пакеты, установленные из tarballs через явно offline install после npm ci. Это проверка каталога, не будущих commands/config fixtures.
+- Tasks 1–2: metadata exports, namespaces/canonical profile IDs, explicit schema-version diagnostics, bundled schema parity, отсутствие runtime dependency CLI на core и root-symlink regression реализованы. 45 тестов проходят на Node 22.13.0 и 24.14.0; проверка включает пакеты, установленные из tarballs через явно offline install после npm ci. Это проверка каталога, не будущих commands/config fixtures.
 - Task 3.1: core boundaries/workflow/security тексты и inventory подготовлены в отдельном commit, все proposed.
 - Task 3.2: runtime-boundaries и strict-checking TypeScript подготовлены в отдельном commit, оба proposed.
 - Task 3.3: explicit FSD composition/boundaries подготовлены в отдельном commit, proposed.
