@@ -16,3 +16,8 @@ cannot be symlinks or escape those roots. Hostile concurrent filesystem mutation
 is not a supported isolation guarantee.
 
 The CLI commands, resolver and managed-file writer are not implemented yet.
+
+See [the planned project workflow](docs/workflow.md) for the purpose of the
+generated document, the difference between init and sync, names-only package
+selection, and terminal diff previews. The workflow is a future command
+contract, not evidence that the commands are available.

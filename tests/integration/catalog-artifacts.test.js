@@ -105,6 +105,34 @@ test("packed catalogs export consumer metadata and CLI loads them without worksp
     pathToFileURL(join(cliRoot, "lib/catalog/load.js")).href
   );
 
+  const Ajv = require("ajv");
+  const selection = {
+    schemaVersion: 1,
+    packages: ["@antonsmolko/standards-core"],
+    profiles: ["core"],
+    modules: [],
+    exceptions: [],
+    entrypoints: ["AGENTS.md"],
+  };
+
+  for (const path of [
+    require.resolve("@antonsmolko/standards-core/schemas/project.json"),
+    join(cliRoot, "lib/schemas/project.schema.json"),
+  ]) {
+    const validate = new Ajv().compile(
+      JSON.parse(await readFile(path, "utf8")),
+    );
+
+    assert.equal(validate(selection), true);
+    assert.equal(
+      validate({
+        ...selection,
+        packages: [{ name: "@antonsmolko/standards-core", version: "0.1.0" }],
+      }),
+      false,
+    );
+  }
+
   for (const [, name, namespace, profile] of packages) {
     const metadataPath = require.resolve(`@antonsmolko/${name}/package.json`);
     const manifestPath = require.resolve(`@antonsmolko/${name}/manifest.json`);
