@@ -29,7 +29,7 @@ Task 9 выделен в Task 9.1, чтобы Task 7 не зависел от е
 - Требования имеют стабильные ID, `required|recommended`, `proposed|accepted|deprecated`. Только принятые применимые требования активны; proposed не включаются в обязательные проверки. Релиз 0.1.0 с пустым активным набором запрещён: принятие содержания владельцем — отдельный gate.
 - Потребители фиксируют точные package versions и lockfile; requires между пакетами задаёт semver ranges. Sync/check не выбирают новые версии; init разрешает metadata до writes и показывает конкретные совместимые версии для подтверждения без молчаливых upgrades.
 - Не читать/писать за пределами реального корня; не стирать пользовательские файлы. `check` и dry-run не изменяют проект.
-- Breaking change после 1.0 повышает major, в 0.x — minor с миграцией; editorial — patch. Теги раздельные: `standards-svelte@0.1.0`.
+- Breaking change после 1.0 повышает major, в 0.x — minor с миграцией; editorial — patch. Теги раздельные, по полному npm-имени: `@antonsmolko/standards-svelte@0.1.0` (Changesets).
 - npm-публикация конкретной release-группы требует отдельного одобрения и авторизации; подключение asc-admin — отдельный PR после релиза.
 
 ## Review Focus
@@ -248,13 +248,22 @@ tooling schema при необходимости требует отдельно
 
 ### Task 10: Changesets и проверка release artifacts
 
+После ревью PR #4 начальная настройка Changesets и корневых scripts выделяется
+в отдельный инфраструктурный этап по
+[дизайну monorepo tooling](../specs/2026-10-11-engist-monorepo-tooling-design.md).
+Lerna/Nx отложены до реальных prerequisites и измеримой потребности.
+Этап включает локальные current/projected manifest.requires checks,
+синхронизацию workspace lockfile после version и требования к base ref/history
+для branch-relative status. Полный release preflight ниже остаётся Task 10;
+ни инфраструктурный дизайн, ни его merge не означают завершение Task 10.
+
 **Files:** .changeset/config.json, .changeset/*.md; scripts/releases/{validate,sync-metadata}.js; tests/integration/{releases,artifacts}.test.js; docs/architecture/releases.md.
 
 **Interfaces:** Changesets отвечает за independent versions/changelogs, fixed/linked пусты, access public, baseBranch main, private root не версионируется. Самописный planRelease удалён из плана. validateRelease({ releases, manifests, availableVersions }) -> diagnostics проверяет наши semantic metadata/accepted gates, не повторяет versioning engine. Sync package.version в manifest детерминирован после Changesets version; check отклоняет drift, compatibility ranges не генерируются слепо из runtime dependencies.
 
 - [ ] Написать tests на временной копии workspace, реально выполняющие Changesets: editorial patch, explicit minor для breaking 0.x, major после 1.0; unrelated config version неизменна; несовместимый dependent range требует его change/release; missing published dependency вне группы даёт отказ. Не предполагать специальную 0.x настройку без доказательства — применить minor changeset и проверить реальное поведение выбранной версии.
 - [ ] Запустить node --test tests/integration/releases.test.js tests/integration/artifacts.test.js; Expected: RED отсутствующей release integration.
-- [ ] Закрепить проверенную Changesets версию; добавить semantic preflight, manifest version synchronization и отдельные package tags. Каждая спецификация/конфиг/CLI упаковывается и импортируется в locked consumer; fixtures не публикуются.
+- [ ] Закрепить проверенную Changesets версию; добавить полный semantic preflight поверх локальных workspace проверок, manifest version synchronization, offline lockfile update и отдельные package tags по полному npm-имени. Каждая спецификация/конфиг/CLI упаковывается и импортируется в locked consumer; fixtures не публикуются.
 - [ ] Повторить releases/artifacts/vertical suite; Expected: PASS, провал на пустом active set, mismatched manifest version или non-public access. Для будущего publication workflow предусмотреть npm trusted publishing/provenance; bootstrap первой публикации отдельно согласовать, credentials не копировать.
 - [ ] Закоммитить candidate automation, без npm publish. Источники: https://changesets.dev/guide/config и https://docs.npmjs.com/trusted-publishers/.
 
