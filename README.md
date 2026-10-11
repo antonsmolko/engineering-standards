@@ -1,5 +1,10 @@
 # Engineering standards
 
+Agreed product and future CLI name: **Engist** (`engist init`, `engist sync`,
+`engist check`), with engist.json as the planned project configuration.
+Repository/package renaming and name availability checks are separate work;
+current package identities have not been changed or released.
+
 Composable engineering specifications and independently versioned development tooling.
 
 Implementation is in progress under [issue #1](https://github.com/antonsmolko/engineering-standards/issues/1). No npm release has been published.

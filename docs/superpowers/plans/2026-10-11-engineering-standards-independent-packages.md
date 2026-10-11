@@ -8,6 +8,12 @@
 
 **Architecture:** Корни пакетов вложены по области применения, но каждый имеет собственную версию и публичные exports. Пять пакетов спецификаций содержат Markdown и манифесты; ESLint, Prettier и CLI — отдельные пакеты. CLI проверяет явно установленный набор, собирает профиль чистыми функциями и обновляет только собственные неизменённые файлы.
 
+**Engist amendment:** Имя продукта/команды — Engist, конфигурация — engist.json.
+Init становится мастером выбора и начальной настройки, sync — первой генерацией
+и обновлением. Этот PR меняет дизайн/план, не реализует команды, не переименовывает
+репозиторий/npm-пакеты и не утверждает доступность имени. Tooling setup после
+Task 9 выделен в Task 9.1, чтобы Task 7 не зависел от ещё отсутствующих configs.
+
 **Tech Stack:** JavaScript ESM с JSDoc, npm workspaces, node:test, JSON Schema, semver, ESLint flat config, Prettier; TypeScript и Svelte 5 в fixtures. Локальная исходная среда — Node.js 24.14.0, npm 11.9.0; поддерживаемые диапазоны инструментов фиксируются только после проверки совместимости.
 
 **Spec:** [Согласованная спецификация](../specs/2026-10-11-engineering-standards-design.md).
@@ -19,9 +25,9 @@
 - Восемь пакетов под scope `@antonsmolko`: `standards-core`, `standards-frontend`, `standards-typescript`, `standards-svelte`, `standards-svelte-spa`, `eslint-config`, `prettier-config`, `standards-cli`.
 - Общая архитектура — core; frontend-архитектура — frontend; конкретные FSD-соглашения — Svelte SPA. `docs/architecture` описывает сам репозиторий стандартов.
 - Будущие backend/Go/Vue и модули не создаются как пустые пакеты. Механизм модулей проверяется fixtures, не несогласованными настоящими спецификациями.
-- Спецификации не зависят от CLI/линтеров; CLI не устанавливает все профили транзитивно. Нет postinstall, сетевых обновлений или требований применять конкретный агент/Superpowers.
+- Спецификации не зависят от CLI/линтеров; CLI не устанавливает все профили транзитивно. Нет postinstall или требований применять конкретный агент/Superpowers. Sync/check offline и без установки; только init может явно разрешённо установить подтверждённый набор через выбранный поддерживаемый пакетный менеджер. Установка и её dependency-file changes требуют отдельного согласия.
 - Требования имеют стабильные ID, `required|recommended`, `proposed|accepted|deprecated`. Только принятые применимые требования активны; proposed не включаются в обязательные проверки. Релиз 0.1.0 с пустым активным набором запрещён: принятие содержания владельцем — отдельный gate.
-- Потребители фиксируют точные package versions и lockfile; requires между пакетами задаёт semver ranges. Не выбирать новые версии автоматически.
+- Потребители фиксируют точные package versions и lockfile; requires между пакетами задаёт semver ranges. Sync/check не выбирают новые версии; init разрешает metadata до writes и показывает конкретные совместимые версии для подтверждения без молчаливых upgrades.
 - Не читать/писать за пределами реального корня; не стирать пользовательские файлы. `check` и dry-run не изменяют проект.
 - Breaking change после 1.0 повышает major, в 0.x — minor с миграцией; editorial — patch. Теги раздельные: `standards-svelte@0.1.0`.
 - npm-публикация конкретной release-группы требует отдельного одобрения и авторизации; подключение asc-admin — отдельный PR после релиза.
@@ -57,12 +63,12 @@
 - Requirement: { id, title, level, status, document, verification, requires, refines, replaces, conflicts }. Формат ID — `<NAMESPACE>-<CATEGORY>-<NNN>`; pattern — `^[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)*-[A-Z0-9]+-[0-9]{3}$`. CATEGORY — ровно один непустой ASCII-токен без дефиса, NNN — ровно три цифры; namespace может содержать дефисные токены. Разбор справа: последний токен — номер, предпоследний — категория, все предыдущие вместе — полный namespace. Ownership проверяется точным равенством разобранного namespace и package.namespace, не startsWith и не longest-prefix среди selected catalogs. Поэтому `SVELTE-SPA-ARCH-001` имеет namespace `SVELTE-SPA`, category `ARCH`, number `001` и никогда не принадлежит `SVELTE`. Набор выбранных пакетов не меняет результат разбора. Namespace принадлежит одному npm-имени: CORE, FRONTEND, TS, SVELTE, SVELTE-SPA. Отдельные модули регистрируют собственный namespace. Существующие ID не переименовываются; удалённые ID не переиспользуются.
 - Profile: { id, kind, requires, requirements }. Канонические ID: core, domains/frontend, technologies/typescript, technologies/svelte, stacks/frontend/svelte-spa. Сокращённые старые ID в пока неопубликованном каталоге заменить, не создавать неявных aliases. Все каталоги проверяются на уникальность ID и namespace ownership.
 - Module: { id, requirements, document }; implementation: { id, module, requiresProfiles, requiresModules, requirements, document }. ID будущих модулей namespaced как modules/authentication; модульные требования не смешиваются с общими архитектурными правилами области.
-- Selection engineering-standards.json: { schemaVersion: 1, packages: string[], profiles, modules, exceptions, entrypoints }. packages — уникальные npm-имена, без ручного дублирования версий. Для опубликованных стандартов точные версии прямых dependencies/devDependencies задаёт package.json потребителя; lockfile фиксирует пакетный менеджер. module selection { id, implementation }. Entrypoints — массив относительных POSIX-путей строками, например AGENTS.md и CLAUDE.md, без абсолютных путей, '..' и дубликатов/регистровых aliases.
+- Selection engist.json: { schemaVersion: 1, packages: string[], profiles, modules, exceptions, entrypoints }. packages — уникальные npm-имена спецификаций, без ручного дублирования версий; tooling dependencies не specification catalogs. Для опубликованных стандартов точные версии прямых dependencies/devDependencies задаёт package.json потребителя; lockfile фиксирует пакетный менеджер. module selection { id, implementation }. Entrypoints — массив относительных POSIX-путей строками, например AGENTS.md и CLAUDE.md, без абсолютных путей, '..' и дубликатов/регистровых aliases. Setup plan хранит tooling choices отдельно, без undeclared fields текущей Schema.
 - Exception: { requirement, reason, decision }; reason содержит непробельный текст, decision — HTTPS URL либо существующий относительный Markdown-путь внутри проекта, не произвольный ID. Ссылки в Markdown не разыменовываются по сети CLI.
 - Resolved: { packages: [{ name, version }], profiles, modules, requirements, exceptions }. Здесь версии — фактический результат discovery/валидации metadata, не поле ручного Selection. Каждый profile/module/requirement имеет source: { package, version }; package — точное npm-имя. Ссылки обходятся по canonical ID, одинаковый профиль с двумя source versions отклоняется. Deprecated/proposed не активны.
 - Managed manifest: schemaVersion 1, generatorVersion, packages [{ name, version }], profiles, selectionHash, files [{ path, sha256 }]. selectionHash — SHA-256 канонического Selection JSON: рекурсивно сортировать object keys, set-like arrays строк по значению и объектов по ID/path, без whitespace; дубликаты сначала отклоняются. Версии в Selection отсутствуют: check дополнительно сравнивает точные Resolved packages и generatorVersion с реестром, а не полагается только на selectionHash. Документы генерируются UTF-8/LF; hash содержимого нормализует CRLF/CR в LF, остальные символы/пробелы сохраняет. Check не переписывает CRLF-файлы.
 - Report: { ok, diagnostics, changes, exceptions }; diagnostics [{ code, message }]. Версионируемый каталог кодов — packages/tooling/standards-cli/docs/diagnostics.md. Минимум: UNSUPPORTED_SCHEMA, MANIFEST_SCHEMA, MANIFEST_VERSION, DUPLICATE_ID, REQUIREMENT_NAMESPACE, PACKAGE_METADATA, PACKAGE_MISSING, PACKAGE_VERSION, PROFILE_MISSING, DEPENDENCY_CYCLE, REQUIREMENT_CONFLICT, INVALID_EXCEPTION, UNSAFE_PATH, CASE_COLLISION, DOCUMENT_READ, DOCUMENT_STRUCTURE, MANAGED_CONFLICT, MANAGED_DRIFT, WRITE_FAILED. Не выводить сырые parse/fs errors и содержимое входных файлов.
-- Node discovery: createRequire(resolve(root, 'package.json')).resolve('<pkg>/manifest.json') и resolve('<pkg>/package.json'); safe npm-name validation перед составлением specifier, затем realpath обоих и совпадение физического package root. Выбранные пакеты должны быть явно объявлены прямыми dependencies/devDependencies потребителя, не найдены только транзитивно. Их installed metadata и manifest версии сверяются друг с другом и с точной объявленной версией; несовпадение даёт PACKAGE_VERSION, отсутствие выбранной прямой зависимости — PACKAGE_MISSING. Все spec packages экспортируют оба subpaths. Нет fallback на зависимости CLI или ближайшую другую версию. CLI не устанавливает зависимости и не переписывает package.json/lockfile. Symlink-backed fixtures сохраняют exact declaration; tarball fixtures готовятся пакетным менеджером отдельно от CLI.
+- Node discovery: createRequire(resolve(root, 'package.json')).resolve('<pkg>/manifest.json') и resolve('<pkg>/package.json'); safe npm-name validation перед составлением specifier, затем realpath обоих и совпадение физического package root. Выбранные пакеты должны быть явно объявлены прямыми dependencies/devDependencies потребителя, не найдены только транзитивно. Их installed metadata и manifest версии сверяются друг с другом и с точной объявленной версией; несовпадение даёт PACKAGE_VERSION, отсутствие выбранной прямой зависимости — PACKAGE_MISSING. Все spec packages экспортируют оба subpaths. Нет fallback на зависимости CLI или ближайшую другую версию. Discovery/sync/check не устанавливают зависимости и не переписывают package.json/lockfile; init installer — отдельная граница. Symlink-backed fixtures сохраняют exact declaration; tarball fixtures готовятся пакетным менеджером отдельно от CLI.
 - Package roots, обнаруженные Node, могут быть symlinks наружу в npm workspaces/pnpm; canonical root становится границей read-only загрузки. Внутренние document/metadata paths не выходят за него. Цели записи и entrypoints потребителя имеют отдельную строгую политику: symlinks по пути запрещены.
 - Ajv 8 валидирует schemaVersion 1. Проверять schemaVersion до Ajv, неизвестная версия даёт UNSUPPORTED_SCHEMA. CLI публикует встроенный проверенный snapshot схем core: build/check сравнивает его с каноном, lifecycle-install scripts нет; runtime dependency CLI на profile core убрать при доработке Task 2. Схемы CLI не меняются от случайной версии установленного профиля.
 - Публичные нормативные тексты, README, диагностика и инструкции — English. Рабочие дизайн/план/ревью допустимы по-русски; нормативные переводы пока не поддерживаются. Это явное решение текущей редакции для просмотра владельцем.
@@ -165,24 +171,26 @@ accepted статусы подтверждаются владельцем, не 
 
 ### Task 7: Package discovery, команды и bin
 
-**Files:** packages/tooling/standards-cli/lib/catalog/discover.js; lib/commands/{init,sync,check}.js; bin/engineering-standards.js; tests/{discovery,cli}.test.js; docs/diagnostics.md; CLI package.json.
+**Files:** packages/tooling/standards-cli/lib/catalog/discover.js; lib/commands/{init,sync,check}.js; lib/setup/{plan,install}.js; bin/engist.js; tests/{discovery,cli,setup}.test.js; docs/diagnostics.md; CLI package.json.
 
-**Interfaces:** discoverCatalogs(root, selection) -> Promise<Catalog[]> через createRequire по контракту выше; initProject(root, selection, { dryRun }), syncProject(root, { dryRun, diff }), checkProject(root) -> Promise<Report>. Bin engineering-standards init|sync|check [--dry-run], дополнительно sync --dry-run --diff. root cwd — проект-потребитель, не репозиторий стандартов. --diff допустим только для sync вместе с --dry-run; unified patch выводится в stdout, служебный статус/диагностика — stderr, пустое изменение даёт пустой patch. IDE показывает patch в терминале, без изменений в Git-панели и без нативной diff-интеграции.
+**Interfaces:** discoverCatalogs(root, selection) -> Promise<Catalog[]>; planSetup(root, choices) -> Promise<SetupPlan>; initProject(root, options, adapters) -> Promise<Report>; syncProject(root, { dryRun, diff }), checkProject(root). Init options явно разделяют selection, noninteractive и installation consent; prompt/package-manager adapters injectable для tests. Exact flags и поддерживаемые package managers согласовать до runtime реализации. Bin engist init|sync|check; --dry-run и --diff — sync, --diff только вместе с --dry-run. root cwd — consumer. Stdout diff содержит только unified patch, stderr — diagnostics; IDE preview — терминал. Task 7 реализует standards setup без обещания отсутствующих tooling exports; Task 9.1 подключает готовые configs.
 
-- [ ] Написать tests missing/undeclared package, installed version mismatch с прямой exact package.json declaration, unsupported schema, npm-workspace/pnpm-style external root symlink, exported package metadata, init non-overwrite/repeated init, sync без managed record/manual edit, check/dry-run read-only и отсутствие entrypoint links. Assert.deepEqual(afterCheckFiles, beforeCheckFiles); реальные команды дают 0/1, сообщения не содержат private marker. После обновления dependencies без изменения Selection check даёт MANAGED_DRIFT по source versions; sync сохраняет новые точные версии в документе/реестре.
+- [ ] Написать tests missing/undeclared package, installed version mismatch с прямой exact declaration, unsupported schema, external root symlink и exported metadata. Sync без документа/реестра создаёт оба; existing document без реестра, missing managed output, malformed/partial state и manual edit отклоняются. Check/dry-run read-only, entrypoint links обязательны. После dependency update при неизменном Selection check даёт MANAGED_DRIFT по версиям. Assert.deepEqual(afterCheckFiles, beforeCheckFiles); реальные команды дают 0/1 без private marker.
 - [ ] Запустить node --test packages/tooling/standards-cli/tests/discovery.test.js packages/tooling/standards-cli/tests/cli.test.js; Expected: RED отсутствующих команд.
-- [ ] Скомпоновать Tasks 4–6. Init читает существующий selection; при отсутствии предлагает пример без записи. Первичное подключение создаёт docs/engineering-standards.md с полными принятыми требованиями/источниками и managed record, но не присваивает существующие файлы. Повторный init предлагает sync без обновления; sync без первичного подключения предлагает init и отказывает. AGENTS/CLAUDE links добавляет человек. Validate HTTPS/local decision references и stable diagnostics; не делать сетевых запросов и install.
+- [ ] TDD setup сценариев: existing engist.json, включая invalid JSON, даёт successful no-op до prompts/network; unsafe path/IO errors отказывают. Detected stack подтверждается, unknown stack выбирается вручную; только доступные catalogs/modules. Show plan до writes; cancel ничего не меняет; exclusive create не затирает появившийся во время wizard JSON. Configuration-only не запускает install; без package.json не создаётся приложение. Noninteractive missing choices — отказ без writes/network, defaults не разрешают install.
+- [ ] Реализовать отдельную границу installer: только после явного согласия, exact reviewed versions, supported project package manager; compatible existing deps сохраняются, conflicts/upgrades требуют решения. Нет shell interpolation из choices, raw secret output или blind rollback. Failure сохраняет approved JSON/фактические dependency changes, возвращает nonzero с точными завершёнными шагами; recovery через manager и sync. Unit adapter tests плюс реальный offline-prepared tarball consumer проверяют dependency/lock изменения и отсутствие установки при отказе. Metadata resolution предшествует writes; cancellation до commit не меняет проект.
+- [ ] Скомпоновать Tasks 4–6: sync создаёт docs/engineering-standards.md с полными принятыми текстами и managed record либо обновляет managed output. Init создаёт Selection и после validated install предлагает вызвать обычный sync, не собственный renderer. AGENTS/CLAUDE links добавляет человек. Validate HTTPS/local decision references и stable diagnostics. Sync/check не делают сетевых запросов/установки и не переписывают tooling configs.
 - [ ] Реализовать preview только из безопасного WritePlan после полного preflight: sync --dry-run --diff не пишет документ, реестр, временные файлы, backups, package.json или lockfile. Добавить tests реального unified patch, пустого patch при отсутствии изменений, отказа --diff без --dry-run и сохранения ручных правок без вывода их содержимого. Dry-run проходит те же проверки совместимости/конфликтов, что запись. Обычный sync оставляет tracked diff для review/commit.
 - [ ] Повторить suite; Expected: PASS включая symlink root пакета вне consumer, с запретом internal document escape и consumer writes outside root. Read tracked инструкции после удаления fixture node_modules; нельзя выдавать это за успешный CLI check без dependencies.
 - [ ] Закоммитить commands/bin отдельно.
 
 ### Task 8: Вертикальный срез на реальном tarball consumer
 
-**Files:** tests/integration/vertical-slice.test.js; tests/fixtures/vertical/{package.json,package-lock.json,engineering-standards.json,AGENTS.md}; docs/architecture/vertical-acceptance.md.
+**Files:** tests/integration/vertical-slice.test.js; tests/fixtures/vertical/{package.json,package-lock.json,engist.json,AGENTS.md}; docs/architecture/vertical-acceptance.md.
 
 **Interfaces:** Реальные spec artifacts core/TypeScript/Svelte SPA, CLI и явно необходимые dependency profiles frontend/Svelte. Первые 3 принятых требования фокусируются на core/TypeScript/stack; не удалять зависимости стека ради трёх пакетов.
 
-- [ ] Написать failing external-consumer test: npm pack -> locked install -> resolver -> init renderer -> check. Assert generated accepted IDs >= 3; manual edit приводит к MANAGED_CONFLICT, missing selected package к PACKAGE_MISSING. Workspace checkout не участвует в resolution.
+- [ ] Написать failing external-consumer test: npm pack -> locked install -> resolver -> sync renderer -> check; отдельно init configuration-only и явно разрешённая installer граница Task 7. Assert generated accepted IDs >= 3; manual edit приводит к MANAGED_CONFLICT, missing selected package к PACKAGE_MISSING. Workspace checkout не участвует в resolution.
 - [ ] Запустить node --test tests/integration/vertical-slice.test.js; Expected: RED при отсутствии lock/consumer integration.
 - [ ] Создать committed fixture lockfile с зафиксированными tool dependencies; local tarballs устанавливать через --offline и --ignore-scripts после явной cache preparation. Без заполненного cache offline test обязан отказать, не обращаться к registry неявно. Тестировать на Node 22.13.0/24.14.0, npm consumer и symlink-backed consumer.
 - [ ] Повторить vertical test и npm test; Expected: PASS, не пустая инструкция из реальных accepted catalogs. Дополнить frontend/Svelte нормативные review commits из Task 3 после успешного среза.
@@ -200,6 +208,35 @@ accepted статусы подтверждаются владельцем, не 
 - [ ] Повторить configs tests; Expected: PASS valid и подтверждённый ожидаемый отказ negative. Проверить pack обоих config-пакетов без private fixtures.
 - [ ] Проверить rule-contract coverage: каждый enabled rule сопоставлен с accepted нормативным ID либо explicit tooling-only записью в README/mapping; proposed normative rule не включается. TS 5 и Svelte fixture lockfile обязательны. Корневые ESLint/Prettier configs импортируют собственные пакеты для dogfooding.
 - [ ] Закоммитить только файлы задачи.
+
+### Task 9.1: Подключение ESLint/Prettier через init
+
+**Files:** lib/setup/tooling.js и шаблоны внутри CLI; CLI tests/setup-tooling.test.js;
+tests/integration/setup-tooling.test.js; docs/workflow.md.
+
+**Interfaces:** Task 9 public exports/peer compatibility -> SetupPlan Task 7.
+Отдельная подзадача после Task 9, не скрытая зависимость первой генерации.
+Правила живут в пакетах; init создаёт только небольшие import configs.
+Tool choices не добавляют undeclared fields в текущий Selection; installed
+tool dependencies и локальные imports фиксируют подключение. Новый persistent
+tooling schema при необходимости требует отдельного проектирования.
+
+- [ ] RED tests: отсутствующие configs и scripts создаются только по явному
+      выбору после установки/validation; существующие configs любых поддерживаемых
+      форматов, scripts с теми же именами и пользовательские значения сохраняются.
+      No-install/failed-install не оставляет активных imports/scripts на отсутствующие
+      зависимости. Предлагаются lint, format:check, code:fix; исходники не меняются.
+- [ ] Реализовать подтверждённое initial creation с exclusive create, безопасными
+      путями и manual integration guidance при conflicts. package.json не теряет
+      unrelated поля/scripts; concurrent change даёт отказ, не overwrite. Tool configs
+      после создания project-owned, не managed output. Sync не перезаписывает их.
+- [ ] GREEN external tarball test: generated imports действительно работают с
+      совместимыми installed ESLint/Prettier/plugins; positive и negative code checks
+      относятся к реальным rule IDs. Проверить local overrides/ignores, отсутствие
+      противоречий formatter/lint и сохранение произвольных existing configs.
+      Check не выполняет tools и не доказывает semantic conformity их executable configs.
+- [ ] Закоммитить tooling connection отдельно; не объявлять завершённой по
+      наличию документации или install-only теста.
 
 ### Task 10: Changesets и проверка release artifacts
 
@@ -237,8 +274,14 @@ accepted статусы подтверждаются владельцем, не 
 - Task 3.3: explicit FSD composition/boundaries подготовлены в отдельном commit, proposed.
 - Owner content approval: pending, см. [decision record](../../architecture/content-approval.md). Всего девять proposed требований, ноль accepted. Tasks 3.4–3.5 и 4–11 не выполнены; следующий шаг — содержательное ревью владельца, не релиз.
 
-Уточнения после обсуждения PR #3: реализован names-only формат выбора пакетов в canonical/bundled project schema и тестах. Версии остаются в consumer dependencies и generated provenance. Различия `init`/`sync`, документ требований и `sync --dry-run --diff` описаны в [руководстве CLI](../../../packages/tooling/standards-cli/docs/workflow.md); это контракт будущих Tasks 4–7, не готовые команды.
+Уточнения после обсуждения PR #3: names-only project schema реализована.
+Имя Engist и файл engist.json зафиксированы в дизайне, npm/repository identities
+не переименованы. Init создаёт настройки, optional confirmed install и после
+Task 9.1 — отсутствующие tool connection files/scripts; existing JSON останавливает
+wizard. Sync отвечает за первую генерацию и обновление; --dry-run --diff доступен
+для обоих. [Руководство CLI](../../../packages/tooling/standards-cli/docs/workflow.md)
+описывает эти сценарии; commands/setup/configs остаются будущей реализацией.
 
-Tasks 1–2 выполнены по предыдущей редакции и имеют зелёный baseline; новые contracts требуют их ограниченной доработки. Порядок продолжения: эти доработки -> содержание/owner acceptance Task 3 -> resolver Task 4 -> managed Task 5 -> renderer Task 6 -> команды Task 7 -> реальный vertical slice Task 8 -> configs/content expansion Task 9 -> Changesets Task 10 -> CI Task 11.
+Tasks 1–2 выполнены по предыдущей редакции и имеют зелёный baseline; новые contracts требуют их ограниченной доработки. Порядок продолжения: эти доработки -> содержание/owner acceptance Task 3 -> resolver Task 4 -> managed Task 5 -> renderer Task 6 -> команды/standards setup Task 7 -> реальный vertical slice Task 8 -> configs/content expansion Task 9 -> tooling setup Task 9.1 -> Changesets Task 10 -> CI Task 11.
 
 Ни одно review замечание не считается реализованным в runtime только из-за исправления плана. [Ответы по всем пунктам](2026-10-11-engineering-standards-independent-packages-review-response.md) описывают состояние на момент остановленной review-итерации. Работа возобновлена после merge PR #2; фактические доработки и проверки фиксируются в следующих commits/PR. Canonical документы в engineering-standards; оригинал пользовательского review сохраняется. Owner approval нормативных текстов и разрешение публикации по-прежнему отдельные условия.

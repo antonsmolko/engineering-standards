@@ -2,6 +2,9 @@
 
 Independently versioned package within engineering-standards.
 
+Agreed product/command name: Engist; planned configuration: engist.json.
+The npm package identity remains unchanged pending separate naming checks.
+
 Status: implementation in progress. No release is published yet.
 
 The catalog loader validates schema version 1 using bundled snapshots in
@@ -19,5 +22,7 @@ The CLI commands, resolver and managed-file writer are not implemented yet.
 
 See [the planned project workflow](docs/workflow.md) for the purpose of the
 generated document, the difference between init and sync, names-only package
-selection, and terminal diff previews. The workflow is a future command
+selection, optional confirmed dependency/tool setup, and terminal diff previews.
+Sync performs both first generation and updates; init creates the selection.
+The workflow is a future command
 contract, not evidence that the commands are available.
