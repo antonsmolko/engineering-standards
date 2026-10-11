@@ -34,6 +34,12 @@
 
 16. **Lockfiles/TS/canonical docs. Принято.** Все consumer fixtures, не только configs, используют committed locks и explicit cache preparation; offline исполнение без cache не обещается. TS 5 обязателен. Canonical spec/plan в engineering-standards feature branch; локальные authored copies в asc-admin заменяются указателями, пользовательский review не удаляется. Старый однопакетный план остаётся только указателем, без старых executable задач.
 
-## Точка остановки
+## Повторное ревью PR #2
+
+- [Regex ID](https://github.com/antonsmolko/engineering-standards/pull/2#discussion_r4241515811): ошибка подтверждена запуском — опубликованный pattern с `_` вместо `*` отвергал существующие ID. Pattern исправлен и защищён code span от Markdown-форматирования. С учётом уточнённой грамматики `<NAMESPACE>-<CATEGORY>-<NNN>` требуется непустая отдельная категория; Task 2 содержит положительные/отрицательные parser/Schema cases. После Prettier вручную исполняется pattern из фактического Markdown. Runtime Schema/parser доработка остаётся pending.
+- [Namespace ownership](https://github.com/antonsmolko/engineering-standards/pull/2#discussion_r4241515815): неоднозначность prefix matching устранена. Выбрана грамматика с однословной категорией, но namespace может содержать дефисы: разбор идёт справа и namespace сравнивается целиком с package.namespace. Это делает `SVELTE` и `SVELTE-SPA` различимыми без longest-prefix зависимости от selection. Переименование уже созданного `SVELTE-SPA-ARCH-001` не требуется. Tasks 2/4 содержат проверки этой пары, чужого владельца и отсутствия SPA-каталога. Это исправленный контракт, не заявление о реализованном resolver.
+- Неблокирующая формулировка из общего review: раздел спецификации переименован в «Порядок продолжения после возобновления работы» и прямо требует явного запроса владельца. Просмотр исправленного плана сам по себе не возобновляет разработку.
+
+## Точка остановки после повторного ревью
 
 Новых runtime commits после a9de789 нет. Tasks 1–2 не объявляются выполненными по уточнённым контрактам: exports, engines, namespaces, schemas и отдельный symlink test находятся в remediation списке. Дальнейшие Tasks 3–11 не запускались. Эта итерация заканчивается docs-review commit и сохранением работы; публикация и merge не выполняются.
