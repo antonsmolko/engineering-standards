@@ -24,6 +24,16 @@ matrix is a review aid, not a second source of obligations.
 Both remain proposed. Runtime validation is independent of a consumer's guard
 names; strict checking is independent of formatting preferences.
 
+## Svelte SPA review set
+
+| Topic                            | Proposed ID and document                                                                   | Applicability                                                         | Rationale and verification                                                                                                               |
+| -------------------------------- | ------------------------------------------------------------------------------------------ | --------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Composition and slice boundaries | [SVELTE-SPA-ARCH-001](../../packages/stacks/frontend/svelte-spa/docs/module-boundaries.md) | Svelte 5 / TypeScript SPAs explicitly selecting the FSD stack profile | Make dependencies and ownership explicit; check upward, private and peer imports, plus allowed same-slice and public lower-slice imports |
+
+FSD is a selected stack policy, not universal core architecture. App and Shared
+segments are not business slices. No presenter, state library, guard API or
+application alias is implied. The proposed import checker is not implemented.
+
 ## Local-only topics
 
 | Topic                                                   | Disposition             | Reason                                                                                       |
