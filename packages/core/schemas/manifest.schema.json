@@ -16,12 +16,13 @@
         "version": {
           "type": "string",
           "minLength": 1
+        },
+        "namespace": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)*$"
         }
       },
-      "required": [
-        "name",
-        "version"
-      ]
+      "required": ["name", "version", "namespace"]
     },
     "requires": {
       "type": "array",
@@ -38,10 +39,7 @@
             "minLength": 1
           }
         },
-        "required": [
-          "name",
-          "range"
-        ]
+        "required": ["name", "range"]
       }
     },
     "requirements": {
@@ -52,35 +50,24 @@
         "properties": {
           "id": {
             "type": "string",
-            "minLength": 1
+            "pattern": "^[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)*-[A-Z0-9]+-[0-9]{3}$"
           },
           "title": {
             "type": "string",
             "minLength": 1
           },
           "level": {
-            "enum": [
-              "required",
-              "recommended"
-            ]
+            "enum": ["required", "recommended"]
           },
           "status": {
-            "enum": [
-              "proposed",
-              "accepted",
-              "deprecated"
-            ]
+            "enum": ["proposed", "accepted", "deprecated"]
           },
           "document": {
             "type": "string",
             "minLength": 1
           },
           "verification": {
-            "enum": [
-              "automatic",
-              "manual",
-              "combined"
-            ]
+            "enum": ["automatic", "manual", "combined"]
           },
           "requires": {
             "type": "array",
@@ -137,21 +124,16 @@
         "properties": {
           "id": {
             "type": "string",
-            "minLength": 1
+            "pattern": "^(?:core|(?:domains|technologies)/[a-z][a-z0-9]*(?:-[a-z0-9]+)*|stacks/[a-z][a-z0-9]*(?:-[a-z0-9]+)*/[a-z][a-z0-9]*(?:-[a-z0-9]+)*)$(?![\\s\\S])"
           },
           "kind": {
-            "enum": [
-              "core",
-              "domain",
-              "technology",
-              "stack"
-            ]
+            "enum": ["core", "domain", "technology", "stack"]
           },
           "requires": {
             "type": "array",
             "items": {
               "type": "string",
-              "minLength": 1
+              "pattern": "^(?:core|(?:domains|technologies)/[a-z][a-z0-9]*(?:-[a-z0-9]+)*|stacks/[a-z][a-z0-9]*(?:-[a-z0-9]+)*/[a-z][a-z0-9]*(?:-[a-z0-9]+)*)$(?![\\s\\S])"
             },
             "uniqueItems": true
           },
@@ -164,12 +146,7 @@
             "uniqueItems": true
           }
         },
-        "required": [
-          "id",
-          "kind",
-          "requires",
-          "requirements"
-        ]
+        "required": ["id", "kind", "requires", "requirements"]
       }
     },
     "modules": {
@@ -195,11 +172,7 @@
             "minLength": 1
           }
         },
-        "required": [
-          "id",
-          "requirements",
-          "document"
-        ]
+        "required": ["id", "requirements", "document"]
       }
     },
     "implementations": {

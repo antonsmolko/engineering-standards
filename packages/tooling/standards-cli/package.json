@@ -2,6 +2,9 @@
   "name": "@antonsmolko/standards-cli",
   "version": "0.1.0",
   "type": "module",
+  "engines": {
+    "node": "^22.13.0 || ^24.0.0"
+  },
   "license": "MIT",
   "publishConfig": {
     "access": "public"
@@ -22,7 +25,6 @@
     "bin"
   ],
   "dependencies": {
-    "@antonsmolko/standards-core": "0.1.0",
     "ajv": "8.20.0",
     "semver": "7.8.5"
   }

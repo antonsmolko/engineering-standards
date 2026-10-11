@@ -23,6 +23,7 @@
     "forms"
   ],
   "exports": {
-    "./manifest.json": "./manifest.json"
+    "./manifest.json": "./manifest.json",
+    "./package.json": "./package.json"
   }
 }
