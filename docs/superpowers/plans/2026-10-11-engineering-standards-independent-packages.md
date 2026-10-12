@@ -294,22 +294,45 @@ package.json до/после version:prepare, синхронизацию lockfil
 для branch-relative status. Полный release preflight ниже остаётся Task 10;
 ни инфраструктурный дизайн, ни его merge не означают завершение Task 10.
 
-**Files:** .changeset/config.json, .changeset/*.md; scripts/releases/{validate,sync-metadata}.js; tests/integration/{releases,artifacts}.test.js; tests/fixtures/vertical/{engist.json,package.json,package-lock.json} (закреплённый реальный Selection Task 8.2); docs/architecture/releases.md.
+**Files:** .changeset/config.json, .changeset/*.md; scripts/releases/{validate,sync-metadata}.js; tests/integration/{releases,artifacts}.test.js; tests/fixtures/releases/ (synthetic packages и закреплённые Selection); docs/architecture/releases.md.
 
-**Interfaces:** Changesets отвечает за independent versions/changelogs, fixed/linked пусты, access public, baseBranch main, private root не версионируется. Самописный planRelease удалён из плана. validateRelease({ releases, artifacts, selectionPaths, availableVersions }) -> diagnostics проверяет наши semantic metadata/accepted gates, не повторяет versioning engine. artifacts — реальные проверяемые tarballs; selectionPaths — закреплённые reviewed Selection из Task 8.2 для проверяемой revision. Готовые manifests/checkedProfiles не являются доверенным входом release-команды. Sync package.version в manifest детерминирован после Changesets version; check отклоняет drift, compatibility ranges не генерируются слепо из runtime dependencies.
+**Interfaces:** Changesets отвечает за independent versions/changelogs, fixed/linked пусты, access public, baseBranch main, private root не версионируется. Самописный planRelease удалён из плана. validateRelease({ releases, artifacts, selectionPaths, registry }) -> diagnostics проверяет semantic metadata/accepted gates, не повторяет versioning engine. artifacts — реальные проверяемые tarballs; selectionPaths — закреплённые reviewed Selection для проверяемой revision. Task 10 использует synthetic releases fixtures, не требует будущего Task 8.2; его actual Selection передаётся только при реальном выпуске Task 11.1 после Task 8.2. Готовые manifests/checkedProfiles не являются доверенным входом release-команды. Sync package.version в manifest детерминирован после Changesets version; check отклоняет drift, compatibility ranges не генерируются слепо из runtime dependencies.
 
-`scripts/releases/validate.js` самостоятельно получает catalogs из tarballs
-проверяемой группы и точных необходимых dependency artifacts, установленных
-в изолированный locked consumer без workspace fallback. Metadata/manifests
-проверяются загрузчиком Task 2; закреплённый `tests/fixtures/vertical/engist.json`
-Task 8.2 валидируется, а resolver Task 4 вычисляет реальный accepted-набор
-и dependency closure точных package name/version. `checkedProfiles` — внутренний
-результат этой проверки, не переданный флаг, JSON evidence или готовый список
-от вызывающего кода. Проверка сопоставляет его с metadata именно release
-artifacts; прежние результаты Task 8.2 не заменяют пересчёт для новой revision.
-При отсутствии Selection/profile внутренний массив пуст: применяется
-package-level content gate, а не его отключение. Synthetic tests используют
-изолированные Selection/пакеты и не считаются evidence реального выпуска.
+Production release-команда привязывает `registry` к read-only adapter явно
+настроенного registry: для каждой зависимости вне группы он проверяет exact
+name/version и dist integrity по metadata этого registry. `availableVersions`
+остаётся внутренним результатом проверенных metadata, а не произвольным JSON
+вызывающего кода; cache availability не доказывает публикацию. Missing version,
+network/auth failure, malformed metadata и несовпадение artifact integrity дают
+отказ, без подмены результатом cache или workspace. Test adapter разрешён только
+в явно synthetic test harness; его evidence не допускается в actual preflight.
+
+Read-only registry lookup и подготовка необходимых dependency artifacts/cache —
+явные подготовительные шаги до offline consumer phase. Для каждой revision
+validator создаёт временный consumer с exact зависимостями, заполняет новый lock
+из проверяемых локальных tarballs командой
+`npm install --package-lock-only --offline --ignore-scripts --no-audit --no-fund`,
+затем выполняет `npm ci --offline --ignore-scripts --no-audit --no-fund` с явно
+подготовленным cache. Cache miss блокирует проверку; lifecycle scripts и скрытый
+сетевой fallback запрещены. Package manifest временного consumer указывает
+local tarballs для группы и exact dependency artifacts; исходные fixtures и их
+lockfile не изменяются. Lockfile Task 8.2 — baseline предыдущего accepted среза,
+не install input для новых release versions; новый временный lock связывает
+именно проверяемые artifacts. Временный consumer удаляется и при ошибке.
+
+`scripts/releases/validate.js` самостоятельно получает catalogs из установленных
+release/dependency tarballs без workspace fallback. Загрузчик Task 2 валидирует
+metadata/manifests; validateSelection Task 4 проверяет каждый переданный
+Selection, затем resolver Task 4 вычисляет
+accepted-набор и closure exact package name/version. `checkedProfiles` — внутренний
+результат; переданный флаг, JSON evidence и прежние результаты не заменяют
+пересчёт для каждой revision. Без Selection/profile массив пуст и действует
+package-level content gate. Отсутствующий/пустой `selectionPaths` допускает
+такую проверку без профиля; переданный путь к отсутствующему, нечитаемому или
+невалидному Selection даёт отказ. Actual первый выпуск Task 11.1 / #26 требует
+реальный reviewed Selection Task 8.2, поэтому не может использовать пустой вход.
+Synthetic fixtures проверяют те же алгоритмы,
+но не являются actual content evidence и не разрешают реальную публикацию.
 
 Gate пустого actual accepted-набора применяется к выбранному реальному
 профилю в проверяемой release group, а не отдельно к каждому dependency
@@ -342,9 +365,10 @@ accepted-набор: для неё применяются runtime/config/compati
 
 - [ ] Написать tests на временной копии workspace, реально выполняющие Changesets: editorial patch, explicit minor для breaking 0.x, major после 1.0; unrelated config version неизменна; несовместимый dependent range требует его change/release; missing published dependency вне группы даёт отказ. Не предполагать специальную 0.x настройку без доказательства — применить minor changeset и проверить реальное поведение выбранной версии.
 - [ ] До реализации release validator написать RED fixtures: пакет вне closure только с proposed/deprecated блокируется и при отсутствии профиля, и рядом с проверенным непустым профилем; accepted в manifest выпускаемой версии разрешает отдельный package criterion. Proposed-only dependency внутри closure допустима; stale/поддельный готовый список checkedProfiles не заменяет resolver по release tarballs и закреплённому Selection; изменённая версия/manifest artifact меняет результат пересчёта. CLI/config-only группа не требует искусственных normative IDs; остальные release gates проверяются независимо.
+- [ ] Добавить RED fixtures: offline cache miss, отсутствие lifecycle execution/сетевого fallback, новые tarball versions с несовместимым baseline lock, immutable исходные fixtures и cleanup при ошибке; fake registry metadata, missing/unpublished version, network/auth failure и integrity mismatch отклоняются production adapter, synthetic adapter не допускается в actual запуск.
 - [ ] Запустить node --test tests/integration/releases.test.js tests/integration/artifacts.test.js; Expected: RED отсутствующей release integration.
 - [ ] Закрепить проверенную Changesets версию; добавить полный semantic preflight поверх локальных workspace проверок, manifest version synchronization, offline lockfile update и отдельные package tags по полному npm-имени. Каждая спецификация/конфиг/CLI упаковывается и импортируется в locked consumer; fixtures не публикуются.
-- [ ] Повторить releases/artifacts/vertical suite; Expected: PASS, провал на отсутствии необходимого accepted-набора, пакете без accepted ID вне closure, mismatched manifest version или non-public access. Для будущего publication workflow предусмотреть npm trusted publishing/provenance; bootstrap первой публикации отдельно согласовать, credentials не копировать.
+- [ ] Повторить releases/artifacts suite; Expected: PASS, провал на отсутствии необходимого accepted-набора, пакете без accepted ID вне closure, mismatched manifest version или non-public access. Для будущего publication workflow предусмотреть npm trusted publishing/provenance; bootstrap первой публикации отдельно согласовать, credentials не копировать.
 - [ ] Закоммитить candidate automation, без npm publish. Источники: https://changesets.dev/guide/config и https://docs.npmjs.com/trusted-publishers/.
 
 ### Task 11: CI и передача первого release candidate
@@ -371,8 +395,14 @@ accepted-набор: для неё применяются runtime/config/compati
 `tests/integration/publication.test.js`, `docs/architecture/releases.md`.
 
 **Interfaces:** Проверенная release group и её tarballs из Tasks 10–11,
-read-only validateRelease и явно одобренная revision → публикация выбранных
-пакетов и полные package tags. Bootstrap первой npm публикации проектируется
+validateRelease и явно одобренная revision → публикация выбранных
+пакетов и полные package tags. Подготовка использует synthetic Selection Task 10;
+actual запуск передаёт закреплённый `tests/fixtures/vertical/engist.json` Task 8.2
+после его приёмки и повторяет preflight на публикуемых artifacts с production
+registry adapter. Read-only означает отсутствие изменений рабочего дерева,
+исходных lockfiles и registry: временный consumer/lock разрешён и удаляется при
+успехе или ошибке; registry reads и явная cache preparation допустимы, registry
+writes относятся только к отдельно одобренному publisher. Bootstrap первой npm публикации проектируется
 отдельно с проверкой текущих требований registry; credentials не копируются.
 
 - [ ] Согласовать письменный publication design/plan и npm authorization;

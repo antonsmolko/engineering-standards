@@ -16,37 +16,35 @@ its snapshot against the current branch and GitHub state.
 
 ## Review handling
 
-1. Before editing, read all review sources: inline threads, review summary bodies,
-   PR and issue comments, and user-provided review files. Fetch all pages and
-   explicitly reconcile sections describing the status of previous findings.
-2. Maintain one authoritative review ledger in the PR, issue or review-response
-   document. For each finding record its source link or local path, affected
-   files/issues, disposition and verification evidence. Use these dispositions:
-   open, fixed, declined with rationale, or explicitly agreed deferred work with
-   a reason and follow-up. Preserve confirmed closed findings across rounds;
-   reopen them only when new evidence warrants it.
-
-   Ledger columns: `Source | Finding | Affected files/issues | Disposition | Evidence`.
-
-3. Before changing a contract, identify every affected representation: design,
-   implementation plan, issue criteria/dependencies, handoff and published
-   documentation. Update them together, replace superseded wording and merge
-   duplicate criteria. Keep internal roadmap and review details out of published
-   consumer documentation. Record GitHub issue edits separately from repository
-   changes, and use publicly accessible sources in committed review responses.
-4. Define a changed rule completely before submitting it: inputs, who derives
-   and validates them, success/failure conditions, missing or invalid data,
-   exceptions and scope. Check boundary cases, including an empty selection,
-   extra unrelated packages, stale evidence and mismatched versions where
-   applicable. Preserve existing approval gates; release approval is not a waiver
-   of content or compatibility requirements.
-5. Before each review-fix push, inspect the entire final PR diff against the
-   ledger, including relevant unchanged passages and edited GitHub issues.
-   Verify dependencies and documentation paths/anchors. Report requirements and
-   documentation verification separately from runtime tests; passing tests alone
-   does not establish contract consistency. Every finding must have a correction
-   or an explicit disposition and reply before claiming review work complete.
-6. For changes spanning multiple contracts or implementation stages, obtain an
-   independent review of the complete result. When an independent reviewer is
-   unavailable, record the solo-review limitation explicitly. For small changes,
-   complete the ledger and consistency checklist without an additional reviewer.
+1. Read all pages of inline threads, summary reviews, PR/issue comments and supplied
+   review files; reconcile their previous-finding status against the ledger.
+   Record the sources read and retain reviewer-confirmed closures unless new
+   evidence warrants reopening, with that evidence recorded.
+2. Use the committed review-response document as the canonical ledger when one
+   exists; otherwise use the PR description (or issue body before a PR exists).
+   Replies link to individual ledger entries without adding unrecorded dispositions;
+   record every finding using
+   `Source | Finding | Affected files/issues | Disposition | Evidence`, with public
+   source links in committed responses; local/private inputs must be labelled
+   "private input, not a public basis" and paired with a public actionable source.
+3. Identify and update all affected representations: design, plan, issue criteria
+   and dependencies, handoff and published documentation; replace superseded
+   wording and record GitHub issue edits in a dedicated ledger section.
+   Keep internal roadmap/review details out of published consumer documentation.
+4. Define changed contracts in the design/plan: inputs and their derivation/trust,
+   validation, success/failure, missing/invalid data, exceptions and scope.
+   Record applicable checks for empty inputs, unrelated extras, stale/forged
+   evidence and version mismatches (or reasons they do not apply), preserving
+   content/compatibility gates independently of release approval.
+5. Inspect the complete final PR diff once per review round and, for every changed
+   contract, search relevant unchanged documents and issue bodies for conflicts;
+   verify dependencies and links/anchors and report this separately from runtime
+   tests. Completion requires no open findings and a reply for every thread and
+   summary: each finding is fixed with evidence, declined with rationale, or
+   explicitly agreed deferred work with a reason, owner agreement and follow-up.
+6. Contract/gate changes and requirements spanning documents require independent
+   review of the complete result by another person or a separate agent given
+   artifacts/requirements without the author's working conversation.
+   Only wording, typo or link-only corrections may skip it; when required review
+   is unavailable, explicitly record the solo-review limitation in both ledger
+   evidence and PR description.
