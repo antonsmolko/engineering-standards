@@ -26,7 +26,7 @@ check/CI/publication workflow ещё не реализованы.
 [PR #7](https://github.com/antonsmolko/engineering-standards/pull/7),
 commit `05daff770366a5b039e8dcdc375a9b221192ffd7`.
 Первоначальный снимок был сделан после PR #4; этот handoff актуализирован
-после PR #6 и подтягивания main в ветку PR #5.
+после PR #7 (2026-10-12).
 Основная задача: [issue #1](https://github.com/antonsmolko/engineering-standards/issues/1).
 В ней находится roadmap Tasks 3–11.1: issues #9–#26 с критериями и зависимостями.
 Следующий этап — #9; #8 (Node 26 и TypeScript helpers) закрыта после PR #7.

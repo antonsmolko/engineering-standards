@@ -12,11 +12,15 @@ They do not change actual catalog statuses or satisfy the content release gate.
 
 ## Decisions required before the first accepted-content vertical slice
 
-| Package              | Minimum candidate   | Owner decision | Reviewed revision / decision link |
+| Package              | Requirement ID      | Owner decision | Reviewed revision / decision link |
 | -------------------- | ------------------- | -------------- | --------------------------------- |
 | standards-core       | CORE-ARCH-001       | Pending        | No content approval recorded      |
 | standards-typescript | TS-TYPES-001        | Pending        | No content approval recorded      |
 | standards-svelte-spa | SVELTE-SPA-ARCH-001 | Pending        | No content approval recorded      |
+
+The three rows above are minimum candidates, not predetermined decisions.
+Add a row for every other reviewed ID, including deferred or rejected IDs,
+with its package, owner decision and reviewed revision / decision link.
 
 Other proposed core and TypeScript requirements may be accepted, revised or
 deferred independently. Acceptance of one candidate does not approve its entire

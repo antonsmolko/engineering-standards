@@ -294,6 +294,14 @@ package.json до/после version:prepare, синхронизацию lockfil
 
 **Interfaces:** Changesets отвечает за independent versions/changelogs, fixed/linked пусты, access public, baseBranch main, private root не версионируется. Самописный planRelease удалён из плана. validateRelease({ releases, manifests, availableVersions }) -> diagnostics проверяет наши semantic metadata/accepted gates, не повторяет versioning engine. Sync package.version в manifest детерминирован после Changesets version; check отклоняет drift, compatibility ranges не генерируются слепо из runtime dependencies.
 
+Gate пустого actual accepted-набора применяется к выбранному реальному
+профилю в проверяемой release group, а не отдельно к каждому dependency
+profile package. Для первого среза нужны минимум три применимых accepted ID:
+по одному из core, TypeScript и Svelte SPA. Frontend/Svelte dependency profiles
+могут пока содержать только proposed требования; они не активируются и не
+снимают compatibility/registry/artifact проверки. Tasks 3.4/3.5 не становятся
+скрытыми блокерами первого выпуска.
+
 - [ ] Написать tests на временной копии workspace, реально выполняющие Changesets: editorial patch, explicit minor для breaking 0.x, major после 1.0; unrelated config version неизменна; несовместимый dependent range требует его change/release; missing published dependency вне группы даёт отказ. Не предполагать специальную 0.x настройку без доказательства — применить minor changeset и проверить реальное поведение выбранной версии.
 - [ ] Запустить node --test tests/integration/releases.test.js tests/integration/artifacts.test.js; Expected: RED отсутствующей release integration.
 - [ ] Закрепить проверенную Changesets версию; добавить полный semantic preflight поверх локальных workspace проверок, manifest version synchronization, offline lockfile update и отдельные package tags по полному npm-имени. Каждая спецификация/конфиг/CLI упаковывается и импортируется в locked consumer; fixtures не публикуются.
