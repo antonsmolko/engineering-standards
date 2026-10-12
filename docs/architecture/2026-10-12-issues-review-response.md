@@ -111,3 +111,17 @@ package: либо exact name/version входит в dependency closure пров
 наличие другого непустого профиля в группе не освобождает посторонние пакеты.
 Соответствующие RED fixtures включены в будущий Task 10, без заявления,
 что release validator уже реализован.
+
+В следующем review пояснение задачи-носителя добавлено в тело #9; #23 явно
+зависит от #15 для пересмотра ESLint README. Expected Task 10 больше не
+использует «active» вне Selection; общий дизайн ссылается на package gate
+этого этапа.
+
+Источник checkedProfiles уточнён: release validator самостоятельно загружает
+и валидирует catalogs из настоящих tarballs в изолированном consumer,
+проверяет закреплённый Selection Task 8.2 и запускает resolver Task 4.
+Closure/accepted-набор пересчитываются для каждой release revision; готовые
+или исторические evidence от вызывающего кода не заменяют проверку.
+Files и публичный вход validateRelease отражают artifacts/selectionPaths,
+checkedProfiles остаётся внутренним результатом. RED-сценарии на stale/forged
+evidence включены в будущий план реализации, без заявления о готовом runtime.

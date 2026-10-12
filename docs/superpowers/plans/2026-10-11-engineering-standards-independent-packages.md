@@ -294,9 +294,22 @@ package.json до/после version:prepare, синхронизацию lockfil
 для branch-relative status. Полный release preflight ниже остаётся Task 10;
 ни инфраструктурный дизайн, ни его merge не означают завершение Task 10.
 
-**Files:** .changeset/config.json, .changeset/*.md; scripts/releases/{validate,sync-metadata}.js; tests/integration/{releases,artifacts}.test.js; docs/architecture/releases.md.
+**Files:** .changeset/config.json, .changeset/*.md; scripts/releases/{validate,sync-metadata}.js; tests/integration/{releases,artifacts}.test.js; tests/fixtures/vertical/{engist.json,package.json,package-lock.json} (закреплённый реальный Selection Task 8.2); docs/architecture/releases.md.
 
-**Interfaces:** Changesets отвечает за independent versions/changelogs, fixed/linked пусты, access public, baseBranch main, private root не версионируется. Самописный planRelease удалён из плана. validateRelease({ releases, manifests, availableVersions, checkedProfiles }) -> diagnostics проверяет наши semantic metadata/accepted gates, не повторяет versioning engine. checkedProfiles — результаты проверки реальных Selection/resolver с dependency closure точных package name/version; при отсутствии профиля это пустой массив, а не отключение gate. Sync package.version в manifest детерминирован после Changesets version; check отклоняет drift, compatibility ranges не генерируются слепо из runtime dependencies.
+**Interfaces:** Changesets отвечает за independent versions/changelogs, fixed/linked пусты, access public, baseBranch main, private root не версионируется. Самописный planRelease удалён из плана. validateRelease({ releases, artifacts, selectionPaths, availableVersions }) -> diagnostics проверяет наши semantic metadata/accepted gates, не повторяет versioning engine. artifacts — реальные проверяемые tarballs; selectionPaths — закреплённые reviewed Selection из Task 8.2 для проверяемой revision. Готовые manifests/checkedProfiles не являются доверенным входом release-команды. Sync package.version в manifest детерминирован после Changesets version; check отклоняет drift, compatibility ranges не генерируются слепо из runtime dependencies.
+
+`scripts/releases/validate.js` самостоятельно получает catalogs из tarballs
+проверяемой группы и точных необходимых dependency artifacts, установленных
+в изолированный locked consumer без workspace fallback. Metadata/manifests
+проверяются загрузчиком Task 2; закреплённый `tests/fixtures/vertical/engist.json`
+Task 8.2 валидируется, а resolver Task 4 вычисляет реальный accepted-набор
+и dependency closure точных package name/version. `checkedProfiles` — внутренний
+результат этой проверки, не переданный флаг, JSON evidence или готовый список
+от вызывающего кода. Проверка сопоставляет его с metadata именно release
+artifacts; прежние результаты Task 8.2 не заменяют пересчёт для новой revision.
+При отсутствии Selection/profile внутренний массив пуст: применяется
+package-level content gate, а не его отключение. Synthetic tests используют
+изолированные Selection/пакеты и не считаются evidence реального выпуска.
 
 Gate пустого actual accepted-набора применяется к выбранному реальному
 профилю в проверяемой release group, а не отдельно к каждому dependency
@@ -328,10 +341,10 @@ accepted-набор: для неё применяются runtime/config/compati
 обычное одобрение release group не является исключением из content gates.
 
 - [ ] Написать tests на временной копии workspace, реально выполняющие Changesets: editorial patch, explicit minor для breaking 0.x, major после 1.0; unrelated config version неизменна; несовместимый dependent range требует его change/release; missing published dependency вне группы даёт отказ. Не предполагать специальную 0.x настройку без доказательства — применить minor changeset и проверить реальное поведение выбранной версии.
-- [ ] До реализации release validator написать RED fixtures: пакет вне closure только с proposed/deprecated блокируется и при отсутствии профиля, и рядом с проверенным непустым профилем; accepted в manifest выпускаемой версии разрешает отдельный package criterion. Proposed-only dependency внутри closure допустима; неверная версия profile evidence не подтверждает выпускаемый artifact. CLI/config-only группа не требует искусственных normative IDs; остальные release gates проверяются независимо.
+- [ ] До реализации release validator написать RED fixtures: пакет вне closure только с proposed/deprecated блокируется и при отсутствии профиля, и рядом с проверенным непустым профилем; accepted в manifest выпускаемой версии разрешает отдельный package criterion. Proposed-only dependency внутри closure допустима; stale/поддельный готовый список checkedProfiles не заменяет resolver по release tarballs и закреплённому Selection; изменённая версия/manifest artifact меняет результат пересчёта. CLI/config-only группа не требует искусственных normative IDs; остальные release gates проверяются независимо.
 - [ ] Запустить node --test tests/integration/releases.test.js tests/integration/artifacts.test.js; Expected: RED отсутствующей release integration.
 - [ ] Закрепить проверенную Changesets версию; добавить полный semantic preflight поверх локальных workspace проверок, manifest version synchronization, offline lockfile update и отдельные package tags по полному npm-имени. Каждая спецификация/конфиг/CLI упаковывается и импортируется в locked consumer; fixtures не публикуются.
-- [ ] Повторить releases/artifacts/vertical suite; Expected: PASS, провал на пустом active set, mismatched manifest version или non-public access. Для будущего publication workflow предусмотреть npm trusted publishing/provenance; bootstrap первой публикации отдельно согласовать, credentials не копировать.
+- [ ] Повторить releases/artifacts/vertical suite; Expected: PASS, провал на отсутствии необходимого accepted-набора, пакете без accepted ID вне closure, mismatched manifest version или non-public access. Для будущего publication workflow предусмотреть npm trusted publishing/provenance; bootstrap первой публикации отдельно согласовать, credentials не копировать.
 - [ ] Закоммитить candidate automation, без npm publish. Источники: https://changesets.dev/guide/config и https://docs.npmjs.com/trusted-publishers/.
 
 ### Task 11: CI и передача первого release candidate
