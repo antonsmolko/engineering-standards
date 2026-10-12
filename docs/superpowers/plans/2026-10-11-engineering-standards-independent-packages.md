@@ -357,6 +357,10 @@ read-only validateRelease и явно одобренная revision → публ
 
 Текущее состояние после возобновления:
 
+- PR #7: baseline на Node 26.0.0 (нижняя граница) и 26.11.1 (версия разработки)
+  проверен: typecheck и полный suite проходят, 70/70 на каждой версии.
+  До merge это результаты feature-ветки, а не утверждение о состоянии main.
+
 - Tasks 1–2: metadata exports, namespaces/canonical profile IDs, explicit schema-version diagnostics, bundled schema parity, отсутствие runtime dependency CLI на core и root-symlink regression реализованы. Baseline после PR #3 — 70 тестов (прежнее число 55 устарело); предыдущие прогоны проверили его на Node 22.13.0 и 24.14.0. Эти исторические результаты не заменяют свежий прогон при продолжении. Проверка включает пакеты, установленные из tarballs через явно offline install после npm ci, и names-only selection schema. Это проверка каталога и схемы, не будущих commands/config fixtures.
 - Task 3.1: core boundaries/workflow/security тексты и inventory подготовлены в отдельном commit, все proposed.
 - Task 3.2: runtime-boundaries и strict-checking TypeScript подготовлены в отдельном commit, оба proposed.
