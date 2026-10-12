@@ -14,13 +14,15 @@ issues и PR ссылаются на его записи, отдельные д�
 Прочитаны все страницы inline/review bodies PR #27, bodies/comments задач
 #1, #9–#26 и локальный review file; его путь выше обозначает private input,
 not a public basis. Публичное основание исходных замечаний — комментарии #1.
-Текущий раунд: [release review](https://github.com/antonsmolko/engineering-standards/pull/27#pullrequestreview-5495553414)
+Источники предыдущего раунда: [release review](https://github.com/antonsmolko/engineering-standards/pull/27#pullrequestreview-5495553414)
 и [policy review](https://github.com/antonsmolko/engineering-standards/pull/27#pullrequestreview-5495581265);
 [повторная проверка #17](https://github.com/antonsmolko/engineering-standards/issues/17#issuecomment-6131902274)
 повторяет R1–R3 и получает ответ с теми же записями.
+Текущий раунд: [review 5495739407](https://github.com/antonsmolko/engineering-standards/pull/27#pullrequestreview-5495739407).
 Статусы прежних замечаний сверены с ledger: reviewer-confirmed closures
 сохраняются, включая Expected Task 10, носитель #9, зависимость #23 от #15
-и design anchor, подтверждённые release review. Они не переоткрывались.
+и design anchor, подтверждённые release review. R1–R8 и R10–R18 сохраняются закрытыми. R9 переоткрыт новым замечанием
+об отсутствии carrier policy в AGENTS.md; уточнение и повторное закрытие — R24.
 
 | Source | Finding | Affected files/issues | Disposition | Evidence |
 | --- | --- | --- | --- | --- |
@@ -32,7 +34,7 @@ not a public basis. Публичное основание исходных за�
 | [R6](https://github.com/antonsmolko/engineering-standards/pull/27#discussion_r4251996260) <a name="r6"></a> | Local source contradicted public-source requirement | AGENTS rule 2; this document | fixed | Private input labelled and paired with public actionable source; policy owner decision recorded in #28. |
 | [R7](https://github.com/antonsmolko/engineering-standards/pull/27#discussion_r4251996265) <a name="r7"></a> | Open disposition allowed premature completion | AGENTS rule 5; replies | fixed | Completion forbids open entries; fixed/declined/agreed deferred only; every thread and summary receives entry links. Replies verified after push. |
 | [R8](https://github.com/antonsmolko/engineering-standards/pull/27#discussion_r4251996273) <a name="r8"></a> | Independent review and small changes ambiguous | AGENTS rule 6; verification record | fixed | Different person or separate agent without author conversation; any contract/gate/cross-document requirements require it; only wording/typo/link-only may skip; unavailable limitation recorded in Evidence and PR. |
-| [R9](https://github.com/antonsmolko/engineering-standards/pull/27#pullrequestreview-5495581265) <a name="r9"></a> | Repository policy had no issue or recorded scope decision | AGENTS; #28; PR body | fixed | Owner-requested policy added to #9 review carrier in this PR; #28 records decision and criteria, Refs #28 added; #9 runtime remains unfinished. |
+| [R9](https://github.com/antonsmolko/engineering-standards/pull/27#pullrequestreview-5495581265) <a name="r9"></a> | Repository policy had no issue or recorded scope decision | AGENTS; #28; PR body | fixed | Owner-requested policy added to #9 review carrier in this PR; carrier rule now explicit in AGENTS (R24); #28 records decision and criteria, Refs #28 added; #9 runtime remains unfinished. |
 | [R10](https://github.com/antonsmolko/engineering-standards/pull/27#pullrequestreview-5495581265) <a name="r10"></a> | PR did not follow its own ledger policy | this document; PR body; all replies | fixed | One five-column ledger, individual review links, documentation evidence separate from tests, independent review required; duplicate PR ledger removed. |
 | [R11](https://github.com/antonsmolko/engineering-standards/pull/27#pullrequestreview-5495581265) <a name="r11"></a> | Boundary checks were optional and release-specific | AGENTS rule 4; plan Task 10 | fixed | Generic empty/extra/stale/forged/version cases, N/A requires reasons; design/plan owns contract. Release boundary matrix below retains gates. |
 | [R12](https://github.com/antonsmolko/engineering-standards/pull/27#pullrequestreview-5495581265) <a name="r12"></a> | Whole diff before every push was unbounded | AGENTS rule 5; verification record | fixed | Whole PR once per round plus searches of unchanged representations for every changed contract; affected scope recorded here. |
@@ -42,13 +44,21 @@ not a public basis. Публичное основание исходных за�
 | [R16](https://github.com/antonsmolko/engineering-standards/pull/27#pullrequestreview-5495581265) <a name="r16"></a> | Policy paragraphs were unnecessarily long | AGENTS review rules | fixed | Six numbered rules, two sentences each; concrete boundaries replace vague qualifiers. |
 | [R17](https://github.com/antonsmolko/engineering-standards/pull/27#issuecomment-6132144759) <a name="r17"></a> | Optional absence confused with missing supplied Selection | plan Task 10; #17; boundary matrix | fixed | Omitted/empty paths yield empty closure; missing/unreadable/invalid supplied file rejects; actual #26 independently requires reviewed Task 8.2 Selection. Independent reviewer confirmed closure. |
 | [R18](https://github.com/antonsmolko/engineering-standards/pull/27#issuecomment-6132144759) <a name="r18"></a> | Selection validation assigned to catalog loader | plan Task 10 | fixed | Task 2 validates catalogs/metadata; validateSelection Task 4 validates Selection, then resolver computes closure. Independent reviewer confirmed closure. |
+| [R19](https://github.com/antonsmolko/engineering-standards/pull/27#discussion_r4252138296) <a name="r19"></a> | Actual rejection had no implementing component | plan Tasks 10/11.1; #17/#19/#26 | fixed | Publisher binds production adapter and requireActualProfile true, no input override; validator rejects empty paths/missing real profile/incomplete accepted set/synthetic adapter; RED publisher-not-called cases required. |
+| [R20](https://github.com/antonsmolko/engineering-standards/pull/27#discussion_r4252138304) <a name="r20"></a> | Registry scope and lock provenance unspecified | plan Task 10; #17/#26 | fixed | All direct/transitive external dependencies including third-party packages; every fresh-lock resolved/integrity/name/version compared with checked inventory before ci; extra/unverified entries reject. |
+| [R21](https://github.com/antonsmolko/engineering-standards/pull/27#discussion_r4252138311) <a name="r21"></a> | Unavailable reviewer decision/pre-PR report location unclear | AGENTS rule 6; #28 | fixed | Owner determines unavailability; decision and solo-review limitation in ledger and PR description when one exists. Independent review is available and required here. |
+| [R22](https://github.com/antonsmolko/engineering-standards/pull/27#pullrequestreview-5495739407) <a name="r22"></a> | Policy #28 missing from roadmap and carrier issue | handoff; #1/#9/#28 | fixed | #1 tracks #28 as documentation policy alongside PR27; handoff and #9 link it, preserving runtime order/dependencies. |
+| [R23](https://github.com/antonsmolko/engineering-standards/pull/27#pullrequestreview-5495739407) <a name="r23"></a> | Synthetic Selection described as reviewed actual input | plan Task 10; #17 | fixed | Interface explicitly distinguishes pinned synthetic fixtures and reviewed actual Selection Task8.2. |
+| [R24](https://github.com/antonsmolko/engineering-standards/pull/27#pullrequestreview-5495739407) <a name="r24"></a> | Carrier prefix rule absent; R9 closure challenged | AGENTS branch rule; #9/#28; PR body; R9 | fixed | Owner requested policy and its fixes in this PR; explicit carrier policy now permits retaining prefix for owner-requested scope additions with request/linked issue/prefix recorded in both issues and PR. No merge/release approval inferred. |
+| [R25](https://github.com/antonsmolko/engineering-standards/pull/27#pullrequestreview-5495739407) <a name="r25"></a> | Independent-review report lacked reviewed revision | verification evidence; public review report; PR body | fixed | Report records reviewed Git SHA and actual checks, with separate clean-context agent provenance; GitHub shared account is not presented as a different human reviewer. |
 
 ### GitHub issue edits
 
 These are remote body changes, separate from the repository diff:
 
-- [#17](https://github.com/antonsmolko/engineering-standards/issues/17): synthetic ownership, registry adapter trust, offline/cache and fresh-lock contract, RED cases; dependencies remain #16/#9.
-- [#19](https://github.com/antonsmolko/engineering-standards/issues/19): synthetic preparation versus actual invocation and read-only/temporary-write boundary; dependencies remain #18/#17.
+- [#1](https://github.com/antonsmolko/engineering-standards/issues/1) and [#9](https://github.com/antonsmolko/engineering-standards/issues/9): #28 roadmap and owner-requested scope/carrier-prefix record.
+- [#17](https://github.com/antonsmolko/engineering-standards/issues/17): synthetic ownership, registry scope/trust, lock provenance, actual-mode gate, offline/cache and fresh-lock contract, RED cases; dependencies remain #16/#9.
+- [#19](https://github.com/antonsmolko/engineering-standards/issues/19): synthetic preparation versus actual invocation, mandatory actual entrypoint gate/RED cases and read-only/temporary-write boundary; dependencies remain #18/#17.
 - [#26](https://github.com/antonsmolko/engineering-standards/issues/26): actual Selection after #23, exact-artifact recomputation and offline temporary lock; dependencies remain #19/#23.
 - [#28](https://github.com/antonsmolko/engineering-standards/issues/28): owner-requested policy and explicit same-PR scope decision. It does not close #9 implementation or approve merge/release.
 
@@ -65,6 +75,8 @@ These are remote body changes, separate from the repository diff:
 | Offline cache miss, network/auth/metadata/integrity failure | Reject; explicit preparation and no hidden offline fallback. |
 | New tarball revision versus old baseline lock | New temporary exact-artifact lock; source baseline unchanged; cleanup on success/error. |
 | Actual first release without reviewed Task 8.2 Selection | Reject independently of the optional input for generic technical validation. |
+| Actual entrypoint override of requireActualProfile or adapter | No user override; production adapter constructed internally, actual gate always true; failure never calls publisher. |
+| Unverified third-party/transitive dependency or extra/mismatched lock entry | Reject before ci; every installed artifact and lock entry checked against the verified inventory. |
 | Synthetic fixtures/adapter | Test algorithms only; never actual content/publication evidence. |
 | Review completion | No open ledger findings; all thread/summary replies link to entries. |
 | Independent review | Required here because contracts and cross-document requirements changed. |
@@ -77,7 +89,7 @@ current issue bodies/dependency order, local paths/anchors and this boundary
 matrix. Release/runtime RED cases above are future acceptance requirements,
 not assertions that the validator or publisher is implemented.
 
-Documentation checks: `git diff --check` PASS; 20 local paths/anchors resolve;
+Documentation checks: `git diff --check` PASS; Local paths/anchors resolve;
 issue dependency graph has no cycle and #17/#19/#26 retain their intended order.
 All eight versions remain 0.1.0; actual catalogs remain nine proposed, zero accepted.
 Node 26.11.1: `npm run typecheck` and `npm test` PASS, 70/70 tests, including
@@ -212,3 +224,7 @@ catalogs из tarballs и запускает resolver по переданным 
 подготовка использует synthetic fixtures, actual Selection Task 8.2 применяется
 только в Task 11.1 после #23. Offline/cache, temporary lock и registry trust
 определены в ledger текущего раунда; старые результаты не заменяют пересчёт.
+
+Current-round review evidence is recorded against the committed requirements SHA
+in the closing PR report, with the separate agent's context and command results;
+ledger-only evidence recording does not change the reviewed contracts.

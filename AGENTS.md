@@ -10,6 +10,8 @@ its snapshot against the current branch and GitHub state.
 - Put shared architectural principles in core and domain-specific architecture in its domain.
 - Never copy product-specific or private materials into published packages.
 - Work on an issue-scoped feature branch; commits use `[engineering-standards-<issue>]: <English description>`.
+  Owner-requested scope additions may retain the carrier issue's branch/prefix;
+  record the request, linked issue and retained prefix in both issues and the PR.
 - Write and run a failing behavior test before runtime changes; verify the full suite before claiming completion.
 - Inspect packed artifacts and external consumer fixtures, not only workspace imports.
 - Do not merge or publish without explicit release approval. Do not require a particular AI tool for consumers.
@@ -45,6 +47,6 @@ its snapshot against the current branch and GitHub state.
 6. Contract/gate changes and requirements spanning documents require independent
    review of the complete result by another person or a separate agent given
    artifacts/requirements without the author's working conversation.
-   Only wording, typo or link-only corrections may skip it; when required review
-   is unavailable, explicitly record the solo-review limitation in both ledger
-   evidence and PR description.
+   Only wording, typo or link-only corrections may skip it; when the owner
+   determines required review is unavailable, record that decision and the solo-review limitation in ledger
+   evidence and, when a PR exists, its description.

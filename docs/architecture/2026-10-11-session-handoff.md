@@ -29,6 +29,9 @@ commit `05daff770366a5b039e8dcdc375a9b221192ffd7`.
 после PR #7 (2026-10-12).
 Основная задача: [issue #1](https://github.com/antonsmolko/engineering-standards/issues/1).
 В ней находится roadmap Tasks 3–11.1: issues #9–#26 с критериями и зависимостями.
+[Issue #28](https://github.com/antonsmolko/engineering-standards/issues/28)
+фиксирует политику review по запросу владельца в том же подготовительном PR #27;
+ветка и префикс задачи-носителя #9 сохраняются, runtime #9 этим не завершается.
 Следующий этап — #9; #8 (Node 26 и TypeScript helpers) закрыта после PR #7.
 Frontend/Svelte расширение #24/#25 следует после реального среза #23,
 но не является обязательным блокером первого выпуска #26.
