@@ -5,7 +5,12 @@ catalog requirements are currently proposed. The author must not change their
 status on the strength of schema tests, a generic continuation request or their
 own review.
 
-## Decisions required before the first vertical slice
+On 2026-10-12 the owner chose to finish the technical platform using synthetic
+test data before filling the standards catalogs. Technical CLI, packaging,
+configuration and release-pipeline tests may use test-only accepted requirements.
+They do not change actual catalog statuses or satisfy the content release gate.
+
+## Decisions required before the first accepted-content vertical slice
 
 | Package              | Minimum candidate   | Owner decision | Reviewed revision / decision link |
 | -------------------- | ------------------- | -------------- | --------------------------------- |

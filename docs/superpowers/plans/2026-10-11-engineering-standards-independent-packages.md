@@ -14,7 +14,10 @@ Init становится мастером выбора и начальной н
 репозиторий/npm-пакеты и не утверждает доступность имени. Tooling setup после
 Task 9 выделен в Task 9.1, чтобы Task 7 не зависел от ещё отсутствующих configs.
 
-**Tech Stack:** JavaScript ESM с JSDoc, npm workspaces, node:test, JSON Schema, semver, ESLint flat config, Prettier; TypeScript и Svelte 5 в fixtures. Локальная исходная среда — Node.js 24.14.0, npm 11.9.0; поддерживаемые диапазоны инструментов фиксируются только после проверки совместимости.
+**Tech Stack:** JavaScript ESM с JSDoc, TypeScript test helpers, npm workspaces,
+node:test, JSON Schema, semver, ESLint flat config, Prettier; TypeScript и
+Svelte 5 в fixtures. Node.js 26.11.1 закреплён в .node-version;
+поддерживаемые диапазоны инструментов фиксируются после проверки совместимости.
 
 **Spec:** [Согласованная спецификация](../specs/2026-10-11-engineering-standards-design.md).
 
@@ -80,7 +83,9 @@ SVELTE-SPA-ARCH-001 пока verification manual; combined требует реа
 - Package roots, обнаруженные Node, могут быть symlinks наружу в npm workspaces/pnpm; canonical root становится границей read-only загрузки. Внутренние document/metadata paths не выходят за него. Цели записи и entrypoints потребителя имеют отдельную строгую политику: symlinks по пути запрещены.
 - Ajv 8 валидирует schemaVersion 1. Проверять schemaVersion до Ajv, неизвестная версия даёт UNSUPPORTED_SCHEMA. CLI публикует встроенный проверенный snapshot схем core: build/check сравнивает его с каноном, lifecycle-install scripts нет; runtime dependency CLI на profile core убрать при доработке Task 2. Схемы CLI не меняются от случайной версии установленного профиля.
 - Публичные нормативные тексты, README, диагностика и инструкции — English. Рабочие дизайн/план/ревью допустимы по-русски; нормативные переводы пока не поддерживаются. Это явное решение текущей редакции для просмотра владельцем.
-- Proposed runtime support: Node ^22.13.0 || ^24.0.0, проверка на точных 22.13.0 и 24.14.0 до объявления engines; TypeScript 5 обязателен в fixtures. Пока поддержка Node 22 не проверена, не считать её реализованной.
+- Runtime support: только Node ^26.0.0 по решению владельца 2026-10-12;
+  baseline проверок — 26.11.1. Ранние версии Node не поддерживаются;
+  TypeScript 5 обязателен в fixtures.
 
 ### Task 1: Восемь независимых workspaces
 
@@ -192,7 +197,32 @@ accepted статусы подтверждаются владельцем, не 
 - [ ] Повторить suite; Expected: PASS включая symlink root пакета вне consumer, с запретом internal document escape и consumer writes outside root. Read tracked инструкции после удаления fixture node_modules; нельзя выдавать это за успешный CLI check без dependencies.
 - [ ] Закоммитить commands/bin отдельно.
 
-### Task 8: Вертикальный срез на реальном tarball consumer
+### Task 8: Вертикальные срезы на внешнем tarball consumer
+
+#### Task 8.1: Технический срез до наполнения стандартов
+
+Решение владельца 2026-10-12: сначала техническая платформа, затем содержание.
+Tasks 4–7 используют synthetic fixtures вместо ещё не принятых actual catalogs;
+упоминания accepted IDs из Task 3 в renderer tests на этом этапе относятся
+к fixture IDs. Нормативные manifests в packages не меняют статусы ради тестов.
+
+**Files:** tests/integration/technical-vertical-slice.test.js;
+tests/fixtures/technical-vertical/; docs/architecture/technical-acceptance.md.
+
+**Interfaces:** Реальные CLI tarball и test-only specification tarballs,
+созданные из изолированных каталогов; resolver/renderer/managed/commands Tasks 4–7.
+
+- [ ] Написать и выполнить RED external-consumer test: npm pack → offline
+      install → настоящий bin engist init/sync/check; выбранные synthetic accepted
+      ID попадают в документ, proposed и невыбранные ID не попадают.
+- [ ] Проверить повторный sync, dry-run/diff без записи, manual edit → conflict,
+      missing package и incompatible range → nonzero; после отказа файлы сохранены.
+- [ ] Получить GREEN на Node 26.11.1; test-only пакеты не публикуются,
+      actual package versions/statuses остаются неизменными. Этот срез разрешает
+      продолжать технические Tasks 9–11, но не закрывает content/release gates.
+- [ ] Закоммитить технический срез отдельно от нормативного принятия.
+
+#### Task 8.2: Срез реальных стандартов после их принятия
 
 **Files:** tests/integration/vertical-slice.test.js; tests/fixtures/vertical/{package.json,package-lock.json,engist.json,AGENTS.md}; docs/architecture/vertical-acceptance.md.
 
@@ -200,9 +230,9 @@ accepted статусы подтверждаются владельцем, не 
 
 - [ ] Написать failing external-consumer test: npm pack -> locked install -> resolver -> sync renderer -> check; отдельно init configuration-only и явно разрешённая installer граница Task 7. Assert generated accepted IDs >= 3; manual edit приводит к MANAGED_CONFLICT, missing selected package к PACKAGE_MISSING. Workspace checkout не участвует в resolution.
 - [ ] Запустить node --test tests/integration/vertical-slice.test.js; Expected: RED при отсутствии lock/consumer integration.
-- [ ] Создать committed fixture lockfile с зафиксированными tool dependencies; local tarballs устанавливать через --offline и --ignore-scripts после явной cache preparation. Без заполненного cache offline test обязан отказать, не обращаться к registry неявно. Тестировать на Node 22.13.0/24.14.0, npm consumer и symlink-backed consumer.
+- [ ] Создать committed fixture lockfile с зафиксированными tool dependencies; local tarballs устанавливать через --offline и --ignore-scripts после явной cache preparation. Без заполненного cache offline test обязан отказать, не обращаться к registry неявно. Тестировать на Node 26.11.1, npm consumer и symlink-backed consumer.
 - [ ] Повторить vertical test и npm test; Expected: PASS, не пустая инструкция из реальных accepted catalogs. Дополнить frontend/Svelte нормативные review commits из Task 3 после успешного среза.
-- [ ] Закоммитить срез и acceptance evidence до расширенных configs и release automation.
+- [ ] Закоммитить срез и acceptance evidence до первого нормативного релиза.
 
 ### Task 9: Импортируемые конфигурации отдельными пакетами
 
@@ -291,7 +321,7 @@ package.json до/после version:prepare, синхронизацию lockfil
 - Task 3.1: core boundaries/workflow/security тексты и inventory подготовлены в отдельном commit, все proposed.
 - Task 3.2: runtime-boundaries и strict-checking TypeScript подготовлены в отдельном commit, оба proposed.
 - Task 3.3: explicit FSD composition/boundaries подготовлены в отдельном commit, proposed.
-- Owner content approval: pending, см. [decision record](../../architecture/content-approval.md). Всего девять proposed требований, ноль accepted. Tasks 3.4–3.5 и 4–11 не выполнены; следующий шаг — содержательное ревью владельца, не релиз.
+- Owner content approval: pending, см. [decision record](../../architecture/content-approval.md). Всего девять proposed требований, ноль accepted. Tasks 3.4–3.5 и 4–11 не выполнены; следующий шаг — техническая платформа на fixtures по решению 2026-10-12. Содержательное ревью и нормативный релиз следуют после неё.
 
 Уточнения после обсуждения PR #3: names-only project schema реализована.
 Имя Engist и файл engist.json зафиксированы в дизайне, npm/repository identities
@@ -301,6 +331,14 @@ wizard. Sync отвечает за первую генерацию и обнов
 для обоих. [Руководство CLI](../../../packages/tooling/standards-cli/docs/workflow.md)
 описывает эти сценарии; commands/setup/configs остаются будущей реализацией.
 
-Tasks 1–2 выполнены по предыдущей редакции и имеют зелёный baseline; новые contracts требуют их ограниченной доработки. Порядок продолжения: эти доработки -> содержание/owner acceptance Task 3 -> resolver Task 4 -> managed Task 5 -> renderer Task 6 -> команды/standards setup Task 7 -> реальный vertical slice Task 8 -> configs/content expansion Task 9 -> tooling setup Task 9.1 -> Changesets Task 10 -> CI Task 11.
+Порядок продолжения уточнён владельцем 2026-10-12: отдельный monorepo tooling
+этап → resolver Task 4 → managed Task 5 → renderer Task 6 → команды/standards
+setup Task 7 → технический срез Task 8.1 → configs Task 9 → tooling setup
+Task 9.1 → release preflight Task 10 и CI Task 11 → наполнение/owner acceptance
+Task 3 → реальный accepted-срез Task 8.2 → одобренная публикация.
+Content gates в Tasks 10–11 могут быть реализованы и проверены на fixtures;
+проверка actual catalogs останется блокирующей до принятия настоящих требований.
+Publication workflow требует отдельного дополнения к нынешнему candidate-only
+плану, проверки npm authorization и явного одобрения выпуска.
 
 Ни одно review замечание не считается реализованным в runtime только из-за исправления плана. [Ответы по всем пунктам](2026-10-11-engineering-standards-independent-packages-review-response.md) описывают состояние на момент остановленной review-итерации. Работа возобновлена после merge PR #2; фактические доработки и проверки фиксируются в следующих commits/PR. Canonical документы в engineering-standards; оригинал пользовательского review сохраняется. Owner approval нормативных текстов и разрешение публикации по-прежнему отдельные условия.
