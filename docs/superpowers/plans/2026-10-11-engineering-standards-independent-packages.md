@@ -310,7 +310,7 @@ package.json до/после version:prepare, синхронизацию lockfil
 - [ ] Запустить `node --test tests/integration/public-content.test.js`; Expected: FAIL отсутствующих проверок.
 - [ ] Реализовать document/public-content checks и CI: npm ci, typecheck, tests, lint, formatting, docs и tarball fixtures. Закрепить Actions по проверенным SHA на этапе настройки. Вручную проверить материалы/лицензии; автоматический scanner не доказывает отсутствие всех секретов.
 - [ ] Запустить `npm ci`, `npm run typecheck`, `npm test`, `npm run lint`, `npm run format:check`, `npm run check:docs`, `npm run check:public`, `npm run pack:check`; Expected: exit 0 каждого шага. Перед PR провести whole-branch review по spec/plan; проверить CI PR. Содержательное ревью новых требований, npm authorization и одобрение release group — явные незавершённые условия публикации.
-- [ ] Добавить CONTRIBUTING.md, SECURITY.md и CODEOWNERS (@antonsmolko). PR workflow: permissions contents: read, без pull_request_target и secrets; release OIDC permission только в отдельно одобренном publication job. CI проверяет собственные config imports, Node matrix, locked/offline-prepared consumers и macOS case-insensitive scenario.
+- [ ] Добавить CONTRIBUTING.md, SECURITY.md и CODEOWNERS (@antonsmolko). PR workflow: permissions contents: read, без pull_request_target и secrets; release OIDC permission только в отдельно одобренном publication job. CI проверяет собственные config imports, Node matrix [26.0.0, 26.11.1], locked/offline-prepared consumers и macOS case-insensitive scenario.
 - [ ] После появления реального зелёного verify проверить branch-protection API и согласовать настройку main: PR required, verify required, запрет force-push/delete. Не менять защиту основной ветки в ходе этой остановленной итерации и не заявлять её настроенной.
 - [ ] Закоммитить задачу и передать feature PR на ревью; не merge, не publish и не менять consumer asc-admin в этом PR.
 
@@ -330,16 +330,23 @@ read-only validateRelease и явно одобренная revision → публ
 
 - [ ] Согласовать письменный publication design/plan и npm authorization;
       реализация workflow не считается разрешением выполнить публикацию.
-- [ ] RED → GREEN на fixtures: неодобренная revision/group, провал preflight,
+- [ ] Написать failing tests на fixtures: неодобренная revision/group, провал preflight,
       пустой actual accepted set и несовпадение tarball metadata блокируют
       обращение к publisher; approved synthetic fixture проверяет порядок
       действий с test publisher без отправки пакетов в registry.
+- [ ] Запустить `node --test tests/integration/publication.test.js`;
+      Expected: FAIL отсутствующей publication integration до runtime изменений.
 - [ ] Реализовать отдельный publication workflow с минимальными permissions,
       без публикации из PR job; закрепить Actions и проверить выбранный механизм
       npm authorization/provenance по официальной документации.
 - [ ] Проверить failure/recovery: nonzero перечисляет опубликованные пакеты,
       повторный запуск сверяет registry и не перезаписывает существующие версии.
       Test-only пакеты и private root не входят в release group.
+- [ ] Повторить `node --test tests/integration/publication.test.js`,
+      `npm run typecheck` и `npm test`; Expected: PASS всех сценариев и полного
+      suite, без registry writes тестовых пакетов.
+- [ ] Закоммитить подготовку процесса публикации и её тесты в issue-scoped
+      ветке с префиксом коммита по AGENTS.md; не выполнять npm publish.
 - [ ] Зафиксировать техническую готовность: workflow, preflight, fixture tests
       и инструкция первой публикации проверены. Реальный запуск остаётся pending
       до одобрения владельцем, actual accepted-среза Task 8.2 и npm authorization.
