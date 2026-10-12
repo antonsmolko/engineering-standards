@@ -10,8 +10,9 @@ its snapshot against the current branch and GitHub state.
 - Put shared architectural principles in core and domain-specific architecture in its domain.
 - Never copy product-specific or private materials into published packages.
 - Work on an issue-scoped feature branch; commits use `[engineering-standards-<issue>]: <English description>`.
-  Owner-requested scope additions may retain the carrier issue's branch/prefix;
-  record the request, linked issue and retained prefix in both issues and the PR.
+  The branch's issue is the carrier; each related owner-requested addition needs
+  its own linked issue, recorded with the request and retained prefix in the
+  carrier issue, added issue and PR; carrier criteria and closure are unaffected.
 - Write and run a failing behavior test before runtime changes; verify the full suite before claiming completion.
 - Inspect packed artifacts and external consumer fixtures, not only workspace imports.
 - Do not merge or publish without explicit release approval. Do not require a particular AI tool for consumers.
@@ -48,5 +49,5 @@ its snapshot against the current branch and GitHub state.
    review of the complete result by another person or a separate agent given
    artifacts/requirements without the author's working conversation.
    Only wording, typo or link-only corrections may skip it; when the owner
-   determines required review is unavailable, record that decision and the solo-review limitation in ledger
-   evidence and, when a PR exists, its description.
+   determines required review is unavailable, record that decision and the
+   solo-review limitation in ledger evidence and, when a PR exists, its description.
