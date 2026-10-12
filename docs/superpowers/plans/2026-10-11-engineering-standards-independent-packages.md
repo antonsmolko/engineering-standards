@@ -228,7 +228,7 @@ tests/fixtures/technical-vertical/; docs/architecture/technical-acceptance.md.
 
 **Interfaces:** Реальные spec artifacts core/TypeScript/Svelte SPA, CLI и явно необходимые dependency profiles frontend/Svelte. Первые 3 принятых требования фокусируются на core/TypeScript/stack; не удалять зависимости стека ради трёх пакетов.
 
-- [ ] Написать failing external-consumer test: npm pack -> locked install -> resolver -> sync renderer -> check; отдельно init configuration-only и явно разрешённая installer граница Task 7. Assert generated accepted IDs >= 3; manual edit приводит к MANAGED_CONFLICT, missing selected package к PACKAGE_MISSING. Workspace checkout не участвует в resolution.
+- [ ] Написать failing external-consumer test: npm pack -> locked install -> resolver -> sync renderer -> check; отдельно init configuration-only и явно разрешённая installer граница Task 7. Assert generated applicable accepted IDs include at least one from each of core, TypeScript and Svelte SPA (minimum three); manual edit приводит к MANAGED_CONFLICT, missing selected package к PACKAGE_MISSING. Workspace checkout не участвует в resolution.
 - [ ] Запустить node --test tests/integration/vertical-slice.test.js; Expected: RED при отсутствии lock/consumer integration.
 - [ ] Создать committed fixture lockfile с зафиксированными tool dependencies; local tarballs устанавливать через --offline и --ignore-scripts после явной cache preparation. Без заполненного cache offline test обязан отказать, не обращаться к registry неявно. Тестировать на Node 26.0.0 и 26.11.1, npm consumer и symlink-backed consumer.
 - [ ] Повторить vertical test и npm test; Expected: PASS, не пустая инструкция из реальных accepted catalogs. Дополнить frontend/Svelte нормативные review commits из Task 3 после успешного среза.
@@ -296,7 +296,7 @@ package.json до/после version:prepare, синхронизацию lockfil
 
 **Files:** .changeset/config.json, .changeset/*.md; scripts/releases/{validate,sync-metadata}.js; tests/integration/{releases,artifacts}.test.js; tests/fixtures/releases/ (synthetic packages и закреплённые Selection); docs/architecture/releases.md.
 
-**Interfaces:** Changesets отвечает за independent versions/changelogs, fixed/linked пусты, access public, baseBranch main, private root не версионируется. Самописный planRelease удалён из плана. validateRelease({ releases, artifacts, selectionPaths, registry, requireActualProfile = false }) -> diagnostics проверяет semantic metadata/accepted gates, не повторяет versioning engine. artifacts — реальные проверяемые tarballs; selectionPaths — закреплённые synthetic Selection технических fixtures либо reviewed actual Selection Task 8.2 для проверяемой revision. Task 10 использует synthetic releases fixtures, не требует будущего Task 8.2; его actual Selection передаётся только при реальном выпуске Task 11.1 после Task 8.2. Готовые manifests/checkedProfiles не являются доверенным входом release-команды. Sync package.version в manifest детерминирован после Changesets version; check отклоняет drift, compatibility ranges не генерируются слепо из runtime dependencies.
+**Interfaces:** Changesets отвечает за independent versions/changelogs, fixed/linked пусты, access public, baseBranch main, private root не версионируется. Самописный planRelease удалён из плана. validateRelease({ releases, artifacts, selectionPaths, registry }) -> diagnostics проверяет semantic metadata/accepted gates, не повторяет versioning engine. artifacts — реальные проверяемые tarballs; selectionPaths — закреплённые synthetic Selection технических fixtures либо reviewed actual Selection Task 8.2 для проверяемой revision. Task 10 использует synthetic releases fixtures, не требует будущего Task 8.2; его actual Selection передаётся только при реальном выпуске Task 11.1 после Task 8.2. Готовые manifests/checkedProfiles не являются доверенным входом release-команды. Sync package.version в manifest детерминирован после Changesets version; check отклоняет drift, compatibility ranges не генерируются слепо из runtime dependencies.
 
 Production release-команда привязывает `registry` к read-only adapter явно
 настроенного registry: охват — все устанавливаемые прямые и транзитивные
@@ -323,8 +323,7 @@ lockfile не изменяются. Lockfile Task 8.2 — baseline предыд�
 именно проверяемые artifacts. До `npm ci` validator сверяет dependency entries
 нового lock (`resolved`, `integrity`, name/version) с проверенным inventory;
 root entry сверяется с сгенерированным temporary package.json.
-Локальные release tarballs — с audited group, validation-only candidate tarballs
-acceptance consumer — с reviewed inventory Task 8.2, остальные — с registry metadata
+Локальные release tarballs — с проверенной группой, остальные — с registry metadata
 и проверенными dependency tarballs. Local file resolved сопоставляется с путём
 проверенного tarball, registry URL — с dist.tarball; дополнительные/несовпадающие
 записи и artifacts из cache без проверки отклоняются. Временный consumer
@@ -351,33 +350,19 @@ accepted-набор и closure exact package name/version. `checkedProfiles` —
 пересчёт для каждой revision. Без Selection/profile массив пуст и действует
 package-level content gate. Отсутствующий/пустой `selectionPaths` допускает
 такую проверку без профиля; переданный путь к отсутствующему, нечитаемому или
-невалидному Selection даёт отказ. Actual первый выпуск Task 11.1 / #26 требует
-реальный reviewed Selection Task 8.2, поэтому не может использовать пустой вход.
-`requireActualProfile: true` включает обязательный actual gate внутри
-validateRelease: пустой selectionPaths, отсутствие пересчитанного checked real
-profile с применимым accepted ID по одному из каждого: core, TypeScript,
-Svelte SPA, либо не-production adapter дают diagnostics отказа. Default false применяется
-к technical/generic preflight и последующим release groups, не являясь
-разрешением публикации. Флаг true нужен первому выпуску #26; последующие
-CLI/config-only группы не требуют нормативного профиля, а specification groups
-сохраняют package-level content gate ниже, без общего требования трёх IDs.
-
-Для первого CLI/config-only выпуска actual profile проверяется отдельно от
-runtime dependencies: `artifacts` содержит validation-only spec tarballs
-core/TypeScript/Svelte SPA и declared profile dependencies из reviewed Task 8.2
-candidate для одобренной release revision. Они устанавливаются в отдельный
-acceptance consumer по тем же offline/lock checks; эти local candidate artifacts
-не обязаны уже быть опубликованы, не входят автоматически в release group и
-не являются runtime dependencies CLI/config. Их прочие внешние зависимости
-по-прежнему требуют registry metadata; candidate role не освобождает runtime
-dependencies release group от проверки публикации. Совпадающий package из release
-и acceptance inventory обязан иметь ту же exact version/integrity, иначе отказ.
-Real profile определяется по pinned Selection и spec artifacts reviewed Task 8.2
-сверенным с одобренной revision/content decisions; пользовательский real flag
-или fixtures не заменяют это основание. Production adapter выдаётся внутренней
-registry factory как opaque handle, зарегистрированный в module-private
-реестре factory и проверяемый validator;
-поле kind: production в caller JSON таким доказательством не является.
+невалидному Selection даёт отказ. Первый нормативный выпуск Task 11.1 / #26
+требует реальный reviewed Selection Task 8.2 и не допускает пустой вход.
+CLI/config-only preflight не требует нормативного Selection; prerequisite
+реального среза Task 8.2 для первого одобренного запуска #26 сохраняется.
+Первый нормативный выпуск должен опубликовать проверенный реальный spec-профиль
+с active accepted ID по одному из core, TypeScript и Svelte SPA (минимум три).
+Это условие применяется к первому выпуску любых specification packages.
+Предшествующая публикация только CLI/config не закрывает этот gate. Он остаётся
+обязательным до подтверждённой публикации такого профиля; subsequent/first flags
+из CLI/env или caller evidence не могут его снять. При независимых последующих
+релизах specification packages сохраняют package-level gate ниже; CLI/config
+не получают искусственных нормативных IDs. Проверка provenance источников
+registry/profile — требование; механизм задаётся publication design Task 11.1.
 Synthetic fixtures проверяют те же алгоритмы,
 но не являются actual content evidence и не разрешают реальную публикацию.
 
@@ -441,46 +426,49 @@ accepted-набор: для неё применяются runtime/config/compati
 **Files:** `.github/workflows/publish.yml`, `scripts/releases/publish.js`,
 `tests/integration/publication.test.js`, `docs/architecture/releases.md`.
 
-**Interfaces:** Проверенная release group и её tarballs из Tasks 10–11,
-validateRelease и явно одобренная revision → публикация выбранных
-пакетов и полные package tags. Подготовка использует synthetic Selection Task 10;
-actual запуск передаёт закреплённый `tests/fixtures/vertical/engist.json` Task 8.2
-после его приёмки и повторяет preflight на публикуемых artifacts с production
-registry adapter. Public entrypoint `scripts/releases/publish.js` создаёт
-production adapter/publisher; CLI/env/input не может их заменить или отключить
-gates. Внутренняя `createPublishRun({ registry, publisher })` — test seam для
-оркестрации, не CLI option: тесты используют fake registry transport и test
-publisher, сохраняя контракт production adapter factory; registry writes нет.
-Synthetic adapter проверяется отдельным negative validator test при
-requireActualProfile: true, а не подменой через CLI.
+**Interfaces:** Проверенная release group и tarballs из Tasks 10–11,
+явно одобренная revision/group и npm authorization → публикация выбранных
+пакетов и полные package tags. Preflight specification-группы проверяет catalogs
+и каждый переданный Selection на публикуемых artifacts; без Selection действуют
+package-level gates Task 10. Первый нормативный выпуск требует reviewed Selection
+реального Task 8.2; historical/caller flags не заменяют пересчёт.
+CLI/config-only группа проверяет runtime/config artifacts
+без искусственного Selection; prerequisite actual Task 8.2 для #26 и первый
+нормативный publication gate сохраняются. CLI/env не может подменять dependencies или
+отключать content/compatibility/registry/artifact/approval gates. Tests используют
+изолированные IO и test publisher без registry writes; test evidence никогда
+не разрешает production publication.
 
-First-release workflow #26 задаёт requireActualProfile: true. Последующий
-workflow может false только после сверки успешного первого выпуска по approved
-release evidence и exact registry versions/integrities; отсутствие или ошибка
-такой сверки блокирует переход, частичный первый выпуск остаётся first mode.
-Режим задаёт workflow по этой проверке, не пользовательский CLI/env switch.
-При diagnostics отказа publisher не вызывается. Первый CLI/config-only выпуск
-проверяет Task 8.2 через validation-only artifacts, последующие такие группы
-не получают normative accepted gate. Runtime/content approval и обычный
-package-level gate specification packages сохраняются для каждого выпуска.
-Read-only означает отсутствие изменений рабочего дерева,
-исходных lockfiles и registry: временный consumer/lock разрешён и удаляется при
-успехе или ошибке; registry reads и явная cache preparation допустимы, registry
-writes относятся только к отдельно одобренному publisher. Bootstrap первой npm публикации проектируется
-отдельно с проверкой текущих требований registry; credentials не копируются.
+До runtime нужен отдельно одобренный publication design/plan: он определяет
+компонент enforcement первого нормативного gate, разделение production/test
+источников, provenance registry/profile и publication evidence (создатель,
+хранение, привязка к workflow run, approved revision/group и artifact digests).
+Наличие exact versions/integrities в registry или caller evidence-файл не
+доказывает одобрение и выполнение первого нормативного выпуска;
+конкретный механизм доказательства выбирается в этом дизайне.
+Первый нормативный gate сохраняется независимо от ранних CLI/config публикаций.
 
-- [ ] Согласовать письменный publication design/plan и npm authorization;
-      реализация workflow не считается разрешением выполнить публикацию.
-- [ ] Написать failing tests на fixtures: неодобренная revision/group, провал preflight,
-      пустой actual accepted set и несовпадение tarball metadata блокируют
-      обращение к publisher. RED-кейсы actual entrypoint: отсутствующий/пустой
-      selectionPaths, supplied missing/invalid file, отсутствие checked real
-      profile или одного из трёх accepted компонентов и попытка отключить first-release
-      gate блокируют publisher. Отдельный validator test отклоняет synthetic adapter
-      в first mode; internal seam с test publisher проверяет положительный порядок
-      без registry writes. RED/положительные пары: first CLI-only с отдельными actual
-      profile artifacts, subsequent CLI-only без них, independent specification
-      package с accepted manifest; missing first-release evidence блокирует subsequent mode.
+Read-only preflight не меняет working tree, source locks и registry: временный
+consumer/lock допускается с cleanup при успехе/ошибке; registry reads/cache
+preparation явные. Registry writes выполняет только одобренный publisher.
+Bootstrap первой npm публикации и актуальные registry requirements входят
+в отдельный design; credentials не копируются.
+
+- [ ] Согласовать publication design/plan и npm authorization до runtime;
+      создание workflow не считается разрешением публикации.
+- [ ] RED/positive pairs: неодобренная revision/group, validation failure,
+      tarball metadata mismatch и отсутствие любого из трёх required accepted
+      компонентов при первом нормативном выпуске блокируют publisher.
+      CLI/config-only публикация не позволяет затем выпустить один spec-package
+      в обход первого normative profile gate; после подтверждённого выпуска
+      профиля independent packages сохраняют свои package-level gates.
+- [ ] Тестировать production/test separation: fake registry transport, fake
+      profile provenance и caller real/production flags не могут разрешить actual
+      publication; isolated positive harness использует test publisher без writes.
+- [ ] Forged/manual evidence и registry presence без подтверждённого workflow run
+      и approval не снимают первый normative gate; failure/partial publication
+      не считается его завершением. Способ test isolation/evidence verification
+      фиксируется в одобренном design, затем проверяется behavior tests.
 - [ ] Запустить `node --test tests/integration/publication.test.js`;
       Expected: FAIL отсутствующей publication integration до runtime изменений.
 - [ ] Реализовать отдельный publication workflow с минимальными permissions,

@@ -17,6 +17,18 @@ its snapshot against the current branch and GitHub state.
 - Inspect packed artifacts and external consumer fixtures, not only workspace imports.
 - Do not merge or publish without explicit release approval. Do not require a particular AI tool for consumers.
 
+## Task scope
+
+- Start infrastructure work from official documentation and a maintained upstream
+  example. Cite the baseline and identify the concrete project requirement before
+  proposing custom tooling; reuse supported upstream behavior where it fits.
+- Give each implementation PR one independently verifiable outcome. If review
+  introduces another outcome, revise the issue scope and split the work before
+  extending implementation; retain already agreed requirements and approval gates.
+- Keep future tasks at the level of requirements and acceptance criteria.
+  Choose their implementation mechanisms in their own design/implementation PR,
+  supported by a current use case; do not add speculative APIs during review fixes.
+
 ## Review handling
 
 1. Read all pages of inline threads, summary reviews, PR/issue comments and supplied
