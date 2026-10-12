@@ -302,6 +302,19 @@ profile package. Для первого среза нужны минимум тр
 снимают compatibility/registry/artifact проверки. Tasks 3.4/3.5 не становятся
 скрытыми блокерами первого выпуска.
 
+Отсутствие необходимого actual accepted-набора явно блокирует выпуск.
+Если specification release group не участвует в проверенном реальном профиле,
+каждый выпускаемый specification package должен иметь применимые active
+accepted требования; proposed-only specification group блокируется, а не
+проходит gate из-за отсутствия профиля. Это не запрещает proposed-only
+dependency profiles в проверенном непустом срезе, описанном выше.
+Группа только из CLI/config packages не получает искусственный normative
+accepted-набор: для неё применяются runtime/config/compatibility/artifact
+проверки. Условия первого выпуска #26 — actual-срез Task 8.2, authorization
+и явное release approval — сохраняются независимо от состава группы.
+Изменение этих нормативных условий требует отдельного пересмотра design/plan;
+обычное одобрение release group не является исключением из content gates.
+
 - [ ] Написать tests на временной копии workspace, реально выполняющие Changesets: editorial patch, explicit minor для breaking 0.x, major после 1.0; unrelated config version неизменна; несовместимый dependent range требует его change/release; missing published dependency вне группы даёт отказ. Не предполагать специальную 0.x настройку без доказательства — применить minor changeset и проверить реальное поведение выбранной версии.
 - [ ] Запустить node --test tests/integration/releases.test.js tests/integration/artifacts.test.js; Expected: RED отсутствующей release integration.
 - [ ] Закрепить проверенную Changesets версию; добавить полный semantic preflight поверх локальных workspace проверок, manifest version synchronization, offline lockfile update и отдельные package tags по полному npm-имени. Каждая спецификация/конфиг/CLI упаковывается и импортируется в locked consumer; fixtures не публикуются.

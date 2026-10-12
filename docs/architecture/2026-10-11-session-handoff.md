@@ -140,8 +140,8 @@ Tooling config-пакеты пока skeletons. Не объявлять Tasks 4�
   и проверку lockfile; не обещать все alias/overrides/catalog комбинации.
 - Существующий валидный engist.json: no overwrite/no wizard, exit 0.
   Предложенное уточнение для invalid/unreadable/unsafe файла: отказ без записи,
-  prompts или сети. Сейчас workflow всё ещё описывает successful no-op для
-  invalid JSON; перед Task 7 согласовать изменение и синхронизировать документы.
+  prompts или сети. Workflow и design описывают invalid JSON как открытый
+  контракт; перед Task 7 согласовать exit status и синхронизировать документы.
 - Будущее workflow-руководство попадает в files allowlist CLI; перед публикацией
   решить, оставлять ли честно маркированную документацию ещё отсутствующих команд.
 

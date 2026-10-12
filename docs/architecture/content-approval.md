@@ -10,7 +10,7 @@ test data before filling the standards catalogs. Technical CLI, packaging,
 configuration and release-pipeline tests may use test-only accepted requirements.
 They do not change actual catalog statuses or satisfy the content release gate.
 
-## Decisions required before the first accepted-content vertical slice
+## Content decisions
 
 | Package              | Requirement ID      | Owner decision | Reviewed revision / decision link |
 | -------------------- | ------------------- | -------------- | --------------------------------- |
@@ -18,7 +18,9 @@ They do not change actual catalog statuses or satisfy the content release gate.
 | standards-typescript | TS-TYPES-001        | Pending        | No content approval recorded      |
 | standards-svelte-spa | SVELTE-SPA-ARCH-001 | Pending        | No content approval recorded      |
 
-The three rows above are minimum candidates, not predetermined decisions.
+The three rows above are minimum candidates for the first accepted-content
+vertical slice, not predetermined decisions. That slice requires at least one
+accepted, applicable requirement from each of the three packages.
 Add a row for every other reviewed ID, including deferred or rejected IDs,
 with its package, owner decision and reviewed revision / decision link.
 
