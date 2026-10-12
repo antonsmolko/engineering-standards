@@ -28,6 +28,10 @@ versions are not supported. Test helpers use TypeScript: run `npm run typecheck`
 to check their types and `npm test` to run them with Node's built-in TypeScript
 support. Published packages retain their current JavaScript/Markdown/JSON formats.
 
+With nvm, select the pinned version explicitly:
+`nvm install "$(cat .node-version)"` followed by `nvm use "$(cat .node-version)"`.
+nvm does not read `.node-version` automatically.
+
 The technical platform is developed on synthetic test data before standards
 content is filled and accepted. Fixture acceptance does not approve actual
 catalog requirements or authorize a release.

@@ -84,7 +84,8 @@ SVELTE-SPA-ARCH-001 пока verification manual; combined требует реа
 - Ajv 8 валидирует schemaVersion 1. Проверять schemaVersion до Ajv, неизвестная версия даёт UNSUPPORTED_SCHEMA. CLI публикует встроенный проверенный snapshot схем core: build/check сравнивает его с каноном, lifecycle-install scripts нет; runtime dependency CLI на profile core убрать при доработке Task 2. Схемы CLI не меняются от случайной версии установленного профиля.
 - Публичные нормативные тексты, README, диагностика и инструкции — English. Рабочие дизайн/план/ревью допустимы по-русски; нормативные переводы пока не поддерживаются. Это явное решение текущей редакции для просмотра владельцем.
 - Runtime support: только Node ^26.0.0 по решению владельца 2026-10-12;
-  baseline проверок — 26.11.1. Ранние версии Node не поддерживаются;
+  проверяются нижняя граница 26.0.0 и версия разработки 26.11.1.
+  Ранние major-версии Node не поддерживаются;
   TypeScript 5 обязателен в fixtures.
 
 ### Task 1: Восемь независимых workspaces
@@ -217,7 +218,7 @@ tests/fixtures/technical-vertical/; docs/architecture/technical-acceptance.md.
       ID попадают в документ, proposed и невыбранные ID не попадают.
 - [ ] Проверить повторный sync, dry-run/diff без записи, manual edit → conflict,
       missing package и incompatible range → nonzero; после отказа файлы сохранены.
-- [ ] Получить GREEN на Node 26.11.1; test-only пакеты не публикуются,
+- [ ] Получить GREEN на Node 26.0.0 и 26.11.1; test-only пакеты не публикуются,
       actual package versions/statuses остаются неизменными. Этот срез разрешает
       продолжать технические Tasks 9–11, но не закрывает content/release gates.
 - [ ] Закоммитить технический срез отдельно от нормативного принятия.
@@ -230,7 +231,7 @@ tests/fixtures/technical-vertical/; docs/architecture/technical-acceptance.md.
 
 - [ ] Написать failing external-consumer test: npm pack -> locked install -> resolver -> sync renderer -> check; отдельно init configuration-only и явно разрешённая installer граница Task 7. Assert generated accepted IDs >= 3; manual edit приводит к MANAGED_CONFLICT, missing selected package к PACKAGE_MISSING. Workspace checkout не участвует в resolution.
 - [ ] Запустить node --test tests/integration/vertical-slice.test.js; Expected: RED при отсутствии lock/consumer integration.
-- [ ] Создать committed fixture lockfile с зафиксированными tool dependencies; local tarballs устанавливать через --offline и --ignore-scripts после явной cache preparation. Без заполненного cache offline test обязан отказать, не обращаться к registry неявно. Тестировать на Node 26.11.1, npm consumer и symlink-backed consumer.
+- [ ] Создать committed fixture lockfile с зафиксированными tool dependencies; local tarballs устанавливать через --offline и --ignore-scripts после явной cache preparation. Без заполненного cache offline test обязан отказать, не обращаться к registry неявно. Тестировать на Node 26.0.0 и 26.11.1, npm consumer и symlink-backed consumer.
 - [ ] Повторить vertical test и npm test; Expected: PASS, не пустая инструкция из реальных accepted catalogs. Дополнить frontend/Svelte нормативные review commits из Task 3 после успешного среза.
 - [ ] Закоммитить срез и acceptance evidence до первого нормативного релиза.
 
@@ -303,15 +304,47 @@ package.json до/после version:prepare, синхронизацию lockfil
 
 **Files:** `.github/workflows/{ci,release-candidate}.yml`, `scripts/{check-documents,check-public-content}.js`, `tests/integration/public-content.test.js`, root scripts, `docs/architecture/release-checklist.md`.
 
-**Interfaces:** Scripts `test`, `lint`, `format:check`, `check:docs`, `check:public`, `pack:check`. Release candidate workflow проверяет конкретную группу и сохраняет отдельные tarballs, но не делает npm publish.
+**Interfaces:** Scripts `test`, `typecheck`, `lint`, `format:check`, `check:docs`, `check:public`, `pack:check`. Release candidate workflow проверяет конкретную группу и сохраняет отдельные tarballs, но не делает npm publish. Typecheck обязателен в verify job; ошибка типов блокирует подготовку release candidate.
 
 - [ ] Добавить tests отсутствующей локальной ссылки, duplicate ID и маркера private key в синтетическом fixture: `assert.equal(report.ok, false)`. Проверить отсутствие publish команды в candidate workflow и allowlist публикации каждого пакета.
 - [ ] Запустить `node --test tests/integration/public-content.test.js`; Expected: FAIL отсутствующих проверок.
-- [ ] Реализовать document/public-content checks и CI: npm ci, tests, lint, formatting, docs и tarball fixtures. Закрепить Actions по проверенным SHA на этапе настройки. Вручную проверить материалы/лицензии; автоматический scanner не доказывает отсутствие всех секретов.
-- [ ] Запустить `npm ci`, `npm test`, `npm run lint`, `npm run format:check`, `npm run check:docs`, `npm run check:public`, `npm run pack:check`; Expected: exit 0 каждого шага. Перед PR провести whole-branch review по spec/plan; проверить CI PR. Содержательное ревью новых требований, npm authorization и одобрение release group — явные незавершённые условия публикации.
+- [ ] Реализовать document/public-content checks и CI: npm ci, typecheck, tests, lint, formatting, docs и tarball fixtures. Закрепить Actions по проверенным SHA на этапе настройки. Вручную проверить материалы/лицензии; автоматический scanner не доказывает отсутствие всех секретов.
+- [ ] Запустить `npm ci`, `npm run typecheck`, `npm test`, `npm run lint`, `npm run format:check`, `npm run check:docs`, `npm run check:public`, `npm run pack:check`; Expected: exit 0 каждого шага. Перед PR провести whole-branch review по spec/plan; проверить CI PR. Содержательное ревью новых требований, npm authorization и одобрение release group — явные незавершённые условия публикации.
 - [ ] Добавить CONTRIBUTING.md, SECURITY.md и CODEOWNERS (@antonsmolko). PR workflow: permissions contents: read, без pull_request_target и secrets; release OIDC permission только в отдельно одобренном publication job. CI проверяет собственные config imports, Node matrix, locked/offline-prepared consumers и macOS case-insensitive scenario.
 - [ ] После появления реального зелёного verify проверить branch-protection API и согласовать настройку main: PR required, verify required, запрет force-push/delete. Не менять защиту основной ветки в ходе этой остановленной итерации и не заявлять её настроенной.
 - [ ] Закоммитить задачу и передать feature PR на ревью; не merge, не publish и не менять consumer asc-admin в этом PR.
+
+### Task 11.1: Подготовка и одобренный запуск публикации
+
+Дополнение к candidate-only Task 11. Подготовка процесса входит в техническую
+платформу; реальный npm publish выполняется после content gates и отдельного
+одобрения владельцем конкретной release group/revision.
+
+**Files:** `.github/workflows/publish.yml`, `scripts/releases/publish.js`,
+`tests/integration/publication.test.js`, `docs/architecture/releases.md`.
+
+**Interfaces:** Проверенная release group и её tarballs из Tasks 10–11,
+read-only validateRelease и явно одобренная revision → публикация выбранных
+пакетов и полные package tags. Bootstrap первой npm публикации проектируется
+отдельно с проверкой текущих требований registry; credentials не копируются.
+
+- [ ] Согласовать письменный publication design/plan и npm authorization;
+      реализация workflow не считается разрешением выполнить публикацию.
+- [ ] RED → GREEN на fixtures: неодобренная revision/group, провал preflight,
+      пустой actual accepted set и несовпадение tarball metadata блокируют
+      обращение к publisher; approved synthetic fixture проверяет порядок
+      действий с test publisher без отправки пакетов в registry.
+- [ ] Реализовать отдельный publication workflow с минимальными permissions,
+      без публикации из PR job; закрепить Actions и проверить выбранный механизм
+      npm authorization/provenance по официальной документации.
+- [ ] Проверить failure/recovery: nonzero перечисляет опубликованные пакеты,
+      повторный запуск сверяет registry и не перезаписывает существующие версии.
+      Test-only пакеты и private root не входят в release group.
+- [ ] Зафиксировать техническую готовность: workflow, preflight, fixture tests
+      и инструкция первой публикации проверены. Реальный запуск остаётся pending
+      до одобрения владельцем, actual accepted-среза Task 8.2 и npm authorization.
+- [ ] После явного release approval выполнить первую публикацию, проверить
+      точные версии установкой из registry во внешнем consumer и запуском CLI.
 
 ## Проверка плана и остановка
 
@@ -334,11 +367,11 @@ wizard. Sync отвечает за первую генерацию и обнов
 Порядок продолжения уточнён владельцем 2026-10-12: отдельный monorepo tooling
 этап → resolver Task 4 → managed Task 5 → renderer Task 6 → команды/standards
 setup Task 7 → технический срез Task 8.1 → configs Task 9 → tooling setup
-Task 9.1 → release preflight Task 10 и CI Task 11 → наполнение/owner acceptance
+Task 9.1 → release preflight Task 10, CI Task 11 и подготовка публикации Task 11.1 → наполнение/owner acceptance
 Task 3 → реальный accepted-срез Task 8.2 → одобренная публикация.
 Content gates в Tasks 10–11 могут быть реализованы и проверены на fixtures;
 проверка actual catalogs останется блокирующей до принятия настоящих требований.
-Publication workflow требует отдельного дополнения к нынешнему candidate-only
-плану, проверки npm authorization и явного одобрения выпуска.
+Реальный запуск подготовленного publication workflow Task 11.1 требует
+проверки npm authorization и явного одобрения выпуска.
 
 Ни одно review замечание не считается реализованным в runtime только из-за исправления плана. [Ответы по всем пунктам](2026-10-11-engineering-standards-independent-packages-review-response.md) описывают состояние на момент остановленной review-итерации. Работа возобновлена после merge PR #2; фактические доработки и проверки фиксируются в следующих commits/PR. Canonical документы в engineering-standards; оригинал пользовательского review сохраняется. Owner approval нормативных текстов и разрешение публикации по-прежнему отдельные условия.
