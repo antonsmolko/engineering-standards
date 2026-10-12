@@ -13,7 +13,7 @@ test("empty npm cache gives actionable offline preparation guidance", async (t) 
     join(root, "package.json"),
     JSON.stringify({ private: true }),
   );
-  const { installOffline } = await import("../helpers/install-offline.js");
+  const { installOffline } = await import("../helpers/install-offline.ts");
   assert.throws(
     () => {
       installOffline(root, ["ajv@8.20.0"], {

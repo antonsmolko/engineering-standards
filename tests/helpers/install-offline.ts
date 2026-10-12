@@ -2,7 +2,15 @@ import { execFileSync } from "node:child_process";
 
 const INSTALL_TIMEOUT_MS = 120000;
 
-export const installOffline = (root, packages, { cache } = {}) => {
+type InstallOfflineOptions = {
+  cache?: string;
+};
+
+export const installOffline = (
+  root: string,
+  packages: readonly string[],
+  { cache }: InstallOfflineOptions = {},
+): string => {
   try {
     return execFileSync(
       "npm",
@@ -24,7 +32,11 @@ export const installOffline = (root, packages, { cache } = {}) => {
       },
     );
   } catch (error) {
-    if (/\bENOTCACHED\b/.test(String(error.stderr))) {
+    if (
+      error instanceof Error &&
+      "stderr" in error &&
+      /\bENOTCACHED\b/.test(String(error.stderr))
+    ) {
       throw Object.assign(
         new Error(
           "Offline consumer cache is incomplete; run npm ci --ignore-scripts in the repository with registry access before running tests.",

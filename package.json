@@ -3,11 +3,13 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": "^22.13.0 || ^24.0.0"
+    "node": "^26.0.0"
   },
   "devDependencies": {
+    "@types/node": "26.6.5",
     "ajv": "8.20.0",
-    "semver": "7.8.5"
+    "semver": "7.8.5",
+    "typescript": "5.9.3"
   },
   "workspaces": [
     "packages/core",
@@ -20,6 +22,7 @@
     "packages/tooling/standards-cli"
   ],
   "scripts": {
-    "test": "node --test"
+    "test": "node --test",
+    "typecheck": "tsc --project tsconfig.tests.json"
   }
 }

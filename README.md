@@ -23,4 +23,17 @@ cache, then `npm test`. Consumer installation stays offline; an empty cache
 produces preparation guidance. Repository-local formatting tooling/dogfooding
 remains pending: no reproducible npm formatting command is claimed yet.
 
+Use Node 26; `.node-version` pins Node 26.11.1 for development. Older Node
+versions are not supported. Test helpers use TypeScript: run `npm run typecheck`
+to check their types and `npm test` to run them with Node's built-in TypeScript
+support. Published packages retain their current JavaScript/Markdown/JSON formats.
+
+With nvm, select the pinned version explicitly:
+`nvm install "$(cat .node-version)"` followed by `nvm use "$(cat .node-version)"`.
+nvm does not read `.node-version` automatically.
+
+The technical platform is developed on synthetic test data before standards
+content is filled and accepted. Fixture acceptance does not approve actual
+catalog requirements or authorize a release.
+
 Specifications are organized by scope: core, domains, technologies, stacks and optional modules. ESLint, Prettier and CLI tooling are separate packages. There is no repository-wide release version.

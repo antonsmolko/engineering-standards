@@ -29,10 +29,11 @@ test("executable workspaces declare the verified Node support boundary", async (
   ]) {
     const pkg = await json(path);
 
-    assert.ok(semver.satisfies("22.13.0", pkg.engines?.node ?? ""));
-    assert.ok(semver.satisfies("24.14.0", pkg.engines?.node ?? ""));
-    assert.ok(!semver.satisfies("22.12.0", pkg.engines?.node ?? ""));
-    assert.ok(!semver.satisfies("23.0.0", pkg.engines?.node ?? ""));
+    assert.ok(semver.satisfies("26.0.0", pkg.engines?.node ?? ""));
+    assert.ok(!semver.satisfies("22.13.0", pkg.engines?.node ?? ""));
+    assert.ok(!semver.satisfies("24.14.0", pkg.engines?.node ?? ""));
+    assert.ok(!semver.satisfies("25.0.0", pkg.engines?.node ?? ""));
+    assert.ok(!semver.satisfies("27.0.0", pkg.engines?.node ?? ""));
   }
 });
 

@@ -6,7 +6,7 @@ import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import test from "node:test";
-import { installOffline } from "../helpers/install-offline.js";
+import { installOffline } from "../helpers/install-offline.ts";
 
 const packages = [
   ["packages/core", "standards-core", "CORE", "core"],
