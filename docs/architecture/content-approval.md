@@ -18,9 +18,9 @@ They do not change actual catalog statuses or satisfy the content release gate.
 | standards-typescript | TS-TYPES-001        | Pending        | No content approval recorded      |
 | standards-svelte-spa | SVELTE-SPA-ARCH-001 | Pending        | No content approval recorded      |
 
-The three rows above are minimum candidates for the first accepted-content
-vertical slice, not predetermined decisions. That slice requires at least one
-accepted, applicable requirement from each of the three packages.
+The three rows above are candidates for the first accepted-content vertical
+slice, not predetermined decisions. Its content gate is defined under
+[Recording acceptance](#recording-acceptance).
 Add a row for every other reviewed ID, including deferred or rejected IDs,
 with its package, owner decision and reviewed revision / decision link.
 

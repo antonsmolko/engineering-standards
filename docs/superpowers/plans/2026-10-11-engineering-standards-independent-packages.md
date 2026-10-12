@@ -203,9 +203,8 @@ accepted статусы подтверждаются владельцем, не 
 #### Task 8.1: Технический срез до наполнения стандартов
 
 Решение владельца 2026-10-12: сначала техническая платформа, затем содержание.
-Tasks 4–7 используют synthetic fixtures вместо ещё не принятых actual catalogs;
-упоминания accepted IDs из Task 3 в renderer tests на этом этапе относятся
-к fixture IDs. Нормативные manifests в packages не меняют статусы ради тестов.
+Tasks 4–7 используют synthetic fixtures вместо ещё не принятых actual catalogs.
+Нормативные manifests в packages не меняют статусы ради тестов.
 
 **Files:** tests/integration/technical-vertical-slice.test.js;
 tests/fixtures/technical-vertical/; docs/architecture/technical-acceptance.md.
@@ -225,7 +224,7 @@ tests/fixtures/technical-vertical/; docs/architecture/technical-acceptance.md.
 
 #### Task 8.2: Срез реальных стандартов после их принятия
 
-**Files:** tests/integration/vertical-slice.test.js; tests/fixtures/vertical/{package.json,package-lock.json,engist.json,AGENTS.md}; docs/architecture/vertical-acceptance.md.
+**Files:** tests/integration/vertical-slice.test.js; tests/fixtures/vertical/{package.json,package-lock.json,engist.json,AGENTS.md}; docs/architecture/vertical-acceptance.md; packages/tooling/eslint-config/README.md (rule mapping).
 
 **Interfaces:** Реальные spec artifacts core/TypeScript/Svelte SPA, CLI и явно необходимые dependency profiles frontend/Svelte. Первые 3 принятых требования фокусируются на core/TypeScript/stack; не удалять зависимости стека ради трёх пакетов.
 
@@ -233,6 +232,7 @@ tests/fixtures/technical-vertical/; docs/architecture/technical-acceptance.md.
 - [ ] Запустить node --test tests/integration/vertical-slice.test.js; Expected: RED при отсутствии lock/consumer integration.
 - [ ] Создать committed fixture lockfile с зафиксированными tool dependencies; local tarballs устанавливать через --offline и --ignore-scripts после явной cache preparation. Без заполненного cache offline test обязан отказать, не обращаться к registry неявно. Тестировать на Node 26.0.0 и 26.11.1, npm consumer и symlink-backed consumer.
 - [ ] Повторить vertical test и npm test; Expected: PASS, не пустая инструкция из реальных accepted catalogs. Дополнить frontend/Svelte нормативные review commits из Task 3 после успешного среза.
+- [ ] После owner acceptance пересмотреть rule mapping в ESLint README: нормативные ссылки относятся только к реальным accepted ID; обоснованные tooling-only правила могут оставаться tooling-only. Proposed ссылки остаются информационными и не становятся основанием обязательного правила.
 - [ ] Закоммитить срез и acceptance evidence до первого нормативного релиза.
 
 ### Task 9: Импортируемые конфигурации отдельными пакетами
@@ -240,6 +240,10 @@ tests/fixtures/technical-vertical/; docs/architecture/technical-acceptance.md.
 **Files:** `packages/tooling/eslint-config/{javascript,typescript,svelte-spa}.js`, `packages/tooling/prettier-config/{index,svelte}.js`, package.json обоих пакетов; `tests/integration/configs.test.js`, `tests/fixtures/{typescript,svelte-spa}/`.
 
 **Interfaces:** ESLint exports `./javascript`, `./typescript`, `./svelte-spa`: factories `createConfig({ files, ignores } = {}) -> FlatConfig[]`. Prettier exports основной объект и `./svelte` с объявленным совместимым plugin. Нет ASC alias/guard/business-model assumptions. Конфигурации документируют проверяемые rule IDs и нормативные IDs; proposed правила не включаются как обязательные.
+
+На техническом этапе actual accepted ID ещё нет: enabled rules имеют явное
+tooling-only обоснование. После owner acceptance mapping пересматривается
+в Task 8.2 (#23); автоматическая перепривязка всех правил не требуется.
 
 - [ ] Добавить fixtures: valid TS/Svelte проходят; negative examples отклоняются с ожидаемым ruleId, не parse/install error. `assert.equal(validMessages.length, 0)`; `assert.ok(invalidMessages.some((item) => { return item.ruleId === 'no-undef'; }))` для JS fixture. Prettier повторно форматирует без изменения и сохраняет явно заданный inline-пробел. Импортировать публичные exports из установленных tarballs вне workspaces.
 - [ ] Запустить `node --test tests/integration/configs.test.js`; Expected: FAIL отсутствующих exports.
@@ -292,7 +296,7 @@ package.json до/после version:prepare, синхронизацию lockfil
 
 **Files:** .changeset/config.json, .changeset/*.md; scripts/releases/{validate,sync-metadata}.js; tests/integration/{releases,artifacts}.test.js; docs/architecture/releases.md.
 
-**Interfaces:** Changesets отвечает за independent versions/changelogs, fixed/linked пусты, access public, baseBranch main, private root не версионируется. Самописный planRelease удалён из плана. validateRelease({ releases, manifests, availableVersions }) -> diagnostics проверяет наши semantic metadata/accepted gates, не повторяет versioning engine. Sync package.version в manifest детерминирован после Changesets version; check отклоняет drift, compatibility ranges не генерируются слепо из runtime dependencies.
+**Interfaces:** Changesets отвечает за independent versions/changelogs, fixed/linked пусты, access public, baseBranch main, private root не версионируется. Самописный planRelease удалён из плана. validateRelease({ releases, manifests, availableVersions, checkedProfiles }) -> diagnostics проверяет наши semantic metadata/accepted gates, не повторяет versioning engine. checkedProfiles — результаты проверки реальных Selection/resolver с dependency closure точных package name/version; при отсутствии профиля это пустой массив, а не отключение gate. Sync package.version в manifest детерминирован после Changesets version; check отклоняет drift, compatibility ranges не генерируются слепо из runtime dependencies.
 
 Gate пустого actual accepted-набора применяется к выбранному реальному
 профилю в проверяемой release group, а не отдельно к каждому dependency
@@ -303,19 +307,28 @@ profile package. Для первого среза нужны минимум тр
 скрытыми блокерами первого выпуска.
 
 Отсутствие необходимого actual accepted-набора явно блокирует выпуск.
-Если specification release group не участвует в проверенном реальном профиле,
-каждый выпускаемый specification package должен иметь применимые active
-accepted требования; proposed-only specification group блокируется, а не
-проходит gate из-за отсутствия профиля. Это не запрещает proposed-only
-dependency profiles в проверенном непустом срезе, описанном выше.
+Каждый выпускаемый specification package должен либо входить в dependency
+closure проверенного реального профиля с необходимым accepted-набором,
+либо иметь хотя бы одно требование со status: accepted в валидированном
+manifest именно выпускаемой версии. Closure включает пакеты, достигнутые
+через declared profile/package dependencies, а не произвольные дополнительные
+пакеты в release group или Selection. Проверяется соответствие точных package
+name/version проверенного профиля и выпускаемых artifacts.
+Вне closure это проверка статуса в manifest, а не «активности» без Selection:
+proposed/deprecated не засчитываются. При отсутствии проверенного профиля
+closure пуст, и отдельный критерий применяется к каждому specification package.
+Посторонний proposed-only пакет блокирует выпуск даже в группе с непустым
+профилем. Proposed-only dependency profiles внутри проверенного среза
+по-прежнему допустимы.
 Группа только из CLI/config packages не получает искусственный normative
 accepted-набор: для неё применяются runtime/config/compatibility/artifact
 проверки. Условия первого выпуска #26 — actual-срез Task 8.2, authorization
 и явное release approval — сохраняются независимо от состава группы.
-Изменение этих нормативных условий требует отдельного пересмотра design/plan;
+Изменение условий content/release gate требует отдельного пересмотра design/plan;
 обычное одобрение release group не является исключением из content gates.
 
 - [ ] Написать tests на временной копии workspace, реально выполняющие Changesets: editorial patch, explicit minor для breaking 0.x, major после 1.0; unrelated config version неизменна; несовместимый dependent range требует его change/release; missing published dependency вне группы даёт отказ. Не предполагать специальную 0.x настройку без доказательства — применить minor changeset и проверить реальное поведение выбранной версии.
+- [ ] До реализации release validator написать RED fixtures: пакет вне closure только с proposed/deprecated блокируется и при отсутствии профиля, и рядом с проверенным непустым профилем; accepted в manifest выпускаемой версии разрешает отдельный package criterion. Proposed-only dependency внутри closure допустима; неверная версия profile evidence не подтверждает выпускаемый artifact. CLI/config-only группа не требует искусственных normative IDs; остальные release gates проверяются независимо.
 - [ ] Запустить node --test tests/integration/releases.test.js tests/integration/artifacts.test.js; Expected: RED отсутствующей release integration.
 - [ ] Закрепить проверенную Changesets версию; добавить полный semantic preflight поверх локальных workspace проверок, manifest version synchronization, offline lockfile update и отдельные package tags по полному npm-имени. Каждая спецификация/конфиг/CLI упаковывается и импортируется в locked consumer; fixtures не публикуются.
 - [ ] Повторить releases/artifacts/vertical suite; Expected: PASS, провал на пустом active set, mismatched manifest version или non-public access. Для будущего publication workflow предусмотреть npm trusted publishing/provenance; bootstrap первой публикации отдельно согласовать, credentials не копировать.

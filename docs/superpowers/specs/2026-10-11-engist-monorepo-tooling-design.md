@@ -198,7 +198,7 @@ check не должен случайно требовать remote ref. Status �
 Рабочие каталог, package versions и lockfile не используются как fixture для
 изменения версий. Все временные артефакты имеют изолированные пути и cleanup.
 
-## Вне этого PR
+## Вне этого этапа
 
 Нет npm publish, release workflow, Git-тегов, merge, настройки credentials или
 branch protection. Нет реализации init/sync/check Engist, новых ESLint/Prettier
