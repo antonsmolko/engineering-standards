@@ -309,37 +309,17 @@ network/auth failure, malformed metadata и несовпадение artifact in
 отказ, без подмены результатом cache или workspace. Test adapter разрешён только
 в явно synthetic test harness; его evidence не допускается в actual preflight.
 
-Read-only registry lookup и подготовка необходимых dependency artifacts/cache —
-явные подготовительные шаги до offline consumer phase. Для каждой revision
-validator создаёт временный consumer с exact зависимостями, заполняет новый lock
-из проверяемых локальных tarballs командой
-`npm install --package-lock-only --offline --ignore-scripts --no-audit --no-fund`,
-затем выполняет `npm ci --offline --ignore-scripts --no-audit --no-fund` с явно
-подготовленным cache. Cache miss блокирует проверку; lifecycle scripts и скрытый
-сетевой fallback запрещены. Package manifest временного consumer указывает
-local tarballs для группы и exact dependency artifacts; исходные fixtures и их
-lockfile не изменяются. Lockfile Task 8.2 — baseline предыдущего accepted среза,
-не install input для новых release versions; новый временный lock связывает
-именно проверяемые artifacts. До `npm ci` validator сверяет dependency entries
-нового lock (`resolved`, `integrity`, name/version) с проверенным inventory;
-root entry сверяется с сгенерированным temporary package.json.
-Локальные release tarballs — с проверенной группой, остальные — с registry metadata
-и проверенными dependency tarballs. Local file resolved сопоставляется с путём
-проверенного tarball, registry URL — с dist.tarball; дополнительные/несовпадающие
-записи и artifacts из cache без проверки отклоняются. Временный consumer
-удаляется и при ошибке.
-
-Inventory включает metadata всех dependency lock entries, также optional и
-os/cpu-ограниченных; tarball/cache обязателен для устанавливаемых на текущей
-платформе dependencies. Пропуск разрешён только для optional dependency,
-несовместимой с платформой по проверенным package metadata и declared graph;
-и для ветви, достижимой только через такую dependency; требуемая другим
-устанавливаемым путём dependency не пропускается. Одного optional flag из lock
-недостаточно. Такая запись сохраняется и проверяется
-по registry metadata, но отсутствие её tarball в cache не вызывает отказ.
-Несовместимая обязательная dependency и cache miss устанавливаемой dependency
-блокируют consumer. RED-кейсы: skipped optional, другая совместимая платформа,
-forged optional flag и cache miss обязательной dependency.
+Временный consumer устанавливается offline из проверенных exact artifacts после
+явной подготовки cache, без lifecycle scripts и сетевого fallback. Новый lock
+соответствует этим artifacts, не подменяется baseline Task 8.2: name/version,
+resolved и integrity всех dependency entries до установки сверяются с проверенным inventory,
+root — с temporary manifest; лишние/непроверенные записи дают отказ. Metadata
+optional/platform entries также проверяются. Пропуск tarball/cache допустим
+только для platform-incompatible optional ветви по проверенным metadata/graph;
+dependency на другом required installable пути не пропускается. Обязательная
+platform incompatibility и cache miss устанавливаемой dependency дают отказ.
+Consumer удаляется при успехе/ошибке; исходные fixtures и lock неизменны.
+Конкретные npm-команды и реализация этих проверок выбираются в #17.
 
 `scripts/releases/validate.js` самостоятельно получает catalogs из установленных
 release/dependency tarballs без workspace fallback. Загрузчик Task 2 валидирует
@@ -439,14 +419,8 @@ CLI/config-only группа проверяет runtime/config artifacts
 изолированные IO и test publisher без registry writes; test evidence никогда
 не разрешает production publication.
 
-До runtime нужен отдельно одобренный publication design/plan: он определяет
-компонент enforcement первого нормативного gate, разделение production/test
-источников, provenance registry/profile и publication evidence (создатель,
-хранение, привязка к workflow run, approved revision/group и artifact digests).
-Наличие exact versions/integrities в registry или caller evidence-файл не
-доказывает одобрение и выполнение первого нормативного выпуска;
-конкретный механизм доказательства выбирается в этом дизайне.
-Первый нормативный gate сохраняется независимо от ранних CLI/config публикаций.
+Механизмы enforcement первого нормативного gate, provenance, test isolation
+и evidence определяет [publication design #19](https://github.com/antonsmolko/engineering-standards/issues/19#issuecomment-6132792894).
 
 Read-only preflight не меняет working tree, source locks и registry: временный
 consumer/lock допускается с cleanup при успехе/ошибке; registry reads/cache
@@ -462,13 +436,7 @@ Bootstrap первой npm публикации и актуальные registry
       CLI/config-only публикация не позволяет затем выпустить один spec-package
       в обход первого normative profile gate; после подтверждённого выпуска
       профиля independent packages сохраняют свои package-level gates.
-- [ ] Тестировать production/test separation: fake registry transport, fake
-      profile provenance и caller real/production flags не могут разрешить actual
-      publication; isolated positive harness использует test publisher без writes.
-- [ ] Forged/manual evidence и registry presence без подтверждённого workflow run
-      и approval не снимают первый normative gate; failure/partial publication
-      не считается его завершением. Способ test isolation/evidence verification
-      фиксируется в одобренном design, затем проверяется behavior tests.
+- [ ] Тесты по одобренному design #19; test data не разрешает production publication.
 - [ ] Запустить `node --test tests/integration/publication.test.js`;
       Expected: FAIL отсутствующей publication integration до runtime изменений.
 - [ ] Реализовать отдельный publication workflow с минимальными permissions,

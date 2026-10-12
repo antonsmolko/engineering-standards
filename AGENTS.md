@@ -24,7 +24,8 @@ its snapshot against the current branch and GitHub state.
   proposing custom tooling; reuse supported upstream behavior where it fits.
 - Give each implementation PR one independently verifiable outcome. If review
   introduces another outcome, revise the issue scope and split the work before
-  extending implementation; retain already agreed requirements and approval gates.
+  extending implementation; count carrier additions as separate outcomes and
+  retain already agreed requirements and approval gates.
 - Keep future tasks at the level of requirements and acceptance criteria.
   Choose their implementation mechanisms in their own design/implementation PR,
   supported by a current use case; do not add speculative APIs during review fixes.
@@ -48,8 +49,7 @@ its snapshot against the current branch and GitHub state.
    Keep internal roadmap/review details out of published consumer documentation.
 4. Define changed contracts in the design/plan: inputs and their derivation/trust,
    validation, success/failure, missing/invalid data, exceptions and scope.
-   Record applicable checks for empty inputs, unrelated extras, stale/forged
-   evidence and version mismatches (or reasons they do not apply), preserving
+   Record boundary checks relevant to the current task's contract, preserving
    content/compatibility gates independently of release approval.
 5. Inspect the complete final PR diff once per review round and, for every changed
    contract, search relevant unchanged documents and issue bodies for conflicts;

@@ -18,7 +18,7 @@ not a public basis. Публичное основание исходных за�
 и [policy review](https://github.com/antonsmolko/engineering-standards/pull/27#pullrequestreview-5495581265);
 [повторная проверка #17](https://github.com/antonsmolko/engineering-standards/issues/17#issuecomment-6131902274)
 повторяет R1–R3 и получает ответ с теми же записями.
-Текущий раунд: [review 5496017480](https://github.com/antonsmolko/engineering-standards/pull/27#pullrequestreview-5496017480); предыдущий раунд — review 5495866790.
+Текущий раунд: [review 5496221947](https://github.com/antonsmolko/engineering-standards/pull/27#pullrequestreview-5496221947); предыдущий раунд — review 5496017480.
 Статусы прежних замечаний сверены с ledger: reviewer-confirmed closures
 сохраняются, включая Expected Task 10, носитель #9, зависимость #23 от #15
 и design anchor, подтверждённые release review. R1–R8 и R10–R18 сохраняются закрытыми. R9 переоткрыт новым замечанием
@@ -43,13 +43,13 @@ test seam и release modes разобраны в R26/R27, carrier definition —
 | [R8](https://github.com/antonsmolko/engineering-standards/pull/27#discussion_r4251996273) <a name="r8"></a> | Independent review and small changes ambiguous | AGENTS rule 6; verification record | fixed | Different person or separate agent without author conversation; any contract/gate/cross-document requirements require it; only wording/typo/link-only may skip; owner determines unavailability; decision/limitation recorded in Evidence and, when a PR exists, its description (R21/R32). |
 | [R9](https://github.com/antonsmolko/engineering-standards/pull/27#pullrequestreview-5495581265) <a name="r9"></a> | Repository policy had no issue or recorded scope decision | AGENTS; #28; PR body | fixed | Owner-requested policy added to #9 review carrier in this PR; carrier rule now explicit in AGENTS (R24); #28 records decision and criteria, Refs #28 added; #9 runtime remains unfinished. |
 | [R10](https://github.com/antonsmolko/engineering-standards/pull/27#pullrequestreview-5495581265) <a name="r10"></a> | PR did not follow its own ledger policy | this document; PR body; all replies | fixed | One five-column ledger, individual review links, documentation evidence separate from tests, independent review required; duplicate PR ledger removed. |
-| [R11](https://github.com/antonsmolko/engineering-standards/pull/27#pullrequestreview-5495581265) <a name="r11"></a> | Boundary checks were optional and release-specific | AGENTS rule 4; plan Task 10 | fixed | Generic empty/extra/stale/forged/version cases, N/A requires reasons; design/plan owns contract. Release boundary matrix below retains gates. |
+| [R11](https://github.com/antonsmolko/engineering-standards/pull/27#pullrequestreview-5495581265) <a name="r11"></a> | Boundary checks were optional and release-specific | AGENTS rule 4; plan Task 10 | fixed | Boundary checks relevant to the current task's contract preserve content/compatibility gates independently of approval. The final scope review replaces the exhaustive generic checklist (R46); design/plan owns contracts. |
 | [R12](https://github.com/antonsmolko/engineering-standards/pull/27#pullrequestreview-5495581265) <a name="r12"></a> | Whole diff before every push was unbounded | AGENTS rule 5; verification record | fixed | Whole PR once per round plus searches of unchanged representations for every changed contract; affected scope recorded here. |
 | [R13](https://github.com/antonsmolko/engineering-standards/pull/27#pullrequestreview-5495581265) <a name="r13"></a> | Source collection/status reconciliation had no record location | AGENTS rule 1; source inventory above | fixed | All review sources/pages recorded here and previous statuses reconciled against this ledger. |
 | [R14](https://github.com/antonsmolko/engineering-standards/pull/27#pullrequestreview-5495581265) <a name="r14"></a> | Confirmed closure had no confirming actor | AGENTS rule 1; previous status above | fixed | Reviewer-confirmed closures preserved; reopen only with recorded new evidence. |
 | [R15](https://github.com/antonsmolko/engineering-standards/pull/27#pullrequestreview-5495581265) <a name="r15"></a> | Issue edits had no dedicated record location | AGENTS rule 3; GitHub issue edits below | fixed | Dedicated section distinguishes remote issue-body changes from repository edits. |
 | [R16](https://github.com/antonsmolko/engineering-standards/pull/27#pullrequestreview-5495581265) <a name="r16"></a> | Policy paragraphs were unnecessarily long | AGENTS review rules | fixed | Six numbered rules, two sentences each; concrete boundaries replace vague qualifiers. |
-| [R17](https://github.com/antonsmolko/engineering-standards/pull/27#issuecomment-6132144759) <a name="r17"></a> | Optional absence confused with missing supplied Selection | plan Task 10; #17; boundary matrix | fixed | Omitted/empty paths yield empty closure; missing/unreadable/invalid supplied file rejects; actual #26 independently requires reviewed Task 8.2 Selection. Independent reviewer confirmed closure. |
+| [R17](https://github.com/antonsmolko/engineering-standards/pull/27#issuecomment-6132144759) <a name="r17"></a> | Optional absence confused with missing supplied Selection | plan Task 10; #17; boundary ledger | fixed | Omitted/empty paths yield empty closure; missing/unreadable/invalid supplied file rejects; actual #26 independently requires reviewed Task 8.2 Selection. Independent reviewer confirmed closure. |
 | [R18](https://github.com/antonsmolko/engineering-standards/pull/27#issuecomment-6132144759) <a name="r18"></a> | Selection validation assigned to catalog loader | plan Task 10 | fixed | Task 2 validates catalogs/metadata; validateSelection Task 4 validates Selection, then resolver computes closure. Independent reviewer confirmed closure. |
 | [R19](https://github.com/antonsmolko/engineering-standards/pull/27#discussion_r4252138296) <a name="r19"></a> | Actual rejection had no implementing component | plan Tasks 10/11.1; #17/#19/#26 | fixed | Publication enforcement belongs to the separately approved #19 design; CLI/env cannot bypass gates. First normative publication must publish the reviewed profile (R34); isolated tests cannot authorize production (R35). No publisher API is selected here. |
 | [R20](https://github.com/antonsmolko/engineering-standards/pull/27#discussion_r4252138304) <a name="r20"></a> | Registry scope and lock provenance unspecified | plan Task 10; #17/#26 | fixed | All direct/transitive external dependencies including third-party packages; dependency lock resolved/integrity/name/version compared with checked inventory before ci, root against temporary manifest; optional/platform handling in R31, extra/unverified entries reject. |
@@ -75,23 +75,29 @@ test seam и release modes разобраны в R26/R27, carrier definition —
 | [R40](https://github.com/antonsmolko/engineering-standards/pull/27#pullrequestreview-5496017480) <a name="r40"></a> | Generic validator issue duplicated publication policy | issue #17; ownership table | fixed | Removed detailed modes, acceptance artifact roles and factories from #17; publication enforcement/trust is delegated to #19/#26 while generic gates remain. |
 | [R41](https://github.com/antonsmolko/engineering-standards/pull/27#pullrequestreview-5496017480) <a name="r41"></a> | Thread reply addressed R29 without its anchor | thread 4252251663 | fixed | Follow-up reply links both R28 and R29, including the corrected current provenance requirement. |
 | [R42](https://github.com/antonsmolko/engineering-standards/issues/28) <a name="r42"></a> | Owner requested upstream reuse and smaller task scope after repeated reviews | AGENTS Task scope; #28 | fixed | Recorded owner request in #28. Require upstream baseline/concrete gap, one independently verifiable implementation outcome per PR and no speculative future APIs in review fixes. Existing agreed gates and carrier scope retained. |
+| [R43](https://github.com/antonsmolko/engineering-standards/pull/27#pullrequestreview-5496221947) <a name="r43"></a> | Publication mechanisms were still retold instead of linked | plan Task11.1; issue #19 | fixed | Replaced the mechanism paragraph with the #19 scope link, replaced two test checkboxes with one approved-design/test-data invariant and consolidated three #19 mechanism bullets into one invariant/link. N1-N3 remain agreed deferred. |
+| [R44](https://github.com/antonsmolko/engineering-standards/pull/27#pullrequestreview-5496221947) <a name="r44"></a> | Future #17 npm/lock algorithms over-specified | plan Task10; issue #17 | fixed | Removed prescribed npm commands and step sequence; retained exact-artifact/offline/no-lifecycle/no-fallback, verified lock inventory, optional/required-path distinctions, immutable baseline and cleanup requirements. Implementation is chosen in #17; R2/R20/R31 guarantees retained. |
+| [R45](https://github.com/antonsmolko/engineering-standards/pull/27#pullrequestreview-5496221947) <a name="r45"></a> | Boundary table duplicated ledger entries | ledger verification section | fixed | Replaced duplicate table with one canonical-ledger link and relevant entry references. No requirement disposition changed. |
+| [R46](https://github.com/antonsmolko/engineering-standards/pull/27#pullrequestreview-5496221947) <a name="r46"></a> | Exhaustive boundary checklist conflicted with current-task scope | AGENTS rule4; #28 | fixed | Boundary checks now apply to the current task contract; content/compatibility gates remain independent of approval. |
+| [R47](https://github.com/antonsmolko/engineering-standards/pull/27#pullrequestreview-5496221947) <a name="r47"></a> | First-spec publication condition repeated | design first-release paragraph | fixed | One condition covers first publication of any specification packages regardless of preceding CLI/config publication, retaining the real three-component accepted profile gate. |
+| [R48](https://github.com/antonsmolko/engineering-standards/pull/27#pullrequestreview-5496221947) <a name="r48"></a> | Carrier additions not counted as outcomes or recorded in #9 | AGENTS Task scope; #9/#28 | fixed | Carrier additions explicitly count as separate outcomes for implementation PRs; #9 and #28 record the owner-requested upstream-first/small-PR addition. Carrier runtime criteria/closure unchanged. |
 
 ### GitHub issue edits
 
 These are remote body changes, separate from the repository diff:
 
-- [#1](https://github.com/antonsmolko/engineering-standards/issues/1) and [#9](https://github.com/antonsmolko/engineering-standards/issues/9): #28 roadmap and owner-requested scope/carrier-prefix record.
+- [#1](https://github.com/antonsmolko/engineering-standards/issues/1) and [#9](https://github.com/antonsmolko/engineering-standards/issues/9): #28 roadmap and owner-requested scope/carrier-prefix record; #9 also records the upstream-first/small-PR addition.
 - [#17](https://github.com/antonsmolko/engineering-standards/issues/17): synthetic ownership, registry scope/trust, optional/platform lock provenance, publication-boundary link to #19/#26, offline/cache and fresh-lock contract, RED cases; dependencies remain #16/#9.
 - [#19](https://github.com/antonsmolko/engineering-standards/issues/19): synthetic preparation versus actual invocation, first normative gate, production/test isolation and evidence-trust design requirements/RED cases and read-only/temporary-write boundary; dependencies remain #18/#17.
 - [#26](https://github.com/antonsmolko/engineering-standards/issues/26): actual Selection after #23, exact-artifact recomputation and first normative publication gate; dependencies remain #19/#23.
-- [#28](https://github.com/antonsmolko/engineering-standards/issues/28): owner-requested policy, upstream-first/small-PR task approach and explicit same-PR scope decision. It does not close #9 implementation or approve merge/release.
+- [#28](https://github.com/antonsmolko/engineering-standards/issues/28): owner-requested policy, upstream-first/small-PR task approach, carrier-outcome/current-task boundary clarification and explicit same-PR scope decision. It does not close #9 implementation or approve merge/release.
 
 ### Scope boundary for this PR
 
 | Existing task | Contract owned |
 | --- | --- |
 | #17 | Generic release preflight, artifact/registry/lock checks and package-level content gates. |
-| #19 | Publication enforcement, provenance, production/test isolation and evidence trust; mechanisms require a separately approved design. |
+| #19 | Publication enforcement, provenance, production/test isolation and evidence trust; mechanisms are linked to the separately approved design scope. |
 | #26 | Separately approved first publication and reviewed actual Task8.2 acceptance evidence. |
 | #28 | Repository task/review policy and issue-carrier tracking. |
 
@@ -101,36 +107,19 @@ new tooling task or publication implementation is included here.
 
 ### Contract boundary verification
 
-| Case | Required outcome |
-| --- | --- |
-| Omitted/empty selectionPaths or no selected profile | Empty closure; each specification package must have accepted content in its validated release-version manifest. |
-| Extra unrelated proposed/deprecated-only package | Reject even beside a valid nonempty profile. |
-| Proposed-only dependency inside checked closure | Allowed, retaining compatibility/registry/artifact gates. |
-| CLI/config-only group | No invented normative IDs; actual first-release #26 gates still apply. |
-| Supplied Selection path missing/unreadable/invalid, invalid metadata or exact-version mismatch | Reject; no fabricated checkedProfiles or silent baseline rewrite. |
-| Stale/forged evidence or registry list | Recompute from tarballs/resolver; verified production registry adapter, no caller JSON shortcut. |
-| Offline cache miss, network/auth/metadata/integrity failure | Reject; explicit preparation and no hidden offline fallback. |
-| New tarball revision versus old baseline lock | New temporary exact-artifact lock; source baseline unchanged; cleanup on success/error. |
-| First normative publication without reviewed Task 8.2 Selection | Reject independently of the optional input for generic technical validation. |
-| CLI/env/caller override of publication gates or production dependencies | Reject; failure never calls production publisher; enforcement component must be specified in approved #19 design. |
-| Isolated orchestration test versus fake production sources | Positive isolated test publisher without registry writes; fake transport/profile/evidence cannot authorize production; isolation must be specified in approved #19 design. |
-| CLI/config-only prelude followed by first normative one-core-package release | Reject the normative release until the checked profile with one accepted ID per required component is published; CLI/config preflight adds no artificial Selection. |
-| Independent specification-only release after confirmed first normative profile publication | Package-level accepted/closure gate, no mandatory three-component profile. |
-| Missing/partial/forged first normative publication evidence or manual registry publication | Cannot discharge first normative gate; trusted execution/approval/exact-artifact evidence is required; its verification mechanism is agreed deferred to #19 (R36), registry presence alone is insufficient. |
-| Unverified third-party/transitive dependency or extra/mismatched lock entry | Reject before ci; installed artifacts and all dependency lock metadata checked against verified inventory; root/optional/platform entries handled explicitly (R31). |
-| Synthetic fixtures/adapter | Test algorithms only; never actual content/publication evidence. |
-| Review completion | No open ledger findings; all thread/summary replies link to entries. |
-| Independent review | Required here because contracts and cross-document requirements changed. |
+Boundary requirements and outcomes are recorded in the [canonical ledger](#canonical-review-ledger),
+especially R2/R17/R20/R27/R31 and R34-R36; there is no second copy here.
+Publication mechanisms N1-N3 remain owner-agreed deferred to #19 before runtime.
 
 ### Verification evidence
 
 Requirements verification covers the complete PR diff against origin/main,
 unchanged design/tooling/handoff/consumer passages containing the changed terms,
-current issue bodies/dependency order, local paths/anchors and this boundary
-matrix. Release/runtime RED cases above are future acceptance requirements,
+current issue bodies/dependency order, local paths/anchors and the boundary
+requirements referenced above. Release/runtime RED cases above are future acceptance requirements,
 not assertions that the validator or publisher is implemented.
 
-Documentation checks: `git diff --check` PASS; 20 local paths/anchors resolve;
+Documentation checks: `git diff --check` PASS; 21 local paths/anchors resolve;
 issue dependency graph has no cycle and #17/#19/#26 retain their intended order.
 All eight versions remain 0.1.0; actual catalogs remain nine proposed, zero accepted.
 Node 26.11.1: `npm run typecheck` and `npm test` PASS, 70/70 tests, including
