@@ -40,7 +40,7 @@ Svelte 5 в fixtures. Node.js 26.11.1 закреплён в .node-version;
 1. Несовместимые package versions или несколько версий профиля: отказ, а не неявный выбор — Task 4.
 2. Symlink и обход корня через документ/entrypoint/managed manifest: не читать и не писать наружу — Tasks 2, 5, 7.
 3. Ручная правка и сбой между writes: не потерять исходные файлы и не сообщить ложный успех — Task 5.
-4. Потребитель без workspace links и без исходного checkout: все exports и bin работают из tarballs — Tasks 8, 9, 10.
+4. Потребитель без workspace links и без исходного checkout: все exports и bin работают из tarballs — Tasks 8.1, 8.2, 9, 10.
 5. Независимый релиз с неопубликованной зависимостью: проверять группу и неизменность несвязанных пакетов — Task 10.
 
 ## Размещение и границы этапа
@@ -130,11 +130,11 @@ ownership validation.
 Отдельные содержательные подзадачи, каждая со своим inventory, текстом,
 rationale, verification, review и коммитом:
 
-- **3.1 Core:** `packages/core/architecture`, `security`, `workflow`; темы публичных границ, проверки приёмки, ревью и секретов. Первым принимается CORE-ARCH-001 или согласованная замена без повторного использования ID.
+- **3.1 Core:** `packages/core/architecture`, `security`, `workflow`; темы публичных границ, проверки приёмки, ревью и секретов. Минимальный кандидат первого среза — CORE-ARCH-001 или согласованная замена без повторного использования ID; решение принимает владелец.
 - **3.2 TypeScript:** `packages/technologies/typescript/docs`; strict и runtime-boundaries. TS-TYPES-001 проходит отдельное ревью до первого среза.
 - **3.3 Svelte SPA:** `packages/stacks/frontend/svelte-spa/docs`; композиция и выбранные FSD-границы. SVELTE-SPA-ARCH-001 проходит отдельное ревью до первого среза.
-- **3.4 Frontend:** `packages/domains/frontend/architecture`, `accessibility`, `forms`; state ownership и состояния взаимодействия. Выполняется после Task 8, с отдельным owner approval.
-- **3.5 Svelte:** `packages/technologies/svelte/docs`; derived state и lifecycle. Выполняется после Task 8, с отдельным owner approval.
+- **3.4 Frontend:** `packages/domains/frontend/architecture`, `accessibility`, `forms`; пересмотр seed FRONTEND-ARCH-001 с сохранением ID и новые темы доступности/состояний взаимодействия. Выполняется после Task 8.2, с отдельным owner approval. До текстов forms/store согласовать отдельный дизайн применимости.
+- **3.5 Svelte:** `packages/technologies/svelte/docs`; пересмотр seed SVELTE-STATE-001 с сохранением ID и новые темы lifecycle. Выполняется после Task 8.2, с отдельным owner approval.
 
 Каждый набор проверяется своим catalog validation и review checklist;
 accepted статусы подтверждаются владельцем, не наличием зелёного Schema-теста.
@@ -177,10 +177,10 @@ accepted статусы подтверждаются владельцем, не 
 
 **Interfaces:** renderInstructions(resolved, documents, generatorVersion) -> string; consumes Resolved Task 4, без IO/Node discovery. Вывод UTF-8/LF, полный normative текст, IDs, source package/version, generatorVersion и exceptions.
 
-- [ ] Написать tests: реальные accepted IDs из Task 3 присутствуют; proposed и невыбранные отсутствуют; exception явно обозначено, не как обязательное требование; порядок стабилен при входной перестановке; package version отличается от generator version.
+- [ ] Написать tests: synthetic accepted IDs присутствуют; proposed и невыбранные отсутствуют; exception явно обозначено, не как обязательное требование; порядок стабилен при входной перестановке; package version отличается от generator version. Реальные accepted IDs проверяются позже в Task 8.2 после owner acceptance.
 - [ ] Запустить node --test packages/tooling/standards-cli/tests/render.test.js; Expected: RED отсутствующего renderer.
 - [ ] Реализовать только чистый renderer и deterministic provenance. Исключённые требования и ручные проверки не выдавать за автоматически доказанное соответствие.
-- [ ] Повторить render/catalog/selection suite; Expected: PASS и непустой real profile, подтверждённый owner review.
+- [ ] Повторить render/catalog/selection suite; Expected: PASS и непустой synthetic profile; actual package statuses не меняются. Принятый реальный профиль остаётся проверкой Task 8.2.
 - [ ] Закоммитить renderer отдельно от managed IO.
 
 ### Task 7: Package discovery, команды и bin
@@ -191,7 +191,7 @@ accepted статусы подтверждаются владельцем, не 
 
 - [ ] Написать tests missing/undeclared package, installed version mismatch с прямой exact declaration, unsupported schema, external root symlink и exported metadata. Sync без документа/реестра создаёт оба; existing document без реестра, missing managed output, malformed/partial state и manual edit отклоняются. Check/dry-run read-only, entrypoint links обязательны. После dependency update при неизменном Selection check даёт MANAGED_DRIFT по версиям. Assert.deepEqual(afterCheckFiles, beforeCheckFiles); реальные команды дают 0/1 без private marker.
 - [ ] Запустить node --test packages/tooling/standards-cli/tests/discovery.test.js packages/tooling/standards-cli/tests/cli.test.js; Expected: RED отсутствующих команд.
-- [ ] TDD setup сценариев: existing engist.json, включая invalid JSON, даёт successful no-op до prompts/network; unsafe path/IO errors отказывают. Detected stack подтверждается, unknown stack выбирается вручную; только доступные catalogs/modules. Show plan до writes; cancel ничего не меняет; exclusive create не затирает появившийся во время wizard JSON. Configuration-only не запускает install; без package.json не создаётся приложение. Noninteractive missing choices — отказ без writes/network, defaults не разрешают install.
+- [ ] До runtime реализации согласовать existing-config контракт из handoff: валидный engist.json даёт successful no-op до prompts/network; поведение invalid JSON остаётся открытым. Предложение ревью — отказ без записи/prompts/network; это ещё не принятое решение. Unsafe path/IO errors отказывают. После согласования синхронизировать design/workflow и написать TDD setup сценарии. Detected stack подтверждается, unknown stack выбирается вручную; только доступные catalogs/modules. Show plan до writes; cancel ничего не меняет; exclusive create не затирает появившийся во время wizard JSON. Configuration-only не запускает install; без package.json не создаётся приложение. Noninteractive missing choices — отказ без writes/network, defaults не разрешают install.
 - [ ] Реализовать отдельную границу installer: только после явного согласия, exact reviewed versions, supported project package manager; compatible existing deps сохраняются, conflicts/upgrades требуют решения. Нет shell interpolation из choices, raw secret output или blind rollback. Failure сохраняет approved JSON/фактические dependency changes, возвращает nonzero с точными завершёнными шагами; recovery через manager и sync. Unit adapter tests плюс реальный offline-prepared tarball consumer проверяют dependency/lock изменения и отсутствие установки при отказе. Metadata resolution предшествует writes; cancellation до commit не меняет проект.
 - [ ] Скомпоновать Tasks 4–6: sync создаёт docs/engineering-standards.md с полными принятыми текстами и managed record либо обновляет managed output. Init создаёт Selection и после validated install предлагает вызвать обычный sync, не собственный renderer. AGENTS/CLAUDE links добавляет человек. Validate HTTPS/local decision references и stable diagnostics. Sync/check не делают сетевых запросов/установки и не переписывают tooling configs.
 - [ ] Реализовать preview только из безопасного WritePlan после полного preflight: sync --dry-run --diff не пишет документ, реестр, временные файлы, backups, package.json или lockfile. Добавить tests реального unified patch, пустого patch при отсутствии изменений, отказа --diff без --dry-run и сохранения ручных правок без вывода их содержимого. Dry-run проходит те же проверки совместимости/конфликтов, что запись. Обычный sync оставляет tracked diff для review/commit.
@@ -359,7 +359,8 @@ read-only validateRelease и явно одобренная revision → публ
 
 - PR #7: baseline на Node 26.0.0 (нижняя граница) и 26.11.1 (версия разработки)
   проверен: typecheck и полный suite проходят, 70/70 на каждой версии.
-  До merge это результаты feature-ветки, а не утверждение о состоянии main.
+  PR #7 вмержен в main (`05daff7`); это исторические результаты PR, которые
+  не заменяют свежую проверку при продолжении.
 
 - Tasks 1–2: metadata exports, namespaces/canonical profile IDs, explicit schema-version diagnostics, bundled schema parity, отсутствие runtime dependency CLI на core и root-symlink regression реализованы. Baseline после PR #3 — 70 тестов (прежнее число 55 устарело); предыдущие прогоны проверили его на Node 22.13.0 и 24.14.0. Эти исторические результаты не заменяют свежий прогон при продолжении. Проверка включает пакеты, установленные из tarballs через явно offline install после npm ci, и names-only selection schema. Это проверка каталога и схемы, не будущих commands/config fixtures.
 - Task 3.1: core boundaries/workflow/security тексты и inventory подготовлены в отдельном commit, все proposed.

@@ -14,7 +14,8 @@ lockfile, совместимость и формат тегов. База — me
 npm scripts и подготовку независимых версий/changelog через Changesets.
 Существующая структура пакетов и их публичные имена сохраняются.
 
-Это отдельный инфраструктурный PR по issue #1. Он выделяет начальную настройку
+Это отдельный инфраструктурный этап по [issue #9](https://github.com/antonsmolko/engineering-standards/issues/9)
+в общей задаче #1. Он выделяет начальную настройку
 инструментов из Task 10 [общего плана](../plans/2026-10-11-engineering-standards-independent-packages.md),
 но не завершает Task 10 и не отменяет условия
 [основной спецификации](2026-10-11-engineering-standards-design.md).
