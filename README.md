@@ -13,20 +13,22 @@ Implementation is in progress under [issue #1](https://github.com/antonsmolko/en
 - [Implementation plan](docs/superpowers/plans/2026-10-11-engineering-standards-independent-packages.md)
 - [CLI workflow and generated instructions](packages/tooling/standards-cli/docs/workflow.md)
 
-Current implementation: package catalogs, validation and isolated packed-artifact
-tests. Initial requirements remain proposed. CLI commands and lint/format
-configurations are not implemented yet; workflow examples describe the intended
-behavior rather than available commands.
+Current implementation: package catalogs, validation, read-only workspace checks
+and isolated packed-artifact tests. Initial requirements remain proposed.
+Executable CLI commands and lint/format configurations are not implemented.
 
-Run `npm ci --ignore-scripts` with registry access to explicitly prepare the npm
-cache, then `npm test`. Consumer installation stays offline; an empty cache
-produces preparation guidance. Repository-local formatting tooling/dogfooding
-remains pending: no reproducible npm formatting command is claimed yet.
+Run `npm ci --ignore-scripts` with registry access to prepare the npm cache,
+then `npm run check`. It runs typecheck, workspace lock/version and local
+`manifest.requires` compatibility checks, and the full test suite. Errors stop
+subsequent stages. Source files and versions stay unchanged; external semantic
+requirements are not verified against a registry. The existing tarball tests
+install consumers offline; an empty cache produces preparation guidance.
 
 Use Node 26; `.node-version` pins Node 26.11.1 for development. Older Node
-versions are not supported. Test helpers use TypeScript: run `npm run typecheck`
-to check their types and `npm test` to run them with Node's built-in TypeScript
-support. Published packages retain their current JavaScript/Markdown/JSON formats.
+versions are not supported. Root scripts and test helpers use TypeScript and
+are included in `npm run typecheck`; Node runs their erasable types directly.
+Published packages retain their JavaScript/Markdown/JSON formats. Changesets
+and publication are pending. No repository-local formatting command exists yet.
 
 With nvm, select the pinned version explicitly:
 `nvm install "$(cat .node-version)"` followed by `nvm use "$(cat .node-version)"`.
