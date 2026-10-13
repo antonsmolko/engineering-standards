@@ -2,8 +2,8 @@
 
 Статус: scope #9 сокращён [решением владельца](https://github.com/antonsmolko/engineering-standards/issues/9#issuecomment-6139713816).
 Это заменяет прежние требования pack:check/version:prepare и собственному release tooling.
-[Первый план](../plans/2026-10-13-workspace-checks.md) уточнён прямым запросом владельца
-исправить ревью PR #29 и перевести скрипты на TS; повторного согласования этих исправлений не требуется.
+[Первый план](../plans/2026-10-13-workspace-checks.md) описывает check на TypeScript.
+Согласование плана и gates merge/публикации остаются отдельными.
 
 ## Область работ
 
@@ -41,7 +41,9 @@ semver.satisfies проверяет установленную workspace version
 
 Второй PR #9 настраивает штатный Changesets с fixed: [], linked: [], access: public,
 baseBranch: main; private root не версионируется. Status/version выполняются штатными
-командами, без собственного version:prepare. Точный план второго PR готовится отдельно.
+командами, без собственного version:prepare. Решения по Changesets уточняются
+в отдельно согласуемом плане второго PR. Lerna/Nx отложены до реальных
+prerequisites и измеримой потребности, как зафиксировано в общем плане.
 Рабочие версии до публикации остаются 0.1.0; публикация требует явного разрешения.
 
 Проверка состава пакетов штатным npm pack --workspaces --dry-run --json принадлежит #18.

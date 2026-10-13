@@ -30,6 +30,19 @@ P1–P3 below record the original planning round. Their fixes at the original re
 | [Accepted decision](https://github.com/antonsmolko/engineering-standards/issues/1#issuecomment-6139713098), [#9](https://github.com/antonsmolko/engineering-standards/issues/9#issuecomment-6139713816) | <a id="r8"></a>R8: superseded first-release roadmap/criteria | #9, current tooling design/plan, general design/plan, handoff | Applied to #9; full historical cleanup explicitly separate | Owner accepted the new scope. #9 and its active design/plan replace old criteria; general docs label superseded sections. Owner explicitly requests full roadmap/task cleanup as a separate docs-PR under #1; this is its agreed reason/follow-up, not unfinished runtime work in PR #29. |
 | [Issue #9](https://github.com/antonsmolko/engineering-standards/issues/9), direct owner TS request (private input, not a public basis) | <a id="r9"></a>R9: root script should be TypeScript and typechecked | check-workspaces.ts, tsc, package/lock metadata | Fixed | Typed entry runs directly on Node 26; scripts/**/*.ts included in tsc, exact @types/semver supplies upstream types. No new runtime dependency or published package changes. |
 
+## Follow-up review of 9225bae
+
+Read the complete [follow-up summary](https://github.com/antonsmolko/engineering-standards/pull/29#pullrequestreview-5499887530), all pages of PR reviews/comments and #1/#9 comments, the current issue #9 criteria, linked design/plan/handoff and the earlier private review file. No new inline findings were added. The reviewer confirms R1–R5/R9 and the agreed scope; those closures remain closed.
+
+| Source | Finding | Affected files/issues | Disposition | Evidence |
+| --- | --- | --- | --- | --- |
+| [Follow-up summary](https://github.com/antonsmolko/engineering-standards/pull/29#pullrequestreview-5499887530) | <a id="r10"></a>R10: Changesets decisions and deferred Lerna/Nx lack an explicit pointer after the design rewrite | Tooling design, general plan Task 10 | Fixed | Design explicitly assigns Changesets decisions to the separately agreed second-PR plan and retains the general plan's Lerna/Nx deferral. No new release mechanism or criteria added. |
+| [Follow-up summary](https://github.com/antonsmolko/engineering-standards/pull/29#pullrequestreview-5499887530) | <a id="r11"></a>R11: statement waiving repeat approval relies on private input | Tooling design introduction | Fixed | Replaced it with a neutral statement that plan agreement and merge/publication gates remain separate; the first-plan pointer now describes the typed check. Approval requirements are unchanged. |
+
+This round changes wording only. AGENTS.md review rule 6 permits skipping another independent review for wording corrections; the prior independent implementation review remains applicable. No runtime changes or new behavior tests are required.
+
+Fresh verification for this round: Node 26.11.1 npm run check passed typecheck, workspace consistency and all 95 tests. Separately inspected the complete main-to-feature diff, checked all 24 local file links, R10/R11 anchors and wording against the general plan, handoff and current #9 body; git diff --check is clean. No issue criteria, approval gates or runtime files changed. R10/R11 are closed; the previously accepted follow-up roadmap work remains separate.
+
 ## GitHub issue edits
 
 - #9 body replaced with the explicitly approved new scope, check/standard Changesets criteria, typed check implementation, retained carrier history, Refs/closure and separate roadmap follow-up. Old pack:check/version:prepare criteria are superseded by the public owner decision.
