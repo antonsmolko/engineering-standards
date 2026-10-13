@@ -17,22 +17,24 @@ vertical slice выполняется до содержательного рев
 В ревью PR #7 закреплены проверки нижней границы 26.0.0 и версии разработки
 26.11.1, typecheck в будущем check/CI и Task 11.1 — подготовка процесса
 публикации с отдельным gate на реальный выпуск. Эти пункты описаны в плане;
-check/CI/publication workflow ещё не реализованы.
+Первый PR #9 реализует check/pack:check; CI/publication workflow остаются будущими задачами.
 
 ## Откуда продолжать
 
 Репозиторий: [antonsmolko/engineering-standards](https://github.com/antonsmolko/engineering-standards).
-Актуальная база для продолжения — main после merge
-[PR #7](https://github.com/antonsmolko/engineering-standards/pull/7),
-commit `05daff770366a5b039e8dcdc375a9b221192ffd7`.
-Первоначальный снимок был сделан после PR #4; этот handoff актуализирован
-после PR #7 (2026-10-12).
+Актуальная база — main после merge
+[PR #27](https://github.com/antonsmolko/engineering-standards/pull/27),
+commit `54e29b447e3f06b2d8eab0407bdd1b8857a619b3`.
+Снимок ниже дополнен 2026-10-13: владелец согласовал tooling design и
+[план первого implementation PR #9](../superpowers/plans/2026-10-13-workspace-checks.md)
+для check/pack:check, выполнение в текущей сессии с независимым итоговым review.
+Changesets/versioning остаётся вторым PR #9; issue не закрывается первым этапом.
 Основная задача: [issue #1](https://github.com/antonsmolko/engineering-standards/issues/1).
 В ней находится roadmap Tasks 3–11.1: issues #9–#26 с критериями и зависимостями.
 [Issue #28](https://github.com/antonsmolko/engineering-standards/issues/28)
 фиксирует политику review по запросу владельца в том же подготовительном PR #27;
 ветка и префикс задачи-носителя #9 сохраняются, runtime #9 этим не завершается.
-Следующий этап — #9; #8 (Node 26 и TypeScript helpers) закрыта после PR #7.
+Текущий этап — первый implementation PR #9 (check/pack:check); #8 (Node 26 и TypeScript helpers) закрыта после PR #7.
 Frontend/Svelte расширение #24/#25 следует после реального среза #23,
 но не является обязательным блокером первого выпуска #26.
 
@@ -86,8 +88,8 @@ package-lock.json с package.json до/после version:prepare и negative fi
 с устаревшей lockfile-записью при согласованных package.json/manifest.
 Успех npm ci не заменяет это сравнение. Цель описывает корневые scripts,
 ссылки на Lerna удалены из текущих источников. Общий план синхронизирован,
-устаревший baseline 55 обновлён до 70. Это правки документации; сами проверки
-check/version:check/version:prepare и negative fixture ещё не реализованы.
+устаревший baseline 55 обновлён до 70. Первый implementation PR #9 добавляет read-only check и negative lockfile fixtures;
+version:check/version:prepare остаются вторым PR.
 
 Пять specification-пакетов содержат manifests и Markdown. CLI содержит
 catalog loader/validator и bundled schema snapshots с parity tests; он не
@@ -106,8 +108,9 @@ vertical slice, а не accepted-only fixtures.
 
 ## Чего ещё нет
 
-Lerna, Nx и Changesets не установлены. Новые check/pack/version scripts только
-описаны. PR #4 и PR #6 описывают дизайн, а не выполненную настройку инструментов.
+Lerna, Nx и Changesets не установлены. Check/pack:check реализуются первым PR #9;
+version scripts остаются вторым PR. PR #4/#6/#27 сами по себе были подготовкой,
+а не выполненной настройкой инструментов.
 
 Не реализованы resolver, managed IO/renderer, discovery, команды init/sync/check,
 bin Engist, installer/setup, config exports ESLint/Prettier, вертикальный срез,
@@ -116,15 +119,14 @@ Tooling config-пакеты пока skeletons. Не объявлять Tasks 4�
 
 ## Ближайшие действия
 
-1. Согласовать с владельцем исправленный письменный дизайн monorepo tooling.
-   Merge PR #4/#6 не трактовать как разрешение выполнять ещё не написанный
-   implementation plan. Повторно исправлять закрытые в PR #6 уточнения не нужно.
-2. После утверждения дизайна составить отдельный implementation plan monorepo
-   tooling и согласовать его и способ выполнения. Не реализовывать
-   инструментальную часть по одному
-   общему Task 10: новый этап выделен раньше него и не заменяет release gates.
-3. Выполнить согласованный план с RED → GREEN behavior tests и проверками
-   настоящих Changesets во временных workspaces; рабочие версии не повышать.
+1. Завершить первый согласованный PR #9: check/pack:check с RED → GREEN tests,
+   проверкой всех восьми tarballs и offline consumer на Node 26.0.0/26.11.1,
+   независимым итоговым review. Merge требует отдельного разрешения.
+2. После первого PR подготовить и согласовать план Changesets/versioning по #9,
+   затем проверить настоящие Changesets во временных workspaces.
+   Рабочие версии не повышать; первый PR не закрывает #9.
+3. Далее продолжить resolver и остальные инфраструктурные задачи по roadmap #1.
+   Общий Task 10 сохраняет registry/accepted release gates.
 
 В дизайне version:prepare: clean worktree → projected compatibility preflight
 → Changesets version → manifest sync → offline lockfile update → post-check.

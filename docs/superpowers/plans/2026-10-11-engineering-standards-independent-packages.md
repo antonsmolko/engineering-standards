@@ -287,6 +287,9 @@ tooling schema при необходимости требует отдельно
 в отдельный инфраструктурный этап по
 [дизайну monorepo tooling](../specs/2026-10-11-engist-monorepo-tooling-design.md).
 Lerna/Nx отложены до реальных prerequisites и измеримой потребности.
+Issue #9 выполняется двумя implementation PR: сначала локальный check/pack:check
+по [согласованному плану](2026-10-13-workspace-checks.md), затем Changesets/versioning.
+Первый PR не закрывает #9; все versioning критерии сохраняются, Task 10 не завершён.
 Этап включает локальные current/projected manifest.requires checks,
 прямую проверку равенства всех workspace versions в package-lock.json и
 package.json до/после version:prepare, синхронизацию lockfile после version

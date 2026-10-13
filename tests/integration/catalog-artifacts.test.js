@@ -7,6 +7,7 @@ import { dirname, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import test from "node:test";
 import { installOffline } from "../helpers/install-offline.ts";
+import { verifyConsumer } from "../../scripts/verify-consumer.js";
 
 const packages = [
   ["packages/core", "standards-core", "CORE", "core"],
@@ -50,6 +51,7 @@ test("packed catalogs export consumer metadata and CLI loads them without worksp
     JSON.stringify({ private: true, type: "module" }),
   );
   const tarballs = [];
+  const metadata = [];
 
   for (const path of [
     ...packages.map(([path]) => {
@@ -84,10 +86,12 @@ test("packed catalogs export consumer metadata and CLI loads them without worksp
       }),
     );
     tarballs.push(join(consumer, packed[0].filename));
+    metadata.push(JSON.parse(await readFile(resolve(path, "package.json"), "utf8")));
   }
 
   // npm ci prepares the cache explicitly; this install must not fetch from the registry.
   installOffline(consumer, tarballs);
+  await verifyConsumer(consumer, metadata);
   const require = createRequire(join(consumer, "package.json"));
   const cliRoot = join(consumer, "node_modules/@antonsmolko/standards-cli");
   const { loadCatalog } = await import(

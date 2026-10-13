@@ -2,7 +2,7 @@
 
 > **For agentic workers:** Use `superpowers:executing-plans` after owner review.
 
-**Status:** Tooling design, this first-delivery plan and native execution approved by the owner in chat on 2026-10-13 ("давай делать"). Implementation in progress.
+**Status:** Tooling design, this first-delivery plan and native execution approved by the owner in chat on 2026-10-13 ("давай делать"). Implementation verified on both supported Node versions; whole-branch review and PR creation pending.
 
 **Goal:** Provide `npm run check` and `npm run pack:check` for the existing eight workspaces.
 
@@ -35,35 +35,29 @@ Upstream baseline: [npm run](https://docs.npmjs.com/cli/v11/commands/npm-run/) a
 
 **Interfaces:** `checkWorkspaces(root: string): Promise<string[]>` returns English diagnostics for root workspaces, their package metadata, lock entries and specification manifest compatibility. Success returns `[]` and exits 0. Missing/unreadable/malformed required JSON and invalid versions/ranges return English diagnostics; the command-line wrapper writes diagnostics to stderr and exits nonzero without writes. Specification manifests are required only in the five existing specification workspaces; absent tooling manifests are valid. `npm run check` runs typecheck, this check and the complete existing test suite once, stopping on failure.
 
-- [ ] Write failing behavior tests using temporary workspace copies: all eight matching lock entries pass; missing/stale tooling lock entry fails even when specification metadata agree; manifest name/version drift and an incompatible local `requires` range fail. Cover missing/unreadable/malformed required metadata and invalid versions/ranges; assert empty diagnostics/exit 0 on success and nonzero/English diagnostics on failure. Compare source snapshots before/after.
-- [ ] Run `node --test tests/integration/workspace-checks.test.js`; require failure for the missing intended behavior before implementation.
-- [ ] Implement the metadata checks with JSON reads and existing semver; compose root `check` with npm scripts. External semantic requirements are not claimed verified by this local check.
-- [ ] Verify the targeted tests pass. In a temporary root, inject a failing typecheck/metadata stage and assert later test stages are not invoked; do not add public bypass or dependency-injection options.
-- [ ] Commit with `[engineering-standards-9]: Add read-only workspace checks`.
+- [x] Write failing behavior tests using temporary workspace copies: all eight matching lock entries pass; missing/stale tooling lock entry fails even when specification metadata agree; manifest name/version drift and an incompatible local `requires` range fail. Cover missing/unreadable/malformed required metadata and invalid versions/ranges; assert empty diagnostics/exit 0 on success and nonzero/English diagnostics on failure. Compare source snapshots before/after.
+- [x] Run `node --test tests/integration/workspace-checks.test.js`; require failure for the missing intended behavior before implementation.
+- [x] Implement the metadata checks with JSON reads and existing semver; compose root `check` with npm scripts. External semantic requirements are not claimed verified by this local check.
+- [x] Verify the targeted tests pass. In a temporary root, inject a failing typecheck/metadata stage and assert later test stages are not invoked; do not add public bypass or dependency-injection options.
+- [x] Commit with `[engineering-standards-9]: Add read-only workspace checks`.
 
 ## Task 2: Verify all eight packed artifacts
 
-**Files:** create `scripts/pack-check.js` and `tests/integration/pack-check.test.js`; modify root `package.json` and `README.md`. Reuse `tests/integration/catalog-artifacts.test.js` and `tests/helpers/install-offline.ts`.
+**Files:** create `scripts/pack-check.js`, shared `scripts/verify-consumer.js` and `tests/integration/pack-check.test.js`; modify root `package.json` and `README.md`. Reuse `tests/integration/catalog-artifacts.test.js` and `tests/helpers/install-offline.ts`.
 
-**Interfaces:** `packWorkspaces(root: string): Promise<void>` throws on verification/packing failure and uses the root workspace list and `npm pack --json --ignore-scripts` with a temporary destination; checks actual package identity, packed file inventory and declared exports against existing package allowlists. Root `pack:check` runs `check`, then this pack verification and an offline external consumer of the newly packed artifacts, with no recursive scripts or second full-suite run.
+**Interfaces:** `packWorkspaces(root: string): Promise<void>` throws on verification/packing failure and uses the root workspace list and `npm pack --json --ignore-scripts` with a temporary destination; checks actual package identity, packed file inventory and declared exports against existing package allowlists. Current exports are explicit unconditional file targets; missing or unsupported targets fail. Inputs are maintainer-controlled repository metadata; npm owns pack selection and offline install, with no workspace fallback in consumer verification. Root `pack:check` runs `check`, then this pack verification and an offline external consumer of the newly packed artifacts, with no recursive scripts or second full-suite run.
 
-- [ ] Write failing integration tests: the pack stage is not reached when check fails; success produces and inspects exactly eight artifacts without the private root; a leaked test fixture or missing declared export fails. Verify that the post-pack offline consumer imports existing exports and loads catalogs, and that a cache miss fails without network fallback. Verify cleanup on success and packing/consumer failure.
-- [ ] Run `node --test tests/integration/pack-check.test.js`; require failure for the missing intended behavior before implementation.
-- [ ] Implement the thin npm packaging wrapper. Reuse the existing offline-install helper and consumer assertions for specification metadata and CLI catalog loading, applying them to the newly packed artifacts after successful check. Extract shared consumer verification from the existing test where needed; extend it only where a declared public export lacks coverage. Config/bin implementation remains in its owning tasks.
-- [ ] Run `npm run typecheck`, `npm test`, `npm run check` and `npm run pack:check` on Node 26.0.0 and 26.11.1. Inspect all eight tarballs and verify tracked files, versions and statuses remain unchanged by the commands.
-- [ ] Document cache preparation and the two commands; state that versioning, executable CLI and publication remain pending. Commit with `[engineering-standards-9]: Verify packed workspace artifacts`.
+- [x] Write failing integration tests: the pack stage is not reached when check fails; success produces and inspects exactly eight artifacts without the private root; a leaked test fixture or missing declared export fails. Verify that the post-pack offline consumer imports existing exports and loads catalogs, and that a cache miss fails without network fallback. Verify cleanup on success and packing/consumer failure.
+- [x] Run `node --test tests/integration/pack-check.test.js`; require failure for the missing intended behavior before implementation.
+- [x] Implement the thin npm packaging wrapper. Reuse the existing offline-install helper and consumer assertions for specification metadata and CLI catalog loading, applying them to the newly packed artifacts after successful check. Extract shared consumer verification from the existing test where needed; extend it only where a declared public export lacks coverage. Config/bin implementation remains in its owning tasks.
+- [x] Run `npm run pack:check` on Node 26.0.0 and 26.11.1; its check stage runs `npm run typecheck`, metadata validation and `npm test` once per invocation. Inspect all eight tarballs and verify tracked files, versions and statuses remain unchanged by the commands.
+- [x] Document cache preparation and the two commands; state that versioning, executable CLI and publication remain pending. Commit with `[engineering-standards-9]: Verify packed workspace artifacts`.
 
 ## Completion
 
 - [ ] Review the complete feature diff and related tooling requirements independently under AGENTS.md; record actual checks separately from future release behavior.
 - [ ] Open an implementation PR with `Refs #9`, the two-command outcome and verification evidence. Retain remaining #9 versioning criteria; merge/publish still require explicit approval.
 
-## Draft review evidence
+## Review evidence
 
-Independent reviewer read the full draft, AGENTS.md, tooling design, relevant general plan, issue #9 and its comments, handoff and current package/test setup. Three findings were corrected before owner review; no runtime changes were made. Reviewer input is private input, not a public basis; public requirements are linked below.
-
-| Source | Finding | Affected files/issues | Disposition | Evidence |
-| --- | --- | --- | --- | --- |
-| [Issue #9](https://github.com/antonsmolko/engineering-standards/issues/9) | External consumer must verify post-check artifacts | This plan, Task 2 | Fixed | Post-pack offline install/import/catalog checks explicitly follow successful check. |
-| [AGENTS.md rule 4](https://github.com/antonsmolko/engineering-standards/blob/main/AGENTS.md) | Invalid metadata and success behavior undefined | This plan, Task 1 | Fixed | Defined required/optional manifests, invalid inputs, diagnostics/exit and read-only negative fixtures. |
-| [AGENTS.md task scope](https://github.com/antonsmolko/engineering-standards/blob/main/AGENTS.md) | Maintained upstream example missing | This plan, baseline | Fixed | Linked and inspected npm/cli smoke-test scripts and real pack JSON test. |
+Canonical findings and issue-edit record: [review response](../../architecture/2026-10-13-workspace-checks-review-response.md).
