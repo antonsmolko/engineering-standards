@@ -14,7 +14,8 @@ lockfile, совместимость и формат тегов. База — me
 npm scripts и подготовку независимых версий/changelog через Changesets.
 Существующая структура пакетов и их публичные имена сохраняются.
 
-Это отдельный инфраструктурный PR по issue #1. Он выделяет начальную настройку
+Это отдельный инфраструктурный этап по [issue #9](https://github.com/antonsmolko/engineering-standards/issues/9)
+в общей задаче #1. Он выделяет начальную настройку
 инструментов из Task 10 [общего плана](../plans/2026-10-11-engineering-standards-independent-packages.md),
 но не завершает Task 10 и не отменяет условия
 [основной спецификации](2026-10-11-engineering-standards-design.md).
@@ -197,7 +198,7 @@ check не должен случайно требовать remote ref. Status �
 Рабочие каталог, package versions и lockfile не используются как fixture для
 изменения версий. Все временные артефакты имеют изолированные пути и cleanup.
 
-## Вне этого PR
+## Вне этого этапа
 
 Нет npm publish, release workflow, Git-тегов, merge, настройки credentials или
 branch protection. Нет реализации init/sync/check Engist, новых ESLint/Prettier

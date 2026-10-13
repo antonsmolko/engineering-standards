@@ -22,12 +22,19 @@ check/CI/publication workflow ещё не реализованы.
 ## Откуда продолжать
 
 Репозиторий: [antonsmolko/engineering-standards](https://github.com/antonsmolko/engineering-standards).
-База этой передачи — main после merge
-[PR #6](https://github.com/antonsmolko/engineering-standards/pull/6),
-commit `fa46ee698099e5714d6a94339fe4c5f41da75629`.
+Актуальная база для продолжения — main после merge
+[PR #7](https://github.com/antonsmolko/engineering-standards/pull/7),
+commit `05daff770366a5b039e8dcdc375a9b221192ffd7`.
 Первоначальный снимок был сделан после PR #4; этот handoff актуализирован
-после PR #6 и подтягивания main в ветку PR #5.
+после PR #7 (2026-10-12).
 Основная задача: [issue #1](https://github.com/antonsmolko/engineering-standards/issues/1).
+В ней находится roadmap Tasks 3–11.1: issues #9–#26 с критериями и зависимостями.
+[Issue #28](https://github.com/antonsmolko/engineering-standards/issues/28)
+фиксирует политику review по запросу владельца в том же подготовительном PR #27;
+ветка и префикс задачи-носителя #9 сохраняются, runtime #9 этим не завершается.
+Следующий этап — #9; #8 (Node 26 и TypeScript helpers) закрыта после PR #7.
+Frontend/Svelte расширение #24/#25 следует после реального среза #23,
+но не является обязательным блокером первого выпуска #26.
 
 Прочитать по порядку:
 
@@ -136,8 +143,8 @@ Tooling config-пакеты пока skeletons. Не объявлять Tasks 4�
   и проверку lockfile; не обещать все alias/overrides/catalog комбинации.
 - Существующий валидный engist.json: no overwrite/no wizard, exit 0.
   Предложенное уточнение для invalid/unreadable/unsafe файла: отказ без записи,
-  prompts или сети. Сейчас workflow всё ещё описывает successful no-op для
-  invalid JSON; перед Task 7 согласовать изменение и синхронизировать документы.
+  prompts или сети. Workflow и design описывают invalid JSON как открытый
+  контракт; перед Task 7 согласовать exit status и синхронизировать документы.
 - Будущее workflow-руководство попадает в files allowlist CLI; перед публикацией
   решить, оставлять ли честно маркированную документацию ещё отсутствующих команд.
 
@@ -161,7 +168,8 @@ npm run typecheck проверяет tests/helpers/**/*.ts без генерац
 внешний Prettier предыдущих проверок не является установленным tooling проекта.
 
 Работать от main в issue-scoped feature branch, коммиты
-`[engineering-standards-1]: <English description>`. Ответы на inline review
+`[engineering-standards-<issue>]: <English description>` по номеру конкретной
+задачи (например, `[engineering-standards-9]` для tooling). Ответы на inline review
 оставлять в соответствующих тредах. Без force push, merge, npm publish, тегов,
 настройки credentials/protection или смены нормативных статусов без согласования.
 

@@ -56,10 +56,11 @@ Run in the consuming project's root, not the standards repository:
 engist init
 ```
 
-1. Before prompts or network access, check for engist.json. If it exists, exit
-   successfully without changes: `Engist is already initialized. Run engist sync
-to synchronize.` Even invalid JSON is not overwritten; use check to diagnose
-   it. Unsafe paths, symlinks and IO errors are errors, not evidence of absence.
+1. Before prompts or network access, check for engist.json. If it exists and is
+   valid, exit successfully without changes: `Engist is already initialized. Run engist sync to synchronize.`
+   Invalid JSON is never overwritten; the exit status for that case is not yet
+   decided. Use check to diagnose it. Unsafe paths, symlinks and IO errors are
+   errors, not evidence of absence.
 2. Detect domain, technologies, stack and package manager from project metadata;
    ask the user to confirm or change suggestions. Ambiguous metadata requires a
    choice, not silent inference.
@@ -98,7 +99,8 @@ Once writes/installation begin, no all-or-nothing transaction is promised.
 - Configuration only: create engist.json, show exact installation and manual
   tool-connection instructions. Do not leave active tool imports/scripts referring
   to dependencies that have not been installed and validated.
-- Repeated init: return the already-initialized message before prompts/network.
+- Repeated init with valid configuration: return the already-initialized message
+  before prompts/network. Invalid configuration: see step 1.
 - Failed installation: return a nonzero status and accurately report completed
   steps, without sensitive raw output. Preserve the approved selection and actual
   dependency-file changes; do not claim successful generation or blindly roll back
