@@ -10,8 +10,6 @@ Owner's direct TS request and independent-agent review are **private input, not 
 
 P1–P3 below record the original planning round. Their fixes at the original revision remain historical; post-check consumer/metadata scope is superseded by the explicit owner decision, not silently reopened.
 
-
-
 | Source | Finding | Affected files/issues | Disposition | Evidence |
 | --- | --- | --- | --- | --- |
 | [Issue #9](https://github.com/antonsmolko/engineering-standards/issues/9) | P1: external consumer must verify post-check artifacts | Plan, pack scripts, consumer tests | Fixed | pack:check sequences check before pack; installs all eight new tarballs offline and verifies installed exports/catalogs. Existing full-suite consumer coverage remains. |
@@ -40,4 +38,6 @@ P1–P3 below record the original planning round. Their fixes at the original re
 ## Verification
 
 Previous 109-test check/pack results apply only to revision 8b12ba6 and are historical.
-Current targeted GREEN: 25 workspace tests and typecheck passed. Node 26.0.0 and 26.11.1 npm run check: typecheck, consistency check and all 95 tests passed, including the unchanged original packed-artifact/offline-consumer tests. Independent final review is pending.
+Current targeted GREEN: 25 workspace tests and typecheck passed. Node 26.0.0 and 26.11.1 npm run check: typecheck, consistency check and all 95 tests passed, including the unchanged original packed-artifact/offline-consumer tests. Independent review of the complete 54e29b4..057888f diff found no actionable findings; the reviewer independently reran Node 26.11.1 npm run check (95 tests) and verified the original artifact test is byte-identical to main.
+
+Documentation verification is separate from runtime tests: 24 local links/anchors resolve, the entire final diff and relevant unchanged docs/issues were checked for conflicts against the owner-approved scope. Historical roadmap sections are explicitly superseded pending the owner-assigned separate #1 docs-PR. All nine current review dispositions are closed or assigned to that explicitly agreed follow-up.

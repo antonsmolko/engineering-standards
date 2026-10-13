@@ -1,10 +1,10 @@
 # Engineering Standards Independent Packages Implementation Plan
+
 Текущий scope первого релиза заменён [решением владельца #1](https://github.com/antonsmolko/engineering-standards/issues/1#issuecomment-6139713098):
 #9 → #18 → #20 → #26, пять specification packages; CLI/config products отложены.
 Полная очистка исторических Tasks 4–11 ниже выполняется отдельным docs-PR по #1,
 как требует это решение. Их прежние механизмы и CLI-gates не являются текущими
 критериями первого релиза. Актуальный #9 описан в tooling design и отдельном плане.
-
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans or superpowers:subagent-driven-development to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
