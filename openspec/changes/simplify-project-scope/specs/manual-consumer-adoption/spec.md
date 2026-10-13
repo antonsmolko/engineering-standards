@@ -36,4 +36,4 @@
 
 #### Scenario: Upgrade selected standards
 - **WHEN** разработчик обновляет выбранный пакет через npm
-- **THEN** он читает changelog и рекомендации по совместимости в README без запуска Engist sync
+- **THEN** он читает changelog и рекомендации по совместимости в README без CLI или генерации

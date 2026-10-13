@@ -1,7 +1,7 @@
 # Proposal
 
 Задача планирования: [#30](https://github.com/antonsmolko/engineering-standards/issues/30).
-Владелец одобрил design в обсуждении; реализация и разрешения merge/публикации остаются отдельными.
+Владелец одобрил design в обсуждении (private input, not a public basis); публичная основа scope — [#30](https://github.com/antonsmolko/engineering-standards/issues/30). Реализация и разрешения merge/публикации остаются отдельными.
 
 ## Why
 
