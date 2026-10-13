@@ -7,6 +7,7 @@
   },
   "devDependencies": {
     "@types/node": "26.6.5",
+    "@types/semver": "7.8.0",
     "ajv": "8.20.0",
     "semver": "7.8.5",
     "typescript": "5.9.3"
@@ -24,7 +25,6 @@
   "scripts": {
     "test": "node --test",
     "typecheck": "tsc --project tsconfig.tests.json",
-    "check": "npm run typecheck && node scripts/check-workspaces.js && npm test",
-    "pack:check": "npm run check && node scripts/pack-check.js"
+    "check": "npm run typecheck && node scripts/check-workspaces.ts && npm test"
   }
 }

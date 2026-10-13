@@ -1,10 +1,16 @@
 # Issue #9 workspace checks: review response
 
-Scope: first implementation PR, check/pack:check only. The remaining Changesets/versioning criteria and issue closure stay in #9. Owner approved tooling design, first-delivery plan and native execution in chat on 2026-10-13 ("давай делать"). Chat and separate-agent reviews are **private input, not a public basis**; public actionable requirements are [issue #9](https://github.com/antonsmolko/engineering-standards/issues/9) and [AGENTS.md](https://github.com/antonsmolko/engineering-standards/blob/main/AGENTS.md).
+Current scope: check-only first PR #9, per [owner decision](https://github.com/antonsmolko/engineering-standards/issues/9#issuecomment-6139713816). TypeScript migration corrects the implementation of that same outcome. Changesets remains the second PR; #9 closure and merge/publication approval remain separate.
 
-Sources read: issue #9 body and all seven comments, related issue #1/#17/#18 bodies, complete tooling design and first-delivery plan, relevant general-plan/handoff/README, current workspace metadata and artifact/consumer tests. PR #27 is merged at `54e29b4`; its reviewer-confirmed closures are retained, with no new evidence reopening them. No review file was supplied for this first-delivery implementation.
+Current sources read: all four inline threads and the complete [summary review](https://github.com/antonsmolko/engineering-standards/pull/29#pullrequestreview-5499602258), PR comments, all pages of #1/#9 comments including accepted scope decisions, current issue bodies, complete final diff and linked design/plan/handoff. Inline thread/comment pagination has no further pages. The earlier private requirements review file belongs to merged PR #27; its reviewer-confirmed closures remain historical and are not reopened. It is **private input, not a public basis**; current actionable sources are the public review and owner decisions.
 
-## Findings
+Owner's direct TS request and independent-agent review are **private input, not a public basis**, paired with public issue #9/check requirements and the public review below. The TypeScript change is an implementation correction within the existing check outcome, not a new API/product or carrier scope addition.
+
+## Historical preparation findings
+
+P1–P3 below record the original planning round. Their fixes at the original revision remain historical; post-check consumer/metadata scope is superseded by the explicit owner decision, not silently reopened.
+
+
 
 | Source | Finding | Affected files/issues | Disposition | Evidence |
 | --- | --- | --- | --- | --- |
@@ -12,19 +18,26 @@ Sources read: issue #9 body and all seven comments, related issue #1/#17/#18 bod
 | [AGENTS.md rule 4](https://github.com/antonsmolko/engineering-standards/blob/main/AGENTS.md) | P2: invalid metadata and success behavior undefined | Plan, check script/tests | Fixed | Required JSON failures, name/version drift, invalid ranges and incompatible local ranges diagnose nonzero without writes. Matching eight lock entries and absent tooling manifests pass. |
 | [AGENTS.md task scope](https://github.com/antonsmolko/engineering-standards/blob/main/AGENTS.md) | P3: maintained upstream example missing | Plan baseline | Fixed | Inspected npm/cli smoke-test scripts and real pack JSON smoke test; npm owns sequencing/pack/install and node:test is retained. |
 
+## Current review findings
+
+| Source | Finding | Affected files/issues | Disposition | Evidence |
+| --- | --- | --- | --- | --- |
+| [Inline](https://github.com/antonsmolko/engineering-standards/pull/29#discussion_r4255402823), [owner scope](https://github.com/antonsmolko/engineering-standards/issues/9#issuecomment-6139713816) | <a id="r1"></a>R1: duplicate positive packing stage | package.json, pack scripts/tests | Fixed | Removed pack:check and new pack tests/scripts; check executes the existing full suite once. |
+| [Inline](https://github.com/antonsmolko/engineering-standards/pull/29#discussion_r4255402828) | <a id="r2"></a>R2: new CLI-dependent consumer duplicates existing coverage | verify-consumer, catalog-artifacts test | Fixed | Removed verifier; restored catalog-artifacts.test.js exactly to main, retaining existing catalog/tarball coverage. |
+| [Inline](https://github.com/antonsmolko/engineering-standards/pull/29#discussion_r4255402832) | <a id="r3"></a>R3: npm files allowlist reimplemented | pack-check | Fixed | Removed wrapper entirely. Future inventory uses supported npm behavior in #18. |
+| [Inline](https://github.com/antonsmolko/engineering-standards/pull/29#discussion_r4255402835) | <a id="r4"></a>R4: production wrapper imports test helper | pack-check, install-offline.ts | Fixed | Wrapper removed; only tests use install-offline.ts, so moving the helper would add no value. |
+| [Summary](https://github.com/antonsmolko/engineering-standards/pull/29#pullrequestreview-5499602258), [owner scope](https://github.com/antonsmolko/engineering-standards/issues/9#issuecomment-6139713816) | <a id="r5"></a>R5: duplicate metadata/path/range guards | check-workspaces.ts, tests, design | Fixed | Script retains direct lock version comparisons and local semver.satisfies. Existing suite owns schema/identity validation; I/O failures only receive contextual diagnostics. |
+| [Summary](https://github.com/antonsmolko/engineering-standards/pull/29#pullrequestreview-5499602258) | <a id="r6"></a>R6: RED/GREEN order not visible as separate commits | Test evidence | No change needed | Reviewer explicitly says there is no AGENTS.md violation; recorded prior RED remains valid. TS entry behavior tests also ran RED before implementation, then GREEN. |
+| [Summary](https://github.com/antonsmolko/engineering-standards/pull/29#pullrequestreview-5499602258) | <a id="r7"></a>R7: prefer one upstream workspace pack call | Removed wrapper, #18 | Fixed by scope removal | No new pack call remains in PR #29; owner assigns supported dry-run inventory to #18. |
+| [Accepted decision](https://github.com/antonsmolko/engineering-standards/issues/1#issuecomment-6139713098), [#9](https://github.com/antonsmolko/engineering-standards/issues/9#issuecomment-6139713816) | <a id="r8"></a>R8: superseded first-release roadmap/criteria | #9, current tooling design/plan, general design/plan, handoff | Applied to #9; full historical cleanup explicitly separate | Owner accepted the new scope. #9 and its active design/plan replace old criteria; general docs label superseded sections. Owner explicitly requests full roadmap/task cleanup as a separate docs-PR under #1; this is its agreed reason/follow-up, not unfinished runtime work in PR #29. |
+| [Issue #9](https://github.com/antonsmolko/engineering-standards/issues/9), direct owner TS request (private input, not a public basis) | <a id="r9"></a>R9: root script should be TypeScript and typechecked | check-workspaces.ts, tsc, package/lock metadata | Fixed | Typed entry runs directly on Node 26; scripts/**/*.ts included in tsc, exact @types/semver supplies upstream types. No new runtime dependency or published package changes. |
+
 ## GitHub issue edits
 
-- #1: record the same two-PR split and first-delivery approval in the roadmap; preserve #9 dependency and versioning requirements.
-- #9: record owner approval and the two-PR delivery split in a delivery-status section; retain all original acceptance criteria, versioning scope and closure. This records preparation/execution approval, not merge/publication/content approval.
+- #9 body replaced with the explicitly approved new scope, check/standard Changesets criteria, typed check implementation, retained carrier history, Refs/closure and separate roadmap follow-up. Old pack:check/version:prepare criteria are superseded by the public owner decision.
+- No mass task closures/labels or full #1 roadmap rewrite in this PR; owner explicitly assigns those to the separate docs-PR.
 
 ## Verification
 
-- RED: targeted workspace-check and pack-check tests failed before their scripts/commands existed.
-- Targeted GREEN: 30 workspace-check tests; 10 artifact/pack tests including the original consumer test.
-- Node 26.0.0 and 26.11.1: `npm run pack:check` passed, including typecheck, metadata check and all 109 tests. Each invocation then inspected eight real tarball inventories and verified their offline installed consumer.
-- Independent whole-branch review of `54e29b4..060df0c`: no actionable findings. Reviewer independently ran Node 26.11.1 pack:check (109 tests plus eight artifacts/consumer) and all 39 targeted metadata/pack tests. This does not grant merge/publication approval.
-- Documentation verification is separate from runtime tests: reviewed the complete diff and searched relevant unchanged documents/issue bodies for contract conflicts; checked 26 local links, dependency scope and retained previous reviewer-confirmed closures. No conflicts or broken destinations found.
-- Execution rulings: specification manifests derive from current metadata exports, not reserved files[] paths; current explicit unconditional export forms are supported, other forms reject. Cleanup concerns owned pack/consumer output, not npm/Node compile-cache directories. Supported-Node verification invokes the composed pack:check workflow, exercising each stage once per invocation.
-- Metadata and package versions remain 0.1.0; catalogs retain nine proposed/zero accepted. No dependencies, published package contents or release gates change.
-
-Integration: [PR #29](https://github.com/antonsmolko/engineering-standards/pull/29) is open against main with Refs #9. Changes after independent review only record review/PR results and reflow README wording; no runtime contracts changed.
+Previous 109-test check/pack results apply only to revision 8b12ba6 and are historical.
+Current targeted GREEN: 25 workspace tests and typecheck passed. Node 26.0.0 and 26.11.1 npm run check: typecheck, consistency check and all 95 tests passed, including the unchanged original packed-artifact/offline-consumer tests. Independent final review is pending.

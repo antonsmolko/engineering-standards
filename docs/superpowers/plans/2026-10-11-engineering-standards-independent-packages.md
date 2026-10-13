@@ -1,4 +1,10 @@
 # Engineering Standards Independent Packages Implementation Plan
+Текущий scope первого релиза заменён [решением владельца #1](https://github.com/antonsmolko/engineering-standards/issues/1#issuecomment-6139713098):
+#9 → #18 → #20 → #26, пять specification packages; CLI/config products отложены.
+Полная очистка исторических Tasks 4–11 ниже выполняется отдельным docs-PR по #1,
+как требует это решение. Их прежние механизмы и CLI-gates не являются текущими
+критериями первого релиза. Актуальный #9 описан в tooling design и отдельном плане.
+
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans or superpowers:subagent-driven-development to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -287,15 +293,11 @@ tooling schema при необходимости требует отдельно
 в отдельный инфраструктурный этап по
 [дизайну monorepo tooling](../specs/2026-10-11-engist-monorepo-tooling-design.md).
 Lerna/Nx отложены до реальных prerequisites и измеримой потребности.
-Issue #9 выполняется двумя implementation PR: сначала локальный check/pack:check
-по [согласованному плану](2026-10-13-workspace-checks.md), затем Changesets/versioning.
-Первый PR не закрывает #9; все versioning критерии сохраняются, Task 10 не завершён.
-Этап включает локальные current/projected manifest.requires checks,
-прямую проверку равенства всех workspace versions в package-lock.json и
-package.json до/после version:prepare, синхронизацию lockfile после version
-и требования к base ref/history
-для branch-relative status. Полный release preflight ниже остаётся Task 10;
-ни инфраструктурный дизайн, ни его merge не означают завершение Task 10.
+Issue #9 теперь выполняется двумя PR: сначала check (typecheck, workspace lock/local requires и полный suite)
+по [уточнённому плану](2026-10-13-workspace-checks.md), затем штатный Changesets status/version.
+Старые pack:check/version:prepare и projected-release tooling требования для #9 отменены
+[решением владельца](https://github.com/antonsmolko/engineering-standards/issues/9#issuecomment-6139713816).
+Проверка состава пакетов принадлежит #18. Первый PR не закрывает #9.
 
 **Files:** .changeset/config.json, .changeset/*.md; scripts/releases/{validate,sync-metadata}.js; tests/integration/{releases,artifacts}.test.js; tests/fixtures/releases/ (synthetic packages и закреплённые Selection); docs/architecture/releases.md.
 

@@ -5,19 +5,18 @@
 После возобновления сверить GitHub и рабочее дерево: дальнейшие PR могут
 изменить описанное здесь состояние.
 
-Уточнение владельца от 2026-10-12: сначала завершить техническую платформу
-на synthetic fixtures, затем наполнять и принимать стандарты. Technical
-vertical slice выполняется до содержательного ревью; реальный accepted-срез
-и условия нормативного релиза сохраняются. См. уточнённый порядок работы
-в общем дизайне и Tasks 8.1/8.2 общего плана. Не блокировать реализацию
-инфраструктуры ожиданием accepted текстов и не считать fixtures их принятием.
-Также владелец выбрал только Node 26: engines — ^26.0.0,
-версия разработки закреплена в .node-version (26.11.1).
+Актуальное решение владельца от 2026-10-13: [первый релиз](https://github.com/antonsmolko/engineering-standards/issues/1#issuecomment-6139713098)
+идёт по #9 → #18 → #20 → #26; пять specification packages. CLI/config products
+отложены. Accepted ID по одному из core, TypeScript и Svelte SPA и явное одобрение
+выпуска заменяют прежний CLI vertical-slice gate. Остальной исторический снимок
+очищается отдельным docs-PR #1, как указано в решении владельца.
+
+Node 26 only: engines ^26.0.0; .node-version 26.11.1.
 
 В ревью PR #7 закреплены проверки нижней границы 26.0.0 и версии разработки
 26.11.1, typecheck в будущем check/CI и Task 11.1 — подготовка процесса
 публикации с отдельным gate на реальный выпуск. Эти пункты описаны в плане;
-Первый PR #9 реализует check/pack:check; CI/publication workflow остаются будущими задачами.
+Первый PR #9 реализует check; CI/publication workflow остаются будущими задачами.
 
 ## Откуда продолжать
 
@@ -27,14 +26,14 @@ vertical slice выполняется до содержательного рев
 commit `54e29b447e3f06b2d8eab0407bdd1b8857a619b3`.
 Снимок ниже дополнен 2026-10-13: владелец согласовал tooling design и
 [план первого implementation PR #9](../superpowers/plans/2026-10-13-workspace-checks.md)
-для check/pack:check, выполнение в текущей сессии с независимым итоговым review.
-Changesets/versioning остаётся вторым PR #9; issue не закрывается первым этапом.
+для check, выполнение в текущей сессии с независимым итоговым review.
+Штатный Changesets status/version остаётся вторым PR #9; issue не закрывается первым этапом.
 Основная задача: [issue #1](https://github.com/antonsmolko/engineering-standards/issues/1).
 В ней находится roadmap Tasks 3–11.1: issues #9–#26 с критериями и зависимостями.
 [Issue #28](https://github.com/antonsmolko/engineering-standards/issues/28)
 фиксирует политику review по запросу владельца в том же подготовительном PR #27;
 ветка и префикс задачи-носителя #9 сохраняются, runtime #9 этим не завершается.
-Текущий этап — первый implementation PR #9 (check/pack:check); #8 (Node 26 и TypeScript helpers) закрыта после PR #7.
+Текущий этап — первый implementation PR #9 (check); #8 (Node 26 и TypeScript helpers) закрыта после PR #7.
 Frontend/Svelte расширение #24/#25 следует после реального среза #23,
 но не является обязательным блокером первого выпуска #26.
 
@@ -89,7 +88,7 @@ package-lock.json с package.json до/после version:prepare и negative fi
 Успех npm ci не заменяет это сравнение. Цель описывает корневые scripts,
 ссылки на Lerna удалены из текущих источников. Общий план синхронизирован,
 устаревший baseline 55 обновлён до 70. Первый implementation PR #9 добавляет read-only check и negative lockfile fixtures;
-version:check/version:prepare остаются вторым PR.
+version:prepare отменён; штатный Changesets остаётся вторым PR.
 
 Пять specification-пакетов содержат manifests и Markdown. CLI содержит
 catalog loader/validator и bundled schema snapshots с parity tests; он не
@@ -108,32 +107,17 @@ vertical slice, а не accepted-only fixtures.
 
 ## Чего ещё нет
 
-Lerna, Nx и Changesets не установлены. Check/pack:check реализуются первым PR #9;
-version scripts остаются вторым PR. PR #4/#6/#27 сами по себе были подготовкой,
-а не выполненной настройкой инструментов.
-
-Не реализованы resolver, managed IO/renderer, discovery, команды init/sync/check,
-bin Engist, installer/setup, config exports ESLint/Prettier, вертикальный срез,
-полный release preflight, CI/release automation и подключение потребителя.
-Tooling config-пакеты пока skeletons. Не объявлять Tasks 4–11 завершёнными.
+Lerna, Nx и Changesets не установлены. Первый PR #29 реализует check;
+самописные pack/release scripts удалены по решению владельца #9.
+Существующий catalog loader и тесты сохраняются без новой реализации CLI.
 
 ## Ближайшие действия
 
-1. Завершить первый согласованный PR #9: check/pack:check с RED → GREEN tests,
-   проверкой всех восьми tarballs и offline consumer на Node 26.0.0/26.11.1,
-   независимым итоговым review. Merge требует отдельного разрешения.
-2. После первого PR подготовить и согласовать план Changesets/versioning по #9,
-   затем проверить настоящие Changesets во временных workspaces.
-   Рабочие версии не повышать; первый PR не закрывает #9.
-3. Далее продолжить resolver и остальные инфраструктурные задачи по roadmap #1.
-   Общий Task 10 сохраняет registry/accepted release gates.
-
-В дизайне version:prepare: clean worktree → projected compatibility preflight
-→ Changesets version → manifest sync → offline lockfile update → post-check.
-Изменения range явные; слепого расширения нет. Нужна проверка core 0.1 → 0.2
-при зависимом ^0.1.0 (отказ до записи) и явной range миграции (успех).
-Для branch-relative status нужны base ref и история до merge base; depth 1
-недостаточен. Полный registry/accepted release preflight остаётся Task 10.
+1. Завершить review PR #29: typed workspace check и полный suite на Node 26.0.0/26.11.1.
+   Merge требует явного разрешения. Первый PR не закрывает #9.
+2. Второй PR #9: штатный Changesets, отдельный согласованный план.
+3. Общий docs-PR по #1: очистить старый roadmap ниже/в design и плане согласно
+   принятому решению. Затем #18, #20, #26; не начинать deferred CLI/config задачи.
 
 ## Открытые контракты CLI из ревью PR #3
 
