@@ -2,7 +2,7 @@
 
 > **For agentic workers:** Use `superpowers:executing-plans` after owner review.
 
-**Status:** Tooling design, this first-delivery plan and native execution approved by the owner in chat on 2026-10-13 ("давай делать"). Implementation verified on both supported Node versions; whole-branch review and PR creation pending.
+**Status:** Tooling design, this first-delivery plan and native execution approved by the owner in chat on 2026-10-13 ("давай делать"). Implementation verified on both supported Node versions; independent whole-branch review has no actionable findings. [PR #29](https://github.com/antonsmolko/engineering-standards/pull/29) is open for review.
 
 **Goal:** Provide `npm run check` and `npm run pack:check` for the existing eight workspaces.
 
@@ -16,7 +16,7 @@
 
 This is the first implementation PR in #9. Its outcome is a repeatable local check-and-pack workflow. A second PR implements the existing Changesets/versioning criteria; this first PR uses `Refs #9` and does not close the issue. CI remains #18.
 
-The owner requested the next task after merging PR #27. This proposal applies the small-PR approach to #9; owner review of the corrected tooling design and this plan is required before runtime work. Proposed execution: native implementation in this session, followed by one independent review.
+The owner requested the next task after merging PR #27 and approved this two-PR approach, tooling design, first-delivery plan and native execution before runtime changes. Implementation ran in this session, followed by one independent whole-branch review.
 
 Upstream baseline: [npm run](https://docs.npmjs.com/cli/v11/commands/npm-run/) and [npm pack](https://docs.npmjs.com/cli/v11/commands/npm-pack/). Maintained upstream example: npm/cli [smoke-test scripts](https://github.com/npm/cli/blob/latest/smoke-tests/package.json) and [pack JSON smoke test](https://github.com/npm/cli/blob/latest/smoke-tests/test/pack-json-output.js). Reuse npm script sequencing and parsing actual pack JSON; retain this repository's node:test runner. The project-specific gap is that npm does not validate `manifest.package` or semantic `manifest.requires`, nor the exact versions of all eight workspace lock entries.
 
@@ -55,8 +55,8 @@ Upstream baseline: [npm run](https://docs.npmjs.com/cli/v11/commands/npm-run/) a
 
 ## Completion
 
-- [ ] Review the complete feature diff and related tooling requirements independently under AGENTS.md; record actual checks separately from future release behavior.
-- [ ] Open an implementation PR with `Refs #9`, the two-command outcome and verification evidence. Retain remaining #9 versioning criteria; merge/publish still require explicit approval.
+- [x] Review the complete feature diff and related tooling requirements independently under AGENTS.md; record actual checks separately from future release behavior.
+- [x] Open an implementation PR with `Refs #9`, the two-command outcome and verification evidence. Retain remaining #9 versioning criteria; merge/publish still require explicit approval.
 
 ## Review evidence
 

@@ -14,14 +14,14 @@ Implementation is in progress under [issue #1](https://github.com/antonsmolko/en
 - [CLI workflow and generated instructions](packages/tooling/standards-cli/docs/workflow.md)
 
 Current implementation: package catalogs, validation, workspace consistency
-checks and isolated packed-artifact/consumer verification. Initial requirements remain proposed. CLI commands and lint/format
-configurations are not implemented yet; workflow examples describe the intended
-behavior rather than available commands.
+checks and isolated packed-artifact/consumer verification. Initial requirements
+remain proposed. CLI commands and lint/format configurations are not implemented
+yet; workflow examples describe the intended behavior rather than available commands.
 
 Run `npm ci --ignore-scripts` with registry access to explicitly prepare the npm
-cache, then `npm run check` or `npm run pack:check`. Consumer installation stays offline; an empty cache
-produces preparation guidance. Repository-local formatting tooling/dogfooding
-remains pending: no reproducible npm formatting command is claimed yet.
+cache, then `npm run check` or `npm run pack:check`. Consumer installation stays
+offline; an empty cache produces preparation guidance. Repository-local formatting
+tooling/dogfooding remains pending: no reproducible npm formatting command is claimed yet.
 
 Use Node 26; `.node-version` pins Node 26.11.1 for development. Older Node
 versions are not supported. Test helpers use TypeScript: run `npm run typecheck`
