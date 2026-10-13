@@ -2,11 +2,12 @@
 
 Read the linked design and implementation plan before changing this repository.
 
-When resuming the 2026-10-11 Engist work, start with the
+When resuming engineering-standards work, start with the
 [session handoff](docs/architecture/2026-10-11-session-handoff.md), then verify
 its snapshot against the current branch and GitHub state.
 
-- Keep specification, configuration and CLI packages independently versioned.
+- Keep the five specification packages independently versioned. Future configuration
+  or CLI packages require their own scope and independent versions.
 - Put shared architectural principles in core and domain-specific architecture in its domain.
 - Never copy product-specific or private materials into published packages.
 - Work on an issue-scoped feature branch; commits use `[engineering-standards-<issue>]: <English description>`.

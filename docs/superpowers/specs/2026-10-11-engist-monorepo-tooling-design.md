@@ -17,6 +17,6 @@
 - [#18](https://github.com/antonsmolko/engineering-standards/issues/18): verification CI, состав артефактов и content gate на fixtures; без публикации и CLI/config prerequisites.
 - [#35](https://github.com/antonsmolko/engineering-standards/issues/35): подготовка процесса публикации на synthetic данных без выпуска. Затем #20 принимает содержание и [#26](https://github.com/antonsmolko/engineering-standards/issues/26) выполняет отдельно одобренную публикацию реальных пакетов.
 
-Конкретные параметры, версии, base/history для используемых команд и release workflow определяются/проверяются в собственных планах; старый version:prepare и projected-release engine не возвращаются. Нужный контекст выбранных upstream-команд должен быть доступен, а его отсутствие диагностируется, не маскируется успешным CI.
+Механизмы инструментов, CI и подготовки выпуска выбираются в собственных планах #34/#18/#35; старый version:prepare и projected-release engine не возвращаются.
 
 Node-политика — [handoff](../../architecture/2026-10-11-session-handoff.md#проверки-и-рабочий-процесс). Content approval, ручной аудит и explicit publication approval независимы от настройки инструментов. [Прежний tooling design](https://github.com/antonsmolko/engineering-standards/blob/d483438/docs/superpowers/specs/2026-10-11-engist-monorepo-tooling-design.md) сохраняется в истории, не как новый implementation plan.

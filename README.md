@@ -13,7 +13,8 @@ validation uses local tarballs.
 
 - [Product design](docs/superpowers/specs/2026-10-11-engineering-standards-design.md)
 - [Implementation roadmap](docs/superpowers/plans/2026-10-11-engineering-standards-independent-packages.md)
-- [Package and adoption contracts](openspec/changes/simplify-project-scope/proposal.md)
+- [Package contract](openspec/changes/simplify-project-scope/specs/standards-packages/spec.md)
+- [Manual adoption contract](openspec/changes/simplify-project-scope/specs/manual-consumer-adoption/spec.md)
 
 Each package's README will describe applicability, index its standards and explain
 known compatibility restrictions in prose. Package installation will not generate

@@ -27,7 +27,7 @@
 
 ## Принятие и выпуск
 
-Использовать [content approval](content-approval.md) и [inventory](requirements-inventory.md). Требуется явное решение владельца о каждом принятом ID/ревизии; содержание после review переоценивается. Первый нормативный выпуск требует хотя бы одного применимого accepted ID из core, TypeScript и Svelte SPA, подтверждения тестами/CI на реальных артефактах, ручного аудита приватности/лицензий/прав и отдельного разрешения конкретных пакетов/версий/ревизии. Fixture acceptance этого не заменяет. Метки черновиков и полезные документы сохраняются до удаления manifests.
+Принятие содержания и сохранение чернового статуса — по [content approval](content-approval.md) и [inventory](requirements-inventory.md). Gates первого выпуска и проверка реальных артефактов закреплены в [#26](https://github.com/antonsmolko/engineering-standards/issues/26); infrastructure/fixture success их не заменяет.
 
 ## Проверки и рабочий процесс
 

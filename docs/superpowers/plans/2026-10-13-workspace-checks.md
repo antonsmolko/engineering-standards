@@ -3,7 +3,6 @@
 Исторический план выполненного PR #29. #9 закрыта; оставшийся Changesets criterion
 перенесён в [#34](https://github.com/antonsmolko/engineering-standards/issues/34).
 Актуальный roadmap — [общий план](2026-10-11-engineering-standards-independent-packages.md).
-Указания ниже про второй PR #9 и незакрытую #9 описывают состояние до merge, не текущую работу.
 
 Status: amended by [owner scope decision](https://github.com/antonsmolko/engineering-standards/issues/9#issuecomment-6139713816) and the direct request to fix PR #29 and use TypeScript. Native execution; independent whole-result review required. Existing design/plan approval and merge/publication gates remain distinct.
 
