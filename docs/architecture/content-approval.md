@@ -1,14 +1,17 @@
 # Normative content approval
 
+Current scope: [#30 / PR #31](https://github.com/antonsmolko/engineering-standards/pull/31),
+with five document packages and manual whole-package adoption. Owner acceptance
+and publication permission remain separate from infrastructure readiness.
+
 Implementation-plan approval is not acceptance of new normative wording. All
-catalog requirements are currently proposed. The author must not change their
-status on the strength of schema tests, a generic continuation request or their
+existing requirements are currently drafts (proposed). The author must not change
+their status on the strength of schema tests, a generic continuation request or their
 own review.
 
 On 2026-10-12 the owner chose to finish the technical platform using synthetic
-test data before filling the standards catalogs. Technical CLI, packaging,
-configuration and release-pipeline tests may use test-only accepted requirements.
-They do not change actual catalog statuses or satisfy the content release gate.
+test data before filling the standards documents. Packaging, consumer and
+release-process tests may use synthetic accepted requirements. They do not change actual draft statuses or satisfy the content release gate.
 
 ## Content decisions
 
@@ -18,16 +21,16 @@ They do not change actual catalog statuses or satisfy the content release gate.
 | standards-typescript | TS-TYPES-001        | Pending        | No content approval recorded      |
 | standards-svelte-spa | SVELTE-SPA-ARCH-001 | Pending        | No content approval recorded      |
 
-The three rows above are candidates for the first accepted-content vertical
-slice, not predetermined decisions. Its content gate is defined under
+The three rows above are candidates for the first accepted-content set, not
+predetermined decisions. Its content gate is defined under
 [Recording acceptance](#recording-acceptance).
 Add a row for every other reviewed ID, including deferred or rejected IDs,
 with its package, owner decision and reviewed revision / decision link.
 
 Other proposed core and TypeScript requirements may be accepted, revised or
 deferred independently. Acceptance of one candidate does not approve its entire
-package. Frontend and Svelte expansion is reviewed after the first vertical
-slice; future modules have separate design and acceptance gates.
+package. Frontend and Svelte expansion is reviewed after the first accepted-content
+set; future modules have separate design and acceptance gates.
 
 ## Review checklist
 
@@ -44,15 +47,18 @@ slice; future modules have separate design and acceptance gates.
 
 The owner reviews the complete proposed text and identifies accepted IDs in a
 PR review or another explicit decision. Record that decision's link and the
-reviewed revision here. A follow-up acceptance commit changes only confirmed
-manifest statuses, then validates actual catalogs. Lifecycle status and level
-live only in manifest.json; normative document headers retain stable IDs, not
-duplicate labels. Generated instructions attribute lifecycle metadata from the
-manifest, not from prose. Readers of source documents consult the catalog.
+reviewed revision here. A separate acceptance commit applies only the owner's
+confirmed decisions.
+The installed package is applied as a whole, but this does not accept all of its
+contents. Preserve stable IDs, reviewed revisions and draft labels in documents
+and this decision record. During the current transition, existing statuses still
+live in manifests; #33 must preserve their meaning and evidence before removing
+those files. This is not a requirement for consumers to load a catalog, resolve
+profiles or use generated instructions.
 Changes after review must be assessed again rather than inheriting approval.
 
 At least one accepted, applicable requirement from each of core, TypeScript and
-Svelte SPA is needed for the first real vertical slice: at least three in total.
+Svelte SPA is needed for the first normative release: at least three in total.
 Fixtures with accepted data cannot satisfy this gate. Until then, content
-acceptance, the accepted vertical slice and release remain incomplete. Nothing
+acceptance, the accepted-content set and release remain incomplete. Nothing
 in this document authorizes publication.

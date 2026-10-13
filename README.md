@@ -1,41 +1,44 @@
 # Engineering standards
 
-Agreed product and future CLI name: **Engist** (`engist init`, `engist sync`,
-`engist check`), with engist.json as the planned project configuration.
-Repository/package renaming and name availability checks are separate work;
-current package identities have not been changed or released.
+Five independently versioned npm packages of engineering documents for people
+and AI: core, frontend, TypeScript, Svelte and Svelte SPA. Consumers select whole
+packages, read their READMEs and linked standards, and manually reference them in
+consumer-owned `AGENTS.md` files. No particular AI tool is required.
 
-Composable engineering specifications and independently versioned development tooling.
+No npm release has been published. Installation examples for registry packages
+will become usable after the first explicitly approved release; current
+validation uses local tarballs.
 
-Implementation is in progress under [issue #1](https://github.com/antonsmolko/engineering-standards/issues/1). No npm release has been published.
+## Documentation
 
-- [Design](docs/superpowers/specs/2026-10-11-engineering-standards-design.md)
-- [Implementation plan](docs/superpowers/plans/2026-10-11-engineering-standards-independent-packages.md)
-- [CLI workflow and generated instructions](packages/tooling/standards-cli/docs/workflow.md)
+- [Product design](docs/superpowers/specs/2026-10-11-engineering-standards-design.md)
+- [Implementation roadmap](docs/superpowers/plans/2026-10-11-engineering-standards-independent-packages.md)
+- [Package and adoption contracts](openspec/changes/simplify-project-scope/proposal.md)
 
-Current implementation: package catalogs, validation, read-only workspace checks
-and isolated packed-artifact tests. Initial requirements remain proposed.
-Executable CLI commands and lint/format configurations are not implemented.
+Each package's README will describe applicability, index its standards and explain
+known compatibility restrictions in prose. Package installation will not generate
+instructions or rewrite existing consumer configuration. CLI, catalog resolution
+and lint/format configuration products are outside the initial product scope.
 
-Run `npm ci --ignore-scripts` with registry access to prepare the npm cache,
-then `npm run check`. It runs typecheck, workspace lock/version and local
-`manifest.requires` compatibility checks, and the full test suite. Errors stop
-subsequent stages. Source files and versions stay unchanged; external semantic
-requirements are not verified against a registry. The existing tarball tests
-install consumers offline; an empty cache produces preparation guidance.
+## Current implementation
 
-Use Node 26; `.node-version` pins Node 26.11.1 for development. Older Node
-versions are not supported. Root scripts and test helpers use TypeScript and
-are included in `npm run typecheck`; Node runs their erasable types directly.
-Published packages retain their JavaScript/Markdown/JSON formats. Changesets
-and publication are pending. No repository-local formatting command exists yet.
+The five-package transition is pending. The repository currently contains eight
+workspaces, catalog manifests/schemas, a catalog loader and tooling placeholders.
+It already has read-only workspace checks and isolated packed-artifact tests.
+Existing standards remain drafts; passing infrastructure tests does not approve
+content or authorize a release.
 
-With nvm, select the pinned version explicitly:
-`nvm install "$(cat .node-version)"` followed by `nvm use "$(cat .node-version)"`.
+Use Node 26. The development version in `.node-version` is `26.11.1`; verification
+also covers the supported minimum `26.0.0`. Run `npm ci --ignore-scripts` with registry
+access to prepare dependencies/cache, then `npm run check`. The current check runs
+typecheck, workspace lock/version and local `manifest.requires` checks, then the
+full suite. Consumer tests install tarballs offline; an empty cache gives
+preparation guidance. TypeScript scripts/helpers are checked without generating JS.
+
+With nvm: `nvm install "$(cat .node-version)"` and `nvm use "$(cat .node-version)"`.
 nvm does not read `.node-version` automatically.
 
-The technical platform is developed on synthetic test data before standards
-content is filled and accepted. Fixture acceptance does not approve actual
-catalog requirements or authorize a release.
-
-Specifications are organized by scope: core, domains, technologies, stacks and optional modules. ESLint, Prettier and CLI tooling are separate packages. There is no repository-wide release version.
+Changesets, CI and publication preparation remain separate infrastructure work.
+The technical platform is verified with synthetic documents before actual
+standards are filled and approved. Plans/discussions use Russian; published
+standards and READMEs use English. Bilingual editions are possible future work.

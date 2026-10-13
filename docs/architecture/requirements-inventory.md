@@ -28,7 +28,7 @@ names; strict checking is independent of formatting preferences.
 
 | Topic                            | Proposed ID and document                                                                   | Applicability                                                         | Rationale and verification                                                                                                               |
 | -------------------------------- | ------------------------------------------------------------------------------------------ | --------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| Composition and slice boundaries | [SVELTE-SPA-ARCH-001](../../packages/stacks/frontend/svelte-spa/docs/module-boundaries.md) | Svelte 5 / TypeScript SPAs explicitly selecting the FSD stack profile | Make dependencies and ownership explicit; check upward, private and peer imports, plus allowed same-slice and public lower-slice imports |
+| Composition and slice boundaries | [SVELTE-SPA-ARCH-001](../../packages/stacks/frontend/svelte-spa/docs/module-boundaries.md) | Svelte 5 / TypeScript SPAs explicitly selecting the FSD stack package | Make dependencies and ownership explicit; check upward, private and peer imports, plus allowed same-slice and public lower-slice imports |
 
 FSD is a selected stack policy, not universal core architecture. App and Shared
 segments are not business slices. No presenter, state library, guard API or
@@ -48,7 +48,7 @@ application alias is implied. The proposed import checker is not implemented.
 ## Deferred content
 
 Frontend state ownership, accessibility and form states, and Svelte reactivity
-and lifecycle form separate review sets after the first vertical slice. Existing
+and lifecycle form separate review sets after the first accepted-content set. Existing
 FRONTEND-ARCH-001 and SVELTE-STATE-001 are proposed seeds, not complete packages
 of accepted conventions. Authentication, authorization, API-client and
 frontend-state modules require separate designs; no module package is created
