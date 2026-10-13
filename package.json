@@ -23,6 +23,7 @@
   ],
   "scripts": {
     "test": "node --test",
-    "typecheck": "tsc --project tsconfig.tests.json"
+    "typecheck": "tsc --project tsconfig.tests.json",
+    "check": "npm run typecheck && node scripts/check-workspaces.js && npm test"
   }
 }

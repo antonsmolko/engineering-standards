@@ -2,7 +2,7 @@
 
 > **For agentic workers:** Use `superpowers:executing-plans` after owner review.
 
-**Status:** Draft proposal for owner review; tooling design approval is still pending, so this is not an approved implementation plan and runtime work has not started.
+**Status:** Tooling design, this first-delivery plan and native execution approved by the owner in chat on 2026-10-13 ("давай делать"). Implementation in progress.
 
 **Goal:** Provide `npm run check` and `npm run pack:check` for the existing eight workspaces.
 
