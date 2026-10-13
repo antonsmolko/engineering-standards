@@ -13,7 +13,7 @@ Goal: one `npm run check` for all eight workspaces. [Design](../specs/2026-10-11
 - [x] Targeted tests and typecheck pass after implementation.
 - [x] Run npm run check on Node 26.0.0 and 26.11.1: typecheck, metadata check and the entire suite, including existing real packed-artifact/offline-consumer coverage. Preserve all versions, catalogs and published sources.
 - [x] Review the entire main-to-feature diff and affected documents/issues independently; check dependency and link consistency separately from tests.
-- [ ] Push and answer all four inline threads and the summary through the [canonical ledger](../../architecture/2026-10-13-workspace-checks-review-response.md). PR #29 uses Refs #9 and does not close the remaining Changesets work.
+- [x] Push and answer all four inline threads and the summary through the [canonical ledger](../../architecture/2026-10-13-workspace-checks-review-response.md). PR #29 uses Refs #9 and does not close the remaining Changesets work.
 
 ## Superseded preparation
 

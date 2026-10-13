@@ -41,3 +41,8 @@ Previous 109-test check/pack results apply only to revision 8b12ba6 and are hist
 Current targeted GREEN: 25 workspace tests and typecheck passed. Node 26.0.0 and 26.11.1 npm run check: typecheck, consistency check and all 95 tests passed, including the unchanged original packed-artifact/offline-consumer tests. Independent review of the complete 54e29b4..057888f diff found no actionable findings; the reviewer independently reran Node 26.11.1 npm run check (95 tests) and verified the original artifact test is byte-identical to main.
 
 Documentation verification is separate from runtime tests: 24 local links/anchors resolve, the entire final diff and relevant unchanged docs/issues were checked for conflicts against the owner-approved scope. Historical roadmap sections are explicitly superseded pending the owner-assigned separate #1 docs-PR. All nine current review dispositions are closed or assigned to that explicitly agreed follow-up.
+
+
+## Published responses
+
+All four inline threads have linked dispositions and are resolved: [R1 reply](https://github.com/antonsmolko/engineering-standards/pull/29#discussion_r4255549553), [R2 reply](https://github.com/antonsmolko/engineering-standards/pull/29#discussion_r4255549813), [R3 reply](https://github.com/antonsmolko/engineering-standards/pull/29#discussion_r4255550090), [R4 reply](https://github.com/antonsmolko/engineering-standards/pull/29#discussion_r4255550396). The [summary reply](https://github.com/antonsmolko/engineering-standards/pull/29#issuecomment-6139971749) links R1–R9. PR title/description now describe only typed workspace check. No open findings remain in this review round; full historical roadmap cleanup is the explicitly owner-assigned separate #1 outcome.
