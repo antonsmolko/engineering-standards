@@ -1,0 +1,137 @@
+# Verification CI — #18
+
+Носитель — [#18](https://github.com/antonsmolko/engineering-standards/issues/18), prefix engineering-standards-18. База 3372e96 после merge [PR #38](https://github.com/antonsmolko/engineering-standards/pull/38); #33/#34 завершены. План documentation-verification-ci утверждён владельцем 2026-10-17; helper/workflow/guidance реализованы в PR #39. Выполнено 6/6 tasks, оба реальных GitHub jobs успешны, независимое review завершено; evidence — в разделе реализации ниже. PR ожидает явного merge approval.
+
+## Источники и статус прежних замечаний
+
+Прочитаны body и все шесть comments #18, актуальные roadmap/tooling design/handoff, content-approval/inventory, scripts/tests и #1/#35/#20/#26. Исторические [base/history findings](https://github.com/antonsmolko/engineering-standards/issues/18#issuecomment-6131102884) исправлены в требованиях; [повторное review](https://github.com/antonsmolko/engineering-standards/issues/18#issuecomment-6131370870) подтвердило закрытие. Замечание о якобы отсутствовавшей ссылке было [отозвано reviewer](https://github.com/antonsmolko/engineering-standards/issues/18#issuecomment-6131555963) и не переоткрывается. Старые candidate/CLI/config механизмы не возвращаются: актуальные границы определены #30/PR #31, #32/PR #36 и нынешними criteria #18.
+
+Baseline — [GitHub Node.js starter](https://github.com/actions/starter-workflows/blob/main/ci/node.js.yml), [checkout](https://github.com/actions/checkout), [setup-node](https://github.com/actions/setup-node), [GitHub secure use](https://docs.github.com/en/actions/reference/security/secure-use), [Changesets CLI](https://changesets.dev/guide/cli). Releases/tag commits для checkout v7.0.1 и setup-node v7.1.0 проверены через upstream GitHub API; полные SHA записаны в design. Первоначальный обязательный actionlint исключён по review PR #39; штатная workflow validation выполняется GitHub. Собственный workflow runner/release engine/каталог не планируются.
+
+| Source | Finding | Affected files/issues | Disposition | Evidence |
+| --- | --- | --- | --- | --- |
+| [#18](https://github.com/antonsmolko/engineering-standards/issues/18), [PR #38](https://github.com/antonsmolko/engineering-standards/pull/38) | C1: существующие проверки должны работать в CI | proposal/design/spec/tasks | Реализовано; финальная проверка ниже | Один read-only workflow на двух Node, npm ci/check/pack, прежние real consumer tests; actual GitHub jobs обязательны для завершения реализации. |
+| [#18](https://github.com/antonsmolko/engineering-standards/issues/18) | C2: Changesets нужны base/history и понятный отказ | design/spec/tasks | Реализовано; финальная проверка ниже | Full checkout, PR base SHA через env, штатные event if и CLI status без preflight/parser; upstream отказ подтверждён на temporary npm/Git project. Push main читает pending changesets. |
+| [#18](https://github.com/antonsmolko/engineering-standards/issues/18), [content decisions](https://github.com/antonsmolko/engineering-standards/blob/3372e96/docs/architecture/content-approval.md) | C3: artifact prerequisite не принимает реальные документы | design/spec/tasks | Реализовано; финальная проверка ниже | Helper читает ID/Status установленных пакетов, positive/negative synthetic headers и not-ready реальных tarballs. Применимость/подтверждение решений остаются owner gates #20/#35/#26; новый record format не вводится. |
+| [#18](https://github.com/antonsmolko/engineering-standards/issues/18) | C4: минимальные права, guidance и manual material audit | design/spec/tasks | Реализовано; финальная проверка ниже | Нет publish/tag/секретов/write permissions; contributor/security/ownership docs, существующие artifact checks и отдельный ручной аудит #26. |
+
+## GitHub issue edits
+
+В #1 отмечена завершённая #34 после проверки merged PR #38/closed issue. Criteria/dependencies #18/#35/#20/#26 не менялись; #18 открыта, закрытая #9 не переоткрывается. Планы будущих этапов остаются требованиями, их механизмы не выбираются в #18.
+
+Таблица C1–C4 отражает текущую реализацию; последующие разделы планирования сохраняют исторические результаты своих ревизий.
+
+## Первоначальные проверки планирования 35ca524
+
+Strict OpenSpec validation и whitespace проходят. Runtime suite/Actions jobs не запускались в planning-only изменении; прежние 33/33 из PR #38 не выдаются за evidence CI #18. Пакеты, metadata/lockfile, owner decisions и черновые статусы не менялись. Независимое review полного планирования завершено до передачи draft PR; actionable findings отсутствуют.
+
+## Первоначальное независимое review плана 35ca524
+
+Отдельный агент без авторской рабочей переписки прочитал все четыре artifacts, обновлённый handoff/ledger, текущий check/test код, все шесть comments #18 и критерии #1/#35/#20/#26. Подтвердил базу/merge PR #38/closed #33/#34, upstream Action SHAs и release actionlint. Actionable findings отсутствуют. Отчёт — private input, not a public basis; публичные actionable основания — #18 и официальные источники выше. Уточнение выбора PR/push режима по event type сохраняет уже заявленный отказ при missing PR base.
+
+Документальное evidence отдельно: 11 links/anchors в шести документах разрешаются; очередность зависимостей, прежние reviewer-confirmed closures, content/release gates и issue criteria сохранены. Проверок runtime или реальных jobs на planning этапе нет; обязательность RED/GREEN/full suite/actionlint/actual jobs остаётся в tasks. Реализация 0/7. После review обновлена только эта запись evidence.
+
+## Review PR #39 — пересмотр плана
+
+Прочитаны все страницы inline comments/reviews/PR comments, все шесть issue #18 comments и GraphQL reviewThreads: один новый [review 35ca524](https://github.com/antonsmolko/engineering-standards/pull/39#issuecomment-6224723695), inline threads/summary reviews отсутствуют. Подтверждённые корректные Action SHA/permissions/scope и прежние closures #18 сохраняются. Новое публичное evidence выявило слабость synthetic-only predicate и избыточный Git/YAML механизм первоначального плана; эти части заменены, прежнее независимое review не используется для их повторного объявления корректными.
+
+| Source | Finding | Affected files/issues | Disposition | Evidence |
+| --- | --- | --- | --- | --- |
+| [Review, Important 1](https://github.com/antonsmolko/engineering-standards/pull/39#issuecomment-6224723695) | R1: synthetic record helper не связан с артефактами | proposal/design/spec/tasks, ledger/PR | Исправлено в плане | Корни установленных пакетов → реальные ID/Status headers. Synthetic fixture files дают positive/negative; тот же helper на настоящих tarballs в document-artifacts.test.js даёт ожидаемый not-ready. Applicability field удалено: применимость/owner decision подтверждает владелец в #26. Нет нового каталога или формата решений. |
+| [Review, Important 2](https://github.com/antonsmolko/engineering-standards/pull/39#issuecomment-6224723695) | R2: не назван новый contributor contract | design/spec/tasks | Исправлено в плане | Добавлен scenario package edit without changeset → nonzero и add --empty для no-release change; обновление .changeset/README.md явно входит в task 2.2. Local fixture с package-lock подтвердил статусы 1 без changeset и 0 после committed empty changeset. |
+| [Review, Important 3](https://github.com/antonsmolko/engineering-standards/pull/39#issuecomment-6224723695) | R3: собственный preflight/YAML runner дублирует CLI | design/spec/tasks, ledger/PR | Исправлено в плане | Удалены git cat-file/merge-base preflight, direct yaml dependency и run-step parser/test. Event step if выбирает прямой npm Changesets status; missing-ref fixture дал штатный exit 1 с divergence diagnostic. Предварительный отказ «до status» больше не обещается. |
+| [Review, Minor 4](https://github.com/antonsmolko/engineering-standards/pull/39#issuecomment-6224723695) | R4: actionlint не обязателен и способ запуска не определён | design/tasks, ledger/PR | Исправлено в плане | Обязательный actionlint исключён, ни binary installer, ни дополнительный CI action не добавляются; фактические GitHub jobs/validation и review остаются обязательны. |
+| [Review, Minor 5](https://github.com/antonsmolko/engineering-standards/pull/39#issuecomment-6224723695) | R5: расплывчатые documentation targets и смысл dry-run inventory | design/spec/tasks | Исправлено в плане | Указаны docs/superpowers/specs/2026-10-11-engist-monorepo-tooling-design.md, content-approval.md и .changeset/README.md. Inventory только выводится в log; содержимое проверяют существующие installed-artifact tests. |
+
+### GitHub issue edits этого раунда
+
+Нет. Критерии #18 и зависимости #35/#20/#26 сохраняются; scope — technical verification/accepted-header prerequisite и отдельное ручное подтверждение применимости/owner decisions перед выпуском. Handoff по-прежнему указывает planning-only #18. Публичные package files, версии, draft labels, decision table и working dependency lockfile не менялись.
+
+### Проверка upstream evidence
+
+Прочитан фактически установленный Changesets 3.0.3 status/getDivergedCommit и официальная CLI documentation. Во временном npm workspace с lockfile и Git base проверены: missing SHA → exit 1 с divergence diagnostic; committed package README edit без changeset → exit 1 с no-changesets diagnostic; committed add --empty → exit 0. Fixtures удалены; команды не писали в registry и не меняли рабочий checkout. Это проверка обоснования плана, не реализация/CI evidence #18. Полный runtime suite и Actions jobs в этом planning-only раунде не запускались.
+
+### Независимое review пересмотренного результата
+
+Отдельный агент без авторской рабочей переписки проверил полный итоговый PR diff, R1–R5, связанные неизменённые документы и публичные #18/#35/#20/#26, все comments/reviews PR и шесть comments #18. Actionable findings отсутствуют. Отчёт — private input, not a public basis; публичное основание правок — review PR #39 и criteria #18 выше. Прежние подтверждённые closures сохраняются, новых незакрытых findings нет.
+
+Документальное evidence отдельно: strict OpenSpec/whitespace проходят; 11 links/anchors в шести документах разрешаются, зависимости и approvals согласованы. GitHub issue edits этого раунда отсутствуют. Runtime/Actions не запускались: 0/6 implementation tasks, пакеты/скрипты/тесты/зависимости рабочего repo не менялись. Временное upstream исследование описано отдельно выше и не выдаётся за готовый CI. После независимого review изменена только эта запись evidence; draft ожидает утверждения плана/apply.
+
+## Повторное review d0a3031
+
+Прочитаны все страницы PR comments, inline comments/reviews/GraphQL threads и шесть comments #18. Новый [summary d0a3031](https://github.com/antonsmolko/engineering-standards/pull/39#issuecomment-6224882236) подтвердил закрытие R1–R5 и отсутствие блокеров; подтверждённые closures сохраняются. Два необязательных предложения приняты ниже.
+
+| Source | Finding | Affected files/issues | Disposition | Evidence |
+| --- | --- | --- | --- | --- |
+| [Repeat review, push-main](https://github.com/antonsmolko/engineering-standards/pull/39#issuecomment-6224882236) | R6: роль push-main status не названа точно | design/spec/tasks, PR | Исправлено в плане | Явно указано: чтение config и сборка pending-плана. На main HEAD=baseBranch; контроль package edits без changeset выполняется PR-шагом. Проверено по установленному Changesets versionablePackages/status: ref по умолчанию config.baseBranch. |
+| [Repeat review, optional I/O scenario](https://github.com/antonsmolko/engineering-standards/pull/39#issuecomment-6224882236) | R7: избыточный контракт недоступных данных | design/spec/tasks | Исправлено в плане | Удалены отдельный scenario «Недоступные данные», обещание custom not-ready I/O diagnostics и обязательный negative-кейс task 1.1. Проверки missing package/ID/status и реальные not-ready черновики сохранены; новый I/O wrapper не планируется. |
+
+GitHub issue edits этого раунда: нет. Критерии/зависимости #18/#35/#20/#26, handoff и отдельные content/applicability/release approvals сохраняются. Реализация 0/6; пакеты/версии/документы/owner decisions и runtime не менялись.
+
+Независимый агент без авторской рабочей переписки проверил полный PR diff с R6/R7, публичные reviews/comments, связанные неизменённые документы и criteria/dependencies #18/#35/#20/#26. Actionable findings отсутствуют; R1–R5 остаются закрытыми. Отчёт — private input, not a public basis; публичное основание — repeat review выше и criteria #18.
+
+Документальная проверка отдельно: strict OpenSpec и whitespace проходят, 11 local links/anchors в шести документах разрешаются; полный итоговый diff и неизменённые документы/issues не выявили конфликтов контрактов или зависимостей. Runtime suite/Actions не запускались в этом planning-only раунде; все шесть implementation tasks остаются открытыми. После независимого review добавлено только это evidence.
+
+
+## Реализация утверждённого плана
+
+Владелец утвердил план 2026-10-17 в рабочем диалоге (private input, not a public basis для review findings). Публичное основание реализации — [#18](https://github.com/antonsmolko/engineering-standards/issues/18) и [design](../../openspec/changes/documentation-verification-ci/design.md); прежние R1–R7/closures сохраняются. Scope не расширялся, GitHub issue edits отсутствуют.
+
+Pre-flight shared interfaces: task 1.1 fixture roots/package.json/Markdown → task 1.2 helper; task 1.2 helper → реальный artifact consumer; tasks 2.1 workflow/Changesets → 2.2 contributor guide; tasks 1–2 → full matrix/review 3.1–3.2. Конфликтов с binding spec нет. Tracking использует утверждённые OpenSpec checkboxes вместо несовместимого формата Task N briefs другого планировщика; это не меняет scope/gates.
+
+- Baseline: npm run check на Node 26.11.1 — 33/33. Официальные Node.js starter/setup-node/Changesets CLI перечитаны, pinned release tag SHA повторно проверены GitHub API: checkout v7.0.1 и setup-node v7.1.0 совпадают с design.
+- Task 1.1 RED: установленный через настоящие npm tarballs synthetic fixture; initial helper seam без чтения headers дал 13 failing assertions (14 tests, 1 pass), включая positive readiness и package-specific diagnostics. Это behavior assertions, не missing import/install failure. Новые tests/helper — TS.
+- Task 1.2 GREEN: lexer читает начальные plain ID/Status paragraphs после H1; README/CHANGELOG, code examples и body metadata не принимаются. Missing/empty ID, missing/proposed/unknown/draft-suffixed status и дубликат вместо обязательного пакета дают not-ready. Тот же helper на real all/subset installed tarballs даёт ожидаемые три diagnostics, suite зелёный. Optional marked paragraph.tokens учитывается после typecheck diagnostic; custom I/O handling отсутствует.
+- Tasks 2.1/2.2: один read-only workflow, прямые upstream commands, короткие contributor/security/ownership инструкции, обновлённые Changesets guide/README/tooling/handoff. Во временном npm/Git fixture с lockfile документированные команды проверены: missing SHA → exit 1 (divergence diagnostic), package README edit без changeset → exit 1, committed add --empty → exit 0; обычный push-main status → exit 0. Никаких real bumps/tags/registry writes.
+- Локальная task 3.1: полные npm run check на Node 26.0.0 и 26.11.1 — по 47/47, включая реальные packed artifacts/external consumers. npm pack --workspaces --dry-run --json --ignore-scripts вывел inventory всех пяти пакетов; packages, package.json/lockfile, версии/IDs/drafts/changelog и owner decisions не менялись. Фактическое GitHub/review evidence приведено ниже отдельно от локальных результатов.
+
+Первый HTTPS push отклонён GitHub из-за отсутствующего OAuth workflow scope; существующий SSH успешно отправил d6ad385 без изменения credentials/settings. [Actual GitHub run](https://github.com/antonsmolko/engineering-standards/actions/runs/38969680920) успешен: оба matrix jobs завершились success, каждый с 47/47 tests и inventory всех пяти пакетов; PR Changesets step success, push-only step штатно skipped. Branch-relative status в рабочем repo проверен с полным base SHA 3372e96fe0145648a49ccd0a56ad1396c70d23f2 → exit 0. Короткий 3372e96 upstream CLI интерпретировал как число в scientific notation; workflow использует полный event SHA по design. Документальные проверки отдельно: 32 local links/anchors в 11 документах разрешаются; strict OpenSpec/whitespace проходят.
+
+
+| Source | Finding | Affected files/issues | Disposition | Evidence |
+| --- | --- | --- | --- | --- |
+| [#18 CI criteria](https://github.com/antonsmolko/engineering-standards/issues/18); independent review — private input, not a public basis | I1: текущая вводная ledger и общий design ещё называли результат planning-only/CI отсутствующим | ledger introduction/C1–C4, общий design, PR body | Исправлено | Текущий статус заменён на реализацию #18 с отдельным evidence actual jobs/review; исторические planning sections сохранены и явно обозначены как история. #35/#20/#26 gates не менялись. |
+| [PR #39 evidence links](https://github.com/antonsmolko/engineering-standards/pull/39); independent review — private input, not a public basis | I2: relative links в PR description не закрепляют repo revision | PR body | Исправлено | Canonical ledger/design/tasks используют абсолютные GitHub blob commit URLs; final body закрепляется на итоговый commit. |
+
+
+### Итоговая проверка реализации
+
+[GitHub run d6ad385](https://github.com/antonsmolko/engineering-standards/actions/runs/38969680920):
+[Node 26.0.0](https://github.com/antonsmolko/engineering-standards/actions/runs/38969680920/job/117204708856) и
+[Node 26.11.1](https://github.com/antonsmolko/engineering-standards/actions/runs/38969680920/job/117204708493) — success.
+Прочитаны реальные logs: каждый job выполнил clean npm ci, полный check 47 tests / 47 pass / 0 fail,
+вывел packed inventory всех пяти пакетов и завершил PR Changesets status успешно.
+Push-only step на PR штатно skipped; его команда отдельно проверена на temporary main fixture.
+После d6ad385 runtime/workflow не менялись, добавлены только documentation/status/evidence исправления.
+
+Независимый агент без авторской переписки проверил полный diff от 3372e96, все artifacts, код,
+контракты, прежние closures #18/R1–R7, неизменённые документы и criteria/dependencies #35/#20/#26,
+все пять PR comments и шесть comments #18; inline/reviews/threads пусты.
+Самостоятельно выполнил npm run check 47/47 на Node 26.11.1, подтвердил actual jobs и Action pins.
+I1 исправлено и независимо перепроверено; I2 исправлено в PR links. Открытых findings/deferred minors нет.
+Review report — private input, not a public basis; публичное основание — #18 и PR #39 выше.
+
+Документальные проверки отдельно: полный final diff просмотрен; конфликты с актуальными неизменёнными
+документами и issue bodies не найдены, 37 local links/anchors в 12 документах разрешаются,
+strict OpenSpec/whitespace проходят. GitHub issue edits реализации: нет; criteria/dependencies сохранены.
+Выполнено 6/6 OpenSpec tasks. Применимость/owner acceptance и реальная publication enforcement остаются
+согласованными #20/#35/#26 gates, custom I/O wrapper не возвращается. Это сохранение approved scope,
+не новое deferred finding. Merge/publication/settings/tags не выполнялись; PR передаётся на review.
+
+## Review реализации f25935a
+
+Прочитаны все семь PR comments, все страницы inline comments/reviews и GraphQL threads (пусты, hasNextPage false), все шесть comments #18. [Публичное review](https://github.com/antonsmolko/engineering-standards/pull/39#issuecomment-6225246610) подтвердило критерии #18, actual CI, отсутствие блокеров и закрытия R1–R7; эти closures сохраняются. Два minor предложения приняты без изменения runtime-контракта, gates или плана.
+
+| Source | Finding | Affected files/issues | Disposition | Evidence |
+| --- | --- | --- | --- | --- |
+| [Implementation review, Minor 1](https://github.com/antonsmolko/engineering-standards/pull/39#issuecomment-6225246610) | R8: прежний inline-code case не проверяет plain-text token filter | tests/integration/accepted-headers.test.ts | Исправлено | Case заменён на `ID: ` + inline-code value при обычном accepted status. Mutation без token filter теперь даёт exit 1 именно на «inline code ID value» (ready true вместо false); восстановленный неизменённый helper даёт GREEN. Runtime/helper не менялись. |
+| [Implementation review, Minor 2](https://github.com/antonsmolko/engineering-standards/pull/39#issuecomment-6225246610) | R9: contributor commit example привязан к #18 | CONTRIBUTING.md | Исправлено | Использован общий `[engineering-standards-<issue>]: Describe the change`, совпадающий с AGENTS.md; это исправление примера, не новое правило. |
+| [Implementation review, informational security note](https://github.com/antonsmolko/engineering-standards/pull/39#issuecomment-6225246610) | R10: private reporting выключен, условная инструкция остаётся корректной | SECURITY.md/repository settings | Изменений не требуется | Reviewer подтвердил корректность «when it is available» и fallback к владельцу. Включение reporting остаётся отдельным owner decision; настройки не менялись. |
+
+### Проверки этого раунда
+
+Runtime evidence: focused 16/16 GREEN; mutation без фильтра RED, helper восстановлен; полный npm run check на Node 26.0.0 и 26.11.1 — по 47/47, включая реальные packed artifacts/external consumers. Пакеты, версии, IDs/drafts, owner decisions, lockfile, runtime/helper и workflow сохранены.
+
+Документальные проверки отдельно: полный final PR diff повторно просмотрен; пример commit сверён с AGENTS.md, metadata boundary — с design/spec/tasks/tooling. Новых контрактов и конфликтов с неизменёнными документами/issue criteria/dependencies нет. Strict OpenSpec/whitespace проходят; 37 local links/anchors в 12 документах разрешаются. Независимая проверка полной реализации подтверждена публичным review выше; в этом раунде изменены только regression fixture, wording примера и этот ledger, требования/gates не менялись. OpenSpec остаётся 6/6.
+
+GitHub issue edits этого раунда: нет. Criteria/dependencies #18/#35/#20/#26 и handoff остаются актуальными. Merge/publication/settings не выполнялись.
