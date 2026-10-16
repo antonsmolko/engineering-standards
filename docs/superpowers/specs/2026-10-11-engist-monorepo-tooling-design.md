@@ -1,52 +1,22 @@
-# Engist: npm workspaces, Changesets и корневой check
+# npm workspaces и инструменты пакетов документов
 
-Статус: scope #9 сокращён [решением владельца](https://github.com/antonsmolko/engineering-standards/issues/9#issuecomment-6139713816).
-Это заменяет прежние требования pack:check/version:prepare и собственному release tooling.
-[Первый план](../plans/2026-10-13-workspace-checks.md) описывает check на TypeScript.
-Согласование плана и gates merge/публикации остаются отдельными.
+Текущие границы — [#30 / PR #31](https://github.com/antonsmolko/engineering-standards/pull/31) и [OpenSpec design](../../../openspec/changes/simplify-project-scope/design.md). Согласование дизайна, реализация, merge и публикация — отдельные действия.
 
-## Область работ
+## Базовые инструменты
 
-Первый PR #29 даёт одну локальную команду `npm run check`:
-`npm run typecheck` → `node scripts/check-workspaces.ts` → `npm test`.
-Ошибка любого этапа останавливает последующие. Полный существующий suite,
-включая tarball/consumer/catalog tests, сохраняется; второй упаковочный этап не добавляется.
-Node ^26.0.0; проверяются 26.0.0 и 26.11.1. Root private, все восемь workspace versions — 0.1.0.
+[npm workspaces](https://docs.npmjs.com/cli/v11/using-npm/workspaces/) управляет установкой и lockfile; [npm scripts](https://docs.npmjs.com/cli/v11/commands/npm-run/) задают последовательность проверок. Maintained upstream baseline — [npm/cli smoke-tests](https://github.com/npm/cli/blob/latest/smoke-tests/package.json). У Markdown/JSON-документов нет необходимой компиляции или межпакетной генерации. Не создаём декоративных build targets или собственного versioning engine.
 
-Базовые инструменты: [npm scripts](https://docs.npmjs.com/cli/v11/commands/npm-run/),
-[workspaces](https://docs.npmjs.com/cli/v11/using-npm/workspaces/), node:test.
-Поддерживаемый upstream пример: [npm/cli smoke-test scripts](https://github.com/npm/cli/blob/latest/smoke-tests/package.json).
-Проектный пробел: npm ci не обнаруживает version-only drift workspace lock entries;
-семантический manifest.requires не является npm dependency. Только эти проверки
-добавляет scripts/check-workspaces.ts. Никаких Lerna/Nx и package-level check targets.
+## Что работает сейчас
 
-## Контракт workspace check
+После PR #29 npm run check = typecheck → scripts/check-workspaces.ts → npm test. Он read-only: сверяет восемь workspace lock versions и local manifest.requires; English diagnostics/nonzero при ошибке, дальнейшие этапы не выполняются. Схемы/identity и реальные tarball/consumer проверки находятся в полном suite. Внешняя semantic совместимость не проверяется через registry. Этот текущий контракт пока не изменён.
 
-Вход — maintainer-controlled root package.json.workspaces, package-lock.json,
-workspace package.json и manifest.json у пакетов с существующим manifest export.
-Tooling-пакетам с зарезервированным files[] manifest не требуется.
+## Переход и следующие этапы
 
-Для каждого workspace lock.packages[workspacePath] должен существовать, а version
-точно совпадать с workspace package.json. Для каждого local manifest.requires
-semver.satisfies проверяет установленную workspace version. Внешние requires
-не обращаются к сети и не считаются проверенными для публикации.
+- [#33](https://github.com/antonsmolko/engineering-standards/issues/33): пять workspaces документов, README-указатели и реальный внешний consumer. Catalog-зависимые проверки заменяются проверками сохранённого документационного контракта. Семантическая совместимость становится текстом README. Подробности реализации выбираются в этом PR.
+- [#34](https://github.com/antonsmolko/engineering-standards/issues/34): штатный [Changesets](https://github.com/changesets/changesets/blob/main/docs/intro-to-using-changesets.md), независимые версии/changelog и private root вне версионирования. Это оставшаяся часть закрытой #9, не реализованная merge PR #29. Рабочие версии до отдельно одобренного выпуска остаются 0.1.0.
+- [#18](https://github.com/antonsmolko/engineering-standards/issues/18): verification CI, состав артефактов и content gate на fixtures; без публикации и CLI/config prerequisites.
+- [#35](https://github.com/antonsmolko/engineering-standards/issues/35): подготовка процесса публикации на synthetic данных без выпуска. Затем #20 принимает содержание и [#26](https://github.com/antonsmolko/engineering-standards/issues/26) выполняет отдельно одобренную публикацию реальных пакетов.
 
-Успех: пустые diagnostics и exit 0. Missing/stale lock entry, incompatible local range
-или невозможность прочитать/разобрать входные данные: English diagnostics, exit 1,
-без записи. JSON schema, package/manifest identity, валидность versions/ranges и
-корректность layout проверяются существующим полным suite; их проверки не дублируются
-в новом скрипте. Типы скрипта проверяются штатным tsc, включая @types/semver.
+Механизмы инструментов, CI и подготовки выпуска выбираются в собственных планах #34/#18/#35; старый version:prepare и projected-release engine не возвращаются.
 
-## Второй PR и границы
-
-Второй PR #9 настраивает штатный Changesets с fixed: [], linked: [], access: public,
-baseBranch: main; private root не версионируется. Status/version выполняются штатными
-командами, без собственного version:prepare. Решения по Changesets уточняются
-в отдельно согласуемом плане второго PR. Lerna/Nx отложены до реальных
-prerequisites и измеримой потребности, как зафиксировано в общем плане.
-Рабочие версии до публикации остаются 0.1.0; публикация требует явного разрешения.
-
-Проверка состава пакетов штатным npm pack --workspaces --dry-run --json принадлежит #18.
-CLI/config products отложены до первого выпуска согласно [решению #1](https://github.com/antonsmolko/engineering-standards/issues/1#issuecomment-6139713098).
-Общий roadmap/design обновляется отдельным docs-PR по #1; этот PR не реализует его.
-Принятие содержания, запрет приватных материалов, merge и публикация остаются отдельными gates.
+Node-политика — [handoff](../../architecture/2026-10-11-session-handoff.md#проверки-и-рабочий-процесс). Content approval, ручной аудит и explicit publication approval независимы от настройки инструментов. [Прежний tooling design](https://github.com/antonsmolko/engineering-standards/blob/d483438/docs/superpowers/specs/2026-10-11-engist-monorepo-tooling-design.md) сохраняется в истории, не как новый implementation plan.

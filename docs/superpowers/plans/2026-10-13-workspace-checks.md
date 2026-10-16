@@ -1,5 +1,9 @@
 # Workspace check implementation plan — issue #9, first delivery
 
+Исторический план выполненного PR #29. #9 закрыта; оставшийся Changesets criterion
+перенесён в [#34](https://github.com/antonsmolko/engineering-standards/issues/34).
+Актуальный roadmap — [общий план](2026-10-11-engineering-standards-independent-packages.md).
+
 Status: amended by [owner scope decision](https://github.com/antonsmolko/engineering-standards/issues/9#issuecomment-6139713816) and the direct request to fix PR #29 and use TypeScript. Native execution; independent whole-result review required. Existing design/plan approval and merge/publication gates remain distinct.
 
 Goal: one `npm run check` for all eight workspaces. [Design](../specs/2026-10-11-engist-monorepo-tooling-design.md) defines input trust, diagnostics, exceptions and scope. npm scripts provide sequencing; node:test and tsc retain existing responsibilities. Official npm docs and maintained upstream example are linked in the design.
