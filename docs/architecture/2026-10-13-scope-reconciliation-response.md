@@ -4,7 +4,7 @@
 
 ## Источники и статус предыдущих решений
 
-Публичная основа — [#30](https://github.com/antonsmolko/engineering-standards/issues/30), merged PR #31, [решение владельца о roadmap](https://github.com/antonsmolko/engineering-standards/issues/1#issuecomment-6139713098) и [решение #9](https://github.com/antonsmolko/engineering-standards/issues/9#issuecomment-6139713816). Прочитаны OpenSpec proposal/design/specs/tasks, активные документы и issue bodies; Локальный snapshot до правок — **private input, not a public basis**; он использовался для сравнения. Публичные основания — ссылки на решения выше и история правок соответствующих GitHub issues. Статус #9 CLOSED/COMPLETED проверен непосредственно.
+Публичная основа — [#30](https://github.com/antonsmolko/engineering-standards/issues/30), merged PR #31, [решение владельца о roadmap](https://github.com/antonsmolko/engineering-standards/issues/1#issuecomment-6139713098) и [решение #9](https://github.com/antonsmolko/engineering-standards/issues/9#issuecomment-6139713816). Прочитаны OpenSpec proposal/design/specs/tasks, активные документы и issue bodies; локальный snapshot до правок — **private input, not a public basis**; он использовался для сравнения. Публичные основания — ссылки на решения выше и история правок соответствующих GitHub issues. Статус #9 CLOSED/COMPLETED проверен непосредственно.
 
 Исторические [PR #27 ledger](2026-10-12-issues-review-response.md), [PR #29 ledger](2026-10-13-workspace-checks-review-response.md) и review/response документы остаются неизменными. Reviewer-confirmed closures не переоткрываются. Новое публичное решение меняет именно scope: собственные catalog/profile/release-engine механизмы и CLI/config больше не являются текущими требованиями. Требования качества содержания, сохранения IDs/drafts, независимых версий, artifact/consumer проверок, приватности/лицензий и явных approvals сохраняются. Частные обсуждения и independent-agent input — **private input, not a public basis**; они не заменяют публичную основу выше. Локальный docs-review не включён в Git и не изменён.
 
@@ -43,7 +43,7 @@ Issue states/labels/dependencies проверены после правок. Н�
 | Source | Finding | Affected files/issues | Disposition | Evidence |
 | --- | --- | --- | --- | --- |
 | [PR review](https://github.com/antonsmolko/engineering-standards/pull/36#pullrequestreview-5509738744) | <a id="r6"></a>R6: AGENTS описывает Engist и текущие config/CLI packages | AGENTS.md | Исправлено | Resume указание относится к engineering-standards, независимость пяти specification packages явная; будущий tooling требует собственного scope. Approval/review правила не меняются. |
-| [PR review](https://github.com/antonsmolko/engineering-standards/pull/36#pullrequestreview-5509738744) | <a id="r7"></a>R7: historical issue links ведут на изменяемый main | #10–#17/#19/#21–#25/#28 | Исправлено | Только ссылки Historical criteria (inactive) закреплены на d483438; историческое содержание и dispositions сохранены. |
+| [PR review](https://github.com/antonsmolko/engineering-standards/pull/36#pullrequestreview-5509738744) | <a id="r7"></a>R7: historical issue links ведут на изменяемый main | #10–#17/#19/#21–#25 | Исправлено | Только ссылки Historical criteria (inactive) закреплены на d483438; историческое содержание и dispositions сохранены. |
 | [PR review](https://github.com/antonsmolko/engineering-standards/pull/36#pullrequestreview-5509738744) | <a id="r8"></a>R8: Changesets ошибочно описан как установленный | General design | Исправлено | Написано «будут версионироваться», добавлена ссылка #34 и явное отсутствие Changesets сейчас. |
 | [PR review](https://github.com/antonsmolko/engineering-standards/pull/36#pullrequestreview-5509738744) | <a id="r9"></a>R9: README contracts ведёт на proposal | README, general design | Исправлено | Обе ссылки ведут непосредственно на package/adoption specs; обзорный design также ссылается на реальные сценарии. |
 | [PR review](https://github.com/antonsmolko/engineering-standards/pull/36#pullrequestreview-5509738744) | <a id="r10"></a>R10: локальный snapshot не маркирован приватным | Ledger sources | Исправлено | Snapshot обозначен private input, not a public basis; основания — публичные решения/issues и их история правок. |
@@ -58,10 +58,22 @@ Issue states/labels/dependencies проверены после правок. Н�
 
 ### Issue edits этого review round
 
-Тела #10/#11/#12/#13/#14/#15/#16/#17/#19/#21/#22/#23/#24/#25/#28: закреплены historical blob links на d483438. Headers deferred/backlog обобщены до roadmap #1. #18 изменён только title; #34 получил прежнюю политику версий из обзорного design. Остальные active criteria, states, labels и dependencies не меняются. Новые issues/механизмы не создавались.
+Тела #10/#11/#12/#13/#14/#15/#16/#17/#19/#21/#22/#23/#24/#25: закреплены historical blob links на d483438. Headers deferred/backlog обобщены до roadmap #1. #18 изменён только title; #34 получил прежнюю политику версий из обзорного design. Остальные active criteria, states, labels и dependencies не меняются. Новые issues/механизмы не создавались.
 
 ### Проверка этого review round
 
 Независимое review полного итогового diff, русских артефактов, relevant unchanged documents и актуальных issue criteria — без actionable findings. Reviewer подтвердил fixes R6–R18, сохранность content/artifact/audit/approval gates, states/labels/dependencies и прежних closures. Agent input — private input, not a public basis; публичная основа — summary review PR #36 и #32.
 
-Отдельно от runtime: strict OpenSpec и full-diff whitespace checks проходят, все 38 текущих локальных Markdown links/anchors разрешаются; три distinct historical Git targets существуют на d483438. Проверены закреплённые ссылки в 15 historical issue sections. Свежий авторский npm run check на Node 26.11.1 — typecheck, workspace consistency и 95/95; reviewer runtime suite не повторял. Runtime/package/version diff пуст. R6–R18 закрыты; канонический ledger — этот файл. Ответ на summary публикуется со ссылками на individual entries; inline threads нет.
+Отдельно от runtime: strict OpenSpec и full-diff whitespace checks проходят, все 38 текущих локальных Markdown links/anchors разрешаются; три distinct historical Git targets существуют на d483438. Проверены закреплённые ссылки в 14 historical issue sections; #28 также проверена, но blob-ссылок не содержала и в этом раунде не изменялась. Свежий авторский npm run check на Node 26.11.1 — typecheck, workspace consistency и 95/95; reviewer runtime suite не повторял. Runtime/package/version diff пуст. R6–R18 закрыты; канонический ledger — этот файл. Ответ на summary публикуется со ссылками на individual entries; inline threads нет.
+
+
+## Повторная проверка 31cf889
+
+Прочитаны полный [повторный комментарий](https://github.com/antonsmolko/engineering-standards/pull/36#issuecomment-6155028976), все PR reviews/comments и #32 comments; inline threads отсутствуют. Reviewer подтвердил R6–R18: их dispositions сохраняются закрытыми. Новое замечание уточняет только evidence о #28, а не её первоначальное закрытие в документационном этапе.
+
+| Source | Finding | Affected files/issues | Disposition | Evidence |
+| --- | --- | --- | --- | --- |
+| [Повторная проверка](https://github.com/antonsmolko/engineering-standards/pull/36#issuecomment-6155028976) | <a id="r19"></a>R19: #28 ошибочно включена в список закреплённых historical links | Ledger R7, Issue edits, verification count | Исправлено | #28 убрана из двух списков изменений; счётчик исправлен на 14. Публичное тело #28 не содержит blob-ссылок; updated_at относится к первоначальному этапу до 68c3b0a. В этом раунде issue не редактируется. |
+| [Повторная проверка](https://github.com/antonsmolko/engineering-standards/pull/36#issuecomment-6155028976) | <a id="r20"></a>R20: прописная буква после точки с запятой | Ledger sources | Исправлено | «issue bodies; локальный snapshot» исправлено без изменения смысла или источников. |
+
+Issue edits этого раунда: отсутствуют. Изменён только ledger; контракты, gates, scopes и task status не менялись. По AGENTS.md rule 6 отдельное независимое review для этих wording/typo corrections не требуется; ранее выполненные полные review остаются применимыми. Проверки 2026-10-16: strict OpenSpec и diff whitespace проходят; все 38 локальных ссылок/якорей разрешаются. Diff от проверенной 31cf889 затрагивает только этот ledger; ранее проверенный полный PR не получил других изменений. Свежий npm run check на Node 26.11.1 — typecheck, workspace check и 95/95 тестов. R19/R20 закрыты.
