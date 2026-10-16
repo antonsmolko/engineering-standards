@@ -10,14 +10,10 @@
 
 Maintainer SHALL создавать changeset с выбранными пакетами, bump types и English summary и просматривать release plan штатными командами Changesets. Применение SHALL менять версии/changelog выбранных пакетов; незатронутые пакеты и private root MUST сохраняться. Публичные exports MUST NOT меняться ради versioning tooling.
 
-#### Scenario: Редактура одного пакета
-- **WHEN** во временном проекте из пяти пакетов 0.1.0 changeset выбирает только core с patch и запускаются status и version
-- **THEN** план содержит только core 0.1.1, version записывает его changelog с summary и потребляет changeset
-- **AND** остальные четыре package.json/changelog и private root не меняются
-
-#### Scenario: Один changeset выбирает несколько пакетов
-- **WHEN** synthetic changeset выбирает core patch и TypeScript minor
-- **THEN** их версии меняются независимо до 0.1.1 и 0.2.0, оба changelog содержат summary, остальные три пакета не меняются
+#### Scenario: Выбранные пакеты меняются независимо
+- **WHEN** temporary project содержит core/TypeScript 0.1.0 и Svelte 1.2.3, а changesets выбирают core patch, TypeScript minor и Svelte major
+- **THEN** план и один запуск version дают 0.1.1, 0.2.0 и 2.0.0, дополняют копии настоящих changelog English summaries и потребляют changesets
+- **AND** frontend/Svelte SPA package.json и changelog, а также private root не меняются
 
 ### Requirement: Политика breaking изменений
 
@@ -31,21 +27,13 @@ Maintainer SHALL создавать changeset с выбранными пакет
 - **WHEN** temporary package 1.2.3 получает major changeset с migration summary
 - **THEN** version выдаёт 2.0.0 и сохраняет migration summary в changelog
 
-### Requirement: Просмотр и диагностика
+### Requirement: Просмотр плана
 
-Status без output file SHALL быть read-only. Невалидные config/changeset или неизвестное имя пакета MUST давать штатную ошибку CLI; собственное исправление данных и транзакционный rollback не требуются. Руководство MUST отличать отсутствие релизных изменений от некорректных входов и отсутствующей Git base ref.
-
-#### Scenario: Чистый проект без changesets
-- **WHEN** status выполняется в чистом временном Git-проекте с корректной конфигурацией и base main без changesets
-- **THEN** нет релизных изменений и исходники/lockfile не меняются
+Status без output file SHALL быть read-only. Невалидный вход — штатная диагностика CLI, контракт её не расширяет.
 
 #### Scenario: План не изменяет исходники
-- **WHEN** status читает валидный synthetic changeset
-- **THEN** показывает план, но не меняет версии/changelog/changeset/lockfile
-
-#### Scenario: Некорректный вход
-- **WHEN** корректный temporary Git-project по отдельности получает malformed config, malformed changeset или changeset с неизвестным package name
-- **THEN** CLI завершается nonzero с диагностикой причины, не выдавая ошибку missing Git ref вместо проверки входа
+- **WHEN** status читает валидные changesets с тремя выбранными пакетами
+- **THEN** показывает план, но не меняет версии/changelog/changesets/lockfile
 
 ### Requirement: Согласованность npm метаданных
 

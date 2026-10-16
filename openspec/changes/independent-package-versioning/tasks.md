@@ -2,18 +2,15 @@
 
 Носитель #34, ветка feature/engineering-standards-34-changesets от b205da3. Реализация начинается после утверждения proposal/design/specs/этого плана. Один PR даёт независимое versioning пяти пакетов, без CI или выпуска. Все новые tests/helpers — TypeScript.
 
-## 1. Штатный Changesets и независимость
+## 1. Штатный Changesets и две integration-проверки
 
-- [ ] 1.1 Добавить TS integration fixture и запустить RED до runtime изменений: штатная команда недоступна/конфигурация отсутствует. Сохранить доказательство ожидаемой причины падения; synthetic fixture использует пять существующих package names/paths, private root, Git base main и собственный npm lockfile.
-- [ ] 1.2 Установить exact @changesets/cli@3.0.3, добавить минимальную .changeset configuration по design и прямой root script. GREEN должен показать создание changeset штатным CLI, plan и применение patch одного пакета, неизменность остальных четырёх package.json/changelog/private root и отсутствие новых commits/tags после version. Реальные версии/changelog сохраняются.
-- [ ] 1.3 Добавить проверки read-only status на чистом fixture без changesets и на валидном плане; missing/malformed config, malformed changeset и неизвестное имя должны давать штатный nonzero/diagnostic, а не ошибку неподготовленной Git ref. Проверить snapshot исходников, границы output file и включение новых integration TS tests в tsconfig.tests.json с успешным typecheck (нынешний include охватывает только helpers/scripts).
-- [ ] 1.4 Добавить maintainer guide с English примерами create/status/version, границами записи и ошибок. Сверить команды с реальным fixture, указать подготовку зависимостей/cache, Git main ref и отсутствие publish/tag/автоматического принятия содержания.
+- [ ] 1.1 Добавить две TS integration-проверки по design: version + lockfile и read-only status на валидном плане; включить их в tsconfig.tests.json. Один вид temporary fixture: пять существующих package names/paths, копии реальных CHANGELOG.md, private root без внешних dependencies и собственный lockfile. Core patch, TypeScript minor, Svelte 1.2.3 major; два пакета не выбраны. Запустить RED до runtime изменений и сохранить evidence отсутствия штатной команды/конфигурации, а не ошибки fixture.
+- [ ] 1.2 Установить exact @changesets/cli@3.0.3, добавить configuration только с baseBranch main/commit false и прямой root script. GREEN/typecheck: штатный non-interactive add, plan, один version дают ожидаемые три версии/changelog с summary/миграциями, сохраняют прежние changelog entries, два незатронутых пакета/private root и не создают commits/tags. Lockfile обновляется npm --package-lock-only --ignore-scripts --offline без подготовки cache и проходит существующий workspace check; status без output file не меняет снимок исходников/lockfile. Реальные версии/changelog сохраняются.
+- [ ] 1.3 Добавить maintainer guide с English примерами create/status/version и npm lockfile step, границами записи и остановкой после ошибки. Сверить команды на fixture; выбор bump человеком (редактура patch, breaking 0.x minor, >=1 major с миграцией) отделён от его применения CLI. Root CLI требует установки devDependencies; fixture без внешних dependencies не требует cache. Невалидный ввод — диагностика upstream; её тесты и Git base/history не добавляются. Нет publish/tag/автоматического принятия содержания.
 
-## 2. Версионная политика и npm lockfile
+## 2. Согласованность документации
 
-- [ ] 2.1 На temporary fixtures проверить patch 0.1.0→0.1.1, breaking minor 0.1.0→0.2.0 и major 1.2.3→2.0.0 с English migration summary, а также mixed core patch/TypeScript minor: фактический plan/версии/changelog, сохранение незатронутых пакетов и private root. Руководство отличает выбор bump человеком от его применения CLI и не обещает semantic validator.
-- [ ] 2.2 После fixture version обновить lockfile штатным npm --package-lock-only --ignore-scripts offline и проверить его существующим workspace check. Документировать этот шаг и остановку после ошибки; согласованность не обеспечивается новым versioning engine.
-- [ ] 2.3 Обновить README, handoff и общий tooling design по реально выполненным шагам. Сверить #34/#1 и неизменённые #18/#35/#20/#26, публичные exports и отсутствие настоящего bump/content approval; записать scope/evidence и GitHub issue edits (если они потребовались) в committed ledger.
+- [ ] 2.1 Обновить README, handoff и общий tooling design по реально выполненным шагам. Сверить #34/#1 и неизменённые #18/#35/#20/#26, публичные exports и отсутствие настоящего bump/content approval; записать scope/evidence и GitHub issue edits (если потребовались) в committed ledger. Base/history остаются #18, публикация — #35/#26.
 
 ## 3. Полный результат
 
