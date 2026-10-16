@@ -47,9 +47,7 @@ npm run changeset -- status
 ```
 
 This shows the pending plan without changing project files. To inspect the
-upstream JSON result, add `--output` with a temporary file path. Invalid input
-uses the standard CLI diagnostics. Git base/history verification for CI is a
-separate infrastructure task; this guide introduces no custom error handling.
+upstream JSON result, add `--output` with a temporary file path.
 
 ## Apply an approved version preparation
 
@@ -67,8 +65,7 @@ npm run check
 `version` consumes the pending changesets and updates the selected packages and
 changelogs. It does not update npm's lockfile; the second command does that using
 npm. Stop after any failure, inspect the cause and the diff, and fix or restore
-the partial changes before retrying. Upstream writes are not promised to roll
-back automatically.
+the partial changes before retrying.
 
 Review the resulting package versions, changelogs and lockfile together. The
 configuration uses upstream defaults for independent versions, the changelog
@@ -76,17 +73,6 @@ format and exclusion of private packages; automatic commits are disabled.
 
 These steps do not publish or tag packages. Content acceptance, material audits
 and explicit publication approval remain separate requirements.
-
-## Verification
-
-Two TypeScript integration tests use disposable projects with the five package
-names/paths, copies of the real changelogs and synthetic changes. One combines
-patch, breaking 0.x minor and post-1.0 major bumps, unchanged packages/private
-root, changelogs and npm lockfile consistency; the other checks read-only status.
-The fixture has no external dependencies, so its npm lockfile commands run with
-`--offline` without cache preparation. The CLI comes from this checkout's
-installed development dependencies. Real repository package versions stay
-0.1.0, and the existing suite still packs and installs the five real artifacts.
 
 Command reference: [Changesets CLI](https://changesets.dev/guide/cli).
 Configuration reference: [Changesets config](https://changesets.dev/guide/config).

@@ -72,3 +72,17 @@ Reviewer в [повторной проверке b349a58](https://github.com/ant
 Runtime evidence отдельно: независимый свежий npm run check на Node 26.11.1/npm 11.20.0 — 33/33, typecheck и workspace check. Нижняя граница 26.0.0 проверена автором (33/33); reviewer прочитал этот вывод и RED, не заявляя повторного независимого запуска 26.0.0. Реальные artifact/consumer tests и inventory просмотрены, все пять package trees неизменны; 40 новых lock entries dev-only, прежние зависимости не изменены.
 
 Документальное evidence отдельно: полный final diff, активные неизменённые документы и публичные #1/#34/#18/#35/#20/#26 согласованы; strict OpenSpec/whitespace проходят, 27 local links/anchors независимо разрешены. R1–R6 остаются закрыты. Publication readiness, принятие содержания, scope rights и CI base/history не оценивались как выполненные: это отдельные #20/#26/#35/#18; их gates сохранены. После review изменены только запись evidence и checkbox 3.2. Полнота OpenSpec — 6/6; archive/merge/publish не выполняются.
+
+## Текстовое review реализации cb708aa
+
+Прочитаны все страницы PR/issue #34 comments, inline comments, summary reviews и GraphQL reviewThreads: новый [review cb708aa](https://github.com/antonsmolko/engineering-standards/pull/38#issuecomment-6224302758), inline/summary threads и comments #34 отсутствуют. Reviewer подтвердил выполнение #34/spec, неизменность package trees, 33/33 на Node 26.11.1, мутационные проверки и closures R1–R6. Эти подтверждения сохраняются; данных reviewer о независимом прогоне Node 26.0.0 нет и не заявляется.
+
+| Source | Finding | Affected files/issues | Disposition | Evidence |
+| --- | --- | --- | --- | --- |
+| [Review, Minor 1](https://github.com/antonsmolko/engineering-standards/pull/38#issuecomment-6224302758) | T1: пересказ устройства тестов в руководстве устаревает | .changeset/README.md | Исправлено | Раздел Verification удалён; подробное evidence остаётся в design и ledger. |
+| [Review, Minor 2](https://github.com/antonsmolko/engineering-standards/pull/38#issuecomment-6224302758) | T2: internal CI roadmap и след R1 не нужны в руководстве команд | .changeset/README.md | Исправлено | Удалены две фразы про diagnostics/base-history; инструкция status/JSON output сохранена. |
+| [Review, optional rollback wording](https://github.com/antonsmolko/engineering-standards/pull/38#issuecomment-6224302758) | T3: лишняя оговорка о rollback | .changeset/README.md | Исправлено | Удалена последняя оговорка; stop, inspect diff и fix/restore before retry сохранены. |
+
+GitHub issue edits этого раунда: нет. Контракты/spec/design/tasks, handoff, зависимости и release/content approvals не меняются. Повторное независимое contract review не требуется для text-only сокращения (AGENTS review handling 6); публичный reviewer отдельно подтвердил это. Новых findings после T1–T3 нет.
+
+Evidence раунда: свежий npm run check на Node 26.11.1 — 33/33, typecheck/workspace check и real artifact/consumer scenarios; strict OpenSpec и whitespace проходят. Node 26.0.0 в text-only раунде повторно не запускалась, прежнее evidence реализации сохранено. Отдельно сверены итоговый diff с cb708aa (изменены только guide/ledger), неизменённые design/spec/tasks и ссылки: удалённый heading Verification нигде не используется как локальная цель, остальные ссылки/anchors не менялись. Удаление пояснений не меняет команды, failure recovery или approval gates.
