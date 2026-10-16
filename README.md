@@ -11,6 +11,8 @@ validation uses local tarballs.
 
 ## Documentation
 
+- [Contributing](CONTRIBUTING.md)
+- [Security reporting](SECURITY.md)
 - [Install and use the documents](docs/usage.md)
 - [Product design](docs/superpowers/specs/2026-10-11-engineering-standards-design.md)
 - [Implementation roadmap](docs/superpowers/plans/2026-10-11-engineering-standards-independent-packages.md)
@@ -42,7 +44,8 @@ nvm does not read `.node-version` automatically.
 
 [Changesets](.changeset/README.md) manages independent package versions and
 changelogs. Version preparation is verified on disposable projects; real package
-versions remain 0.1.0. CI and publication preparation remain separate work.
+versions remain 0.1.0. Verification CI runs on PRs into `main` and pushes to `main` on both Node versions.
+Publication preparation remains separate work.
 The technical platform is verified with synthetic documents before actual
 standards are filled and approved. Plans/discussions use Russian; published
 standards and READMEs use English. Bilingual editions are possible future work.

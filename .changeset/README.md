@@ -17,8 +17,15 @@ npm run changeset
 
 Select only the affected packages, choose each bump type, and write an English
 summary explaining the change. Review the generated Markdown file and commit it
-with the package change. Repository tooling changes that do not need a package
-release do not require a changeset.
+with the package change. PR CI requires a committed changeset for every package-file edit, including
+Markdown. If a package edit needs no release, create and commit an empty one:
+
+```sh
+npm run changeset -- add --empty
+```
+
+An empty changeset records the no-release decision without bumping a version or
+accepting content. Changes outside packages do not require a changeset.
 
 The supported non-interactive form is also available, for example:
 
@@ -46,7 +53,12 @@ particular, choosing major at 0.1.0 produces 1.0.0, so use minor for a breaking
 npm run changeset -- status
 ```
 
-This shows the pending plan without changing project files. To inspect the
+This shows the pending plan without changing project files. On PRs, CI uses
+`npm run changeset -- status --since "$BASE_SHA"` with the PR base commit and
+full Git history; a package edit without a changeset fails. On pushes to `main`,
+ordinary status reads config and assembles the pending plan. Its default base
+branch is `main`, which equals HEAD there, so this step does not detect package
+edits without changesets. To inspect the
 upstream JSON result, add `--output` with a temporary file path.
 
 ## Apply an approved version preparation

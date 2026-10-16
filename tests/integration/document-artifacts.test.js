@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { marked } from "marked";
+import { checkAcceptedHeaders } from "../helpers/check-accepted-headers.ts";
 import { checkDocuments } from "../helpers/check-documents.ts";
 import { installOffline } from "../helpers/install-offline.ts";
 
@@ -37,6 +38,9 @@ test("five installed document artifacts and a chosen subset work without CLI or 
       assert.equal(metadata.version, pkg.version);
       assert.deepEqual(await checkDocuments(installed, pkg.name), []);
     }
+    const prerequisite = await checkAcceptedHeaders(selection.map((pkg) => join(consumer, "node_modules", pkg.name)));
+    assert.equal(prerequisite.ready, false, "Real proposed documents must remain not ready.");
+    assert.equal(prerequisite.diagnostics.length, 3, "All three required packages lack accepted IDs.");
     const references = [];
     marked.walkTokens(marked.lexer(instructions), (token) => {
       if (token.type === "link") references.push(token.href);
