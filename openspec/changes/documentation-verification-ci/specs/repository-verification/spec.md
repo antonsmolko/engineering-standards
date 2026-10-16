@@ -18,7 +18,7 @@ PR в main и push main SHALL запускать clean установку зав
 - **WHEN** установка, typecheck, workspace check или тест завершаются с ошибкой
 - **THEN** verification job не считается успешным
 
-### Requirement: Проверенный состав документов
+### Requirement: Inventory и проверки установленных документов
 
 CI SHALL выводить штатный npm packed inventory пяти workspaces и проверять доступность документов/локальных ссылок существующими installed-artifact tests. Служебные/review материалы MUST NOT включаться в пакеты. Автоматические проверки MUST NOT подменять ручной аудит секретов/продуктовых сведений/прав перед выпуском.
 
@@ -28,7 +28,7 @@ CI SHALL выводить штатный npm packed inventory пяти workspace
 
 ### Requirement: Changesets получает Git-контекст
 
-На PR штатный Changesets status SHALL использовать доступный base commit и историю до merge-base. Отсутствующий контекст MUST давать понятный nonzero до status, без fallback success. На push main SHALL проверяться текущие pending changesets. Локальный workspace metadata check MUST обходиться без remote refs.
+На PR штатный Changesets status SHALL использовать доступный base commit и историю до merge-base. Отсутствующий контекст MUST давать понятный штатный отказ Changesets, без fallback success. На push main SHALL проверяться текущие pending changesets. Локальный workspace metadata check MUST обходиться без remote refs.
 
 #### Scenario: PR с доступным контекстом
 - **WHEN** полный checkout содержит base commit и merge-base с HEAD
@@ -38,17 +38,29 @@ CI SHALL выводить штатный npm packed inventory пяти workspace
 - **WHEN** base commit или merge-base недоступны
 - **THEN** шаг завершается nonzero с понятной диагностикой и не выдаёт успешный план
 
-### Requirement: Synthetic accepted-content prerequisite
+#### Scenario: Пакет изменён без changeset
+- **WHEN** PR меняет файл пакета, включая Markdown, без changeset
+- **THEN** branch-relative status завершается nonzero; для изменения без выпуска автор добавляет и коммитит changeset через `npm run changeset -- add --empty`
 
-CI SHALL проверять на synthetic данных правило: минимум один accepted applicable непустой ID из каждого core, TypeScript и Svelte SPA. Fixtures MUST NOT принимать реальные документы или служить разрешением выпуска. Текущие proposed документы MUST NOT блокировать technical verify; нормативный выпуск сохраняет отдельный content gate.
+### Requirement: Accepted ID в установленных артефактах
+
+Проверка SHALL читать существующие ID/Status заголовки установленных пакетов и требовать accepted непустой ID из каждого core, TypeScript и Svelte SPA. Применимость и owner decisions SHALL подтверждаться отдельно владельцем при выпуске. Fixtures MUST NOT принимать реальные документы; technical CI MUST оставаться успешным при ожидаемом not-ready нынешних черновиков.
 
 #### Scenario: Полный synthetic accepted набор
-- **WHEN** fixture содержит qualifying ID всех трёх обязательных пакетов
-- **THEN** проверка prerequisites даёт положительный результат без изменения реальных документов
+- **WHEN** установленные synthetic fixture-пакеты содержат accepted ID всех трёх обязательных пакетов
+- **THEN** проверка наличия accepted headers положительна без изменения реальных документов или owner approval
 
-#### Scenario: Неполный или неприменимый набор
-- **WHEN** один пакет отсутствует, ID пуст, status proposed или ID неприменим, либо один пакет продублирован вместо другого
-- **THEN** prerequisites дают отрицательный результат; тест подтверждает отказ и technical suite проходит
+#### Scenario: Отсутствующие или не принятые документы
+- **WHEN** пакет/ID/status отсутствует, ID пуст, status proposed/неизвестен или один пакет продублирован вместо другого
+- **THEN** результат not ready с указанием недостающего пакета/accepted ID
+
+#### Scenario: Реальные черновые tarballs
+- **WHEN** helper проверяет реальные пакеты, установленные consumer-тестом
+- **THEN** нынешние proposed headers дают not ready, тест подтверждает отказ и technical suite проходит
+
+#### Scenario: Недоступные данные
+- **WHEN** корень пакета или проверяемый документ не читается
+- **THEN** результат not ready с пакетом/путём, без записи в файлы
 
 ### Requirement: Ограниченные права и руководство
 

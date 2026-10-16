@@ -7,8 +7,8 @@
 ## What Changes
 
 - Один verification workflow для PR в main и push main: Node 26.0.0/26.11.1, clean npm install, root check, npm packed inventory и штатный Changesets status с доступной base/history.
-- Synthetic positive/negative проверки правила: минимум один accepted applicable ID из core, TypeScript и Svelte SPA. Нынешние proposed документы не делают technical CI красным и не считаются готовыми к нормативному выпуску.
-- Короткие contributor/security/ownership инструкции; автоматическая проверка состава пакетов дополняет ручной аудит материалов.
+- Проверка существующих ID/Status заголовков из установленных пакетов: synthetic positive/negative и not-ready на реальных proposed tarballs. Применимость accepted ID подтверждает владелец при выпуске; черновики не делают technical CI красным.
+- Явное правило changeset (либо add --empty) для PR с изменениями пакетов; короткие contributor/security/ownership инструкции; автоматическая проверка состава пакетов дополняет ручной аудит материалов.
 - Только read permissions, без publish credentials, tags, registry writes или branch protection changes.
 
 ## Capabilities
