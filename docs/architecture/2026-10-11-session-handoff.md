@@ -21,7 +21,7 @@
 
 ## Ближайшие действия
 
-#32/PR #36 завершили согласование документов и задач. #33/PR #37 завершили переход (OpenSpec tasks 2–4). Текущий этап — реализация/review #34 [independent-package-versioning](../../openspec/changes/independent-package-versioning/proposal.md) в PR #38; после merge далее #18 и #35 подготовки публикации на synthetic данных. После технической готовности — #20 (core/TypeScript/Svelte SPA acceptance), затем отдельно одобренная реальная публикация #26. В #34 входит только versioning; CI и публикация остаются отдельными этапами.
+#32/PR #36 завершили согласование документов и задач. #33/PR #37 завершили переход (OpenSpec tasks 2–4). Текущий этап — реализация/review #34 [independent-package-versioning](../../openspec/changes/independent-package-versioning/proposal.md) в PR #38; после merge — #18 и #35 подготовки публикации на synthetic данных. После технической готовности — #20 (core/TypeScript/Svelte SPA acceptance), затем отдельно одобренная реальная публикация #26. В #34 входит только versioning; CI и публикация остаются отдельными этапами.
 
 #10–#16/#23 deferred; #17/#19 заменены проверками #18 и подготовкой #35 / выпуском #26; #21/#22 объединены в #20; #24/#25 backlog, не блокеры релиза; #28 выполнена PR #27. Старые issue comments/review ledgers сохраняются как история; новые критерии имеют приоритет, не объявляя прежнюю runtime-работу выполненной.
 

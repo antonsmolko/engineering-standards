@@ -15,7 +15,7 @@
 ## 3. Полный результат
 
 - [x] 3.1 Запустить npm run check на Node 26.0.0 и 26.11.1, включая прежние реальные packed artifacts/external consumers. Проверить diff пяти package trees: версии 0.1.0, ID/тексты/статусы/exports/changelog сохранены; теги/публикация отсутствуют, root private без версии.
-- [ ] 3.2 Независимо проверить полный final diff, контракты, связанные неизменённые docs/issue bodies, ссылки и зависимости отдельно от runtime suite. Записать dispositions/evidence и закрыть findings до отправки PR на одобрение; merge не выполнять.
+- [x] 3.2 Независимо проверить полный final diff, контракты, связанные неизменённые docs/issue bodies, ссылки и зависимости отдельно от runtime suite. Записать dispositions/evidence и закрыть findings до отправки PR на одобрение; merge не выполнять.
 
 ## Workflow follow-up
 

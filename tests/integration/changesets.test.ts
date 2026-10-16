@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { copyFile, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { delimiter, join, resolve } from "node:path";
+import { delimiter, join } from "node:path";
 import test from "node:test";
 import type { TestContext } from "node:test";
 import { checkWorkspaces } from "../../scripts/check-workspaces.ts";
