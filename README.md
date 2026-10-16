@@ -33,8 +33,9 @@ Use Node 26. The development version in `.node-version` is `26.11.1`; verificati
 also covers the supported minimum `26.0.0`. Run `npm ci --ignore-scripts` with registry
 access to prepare dependencies/cache, then `npm run check`. The current check runs
 typecheck, exact workspace lock/version checks, then the full suite, including
-installed document indexes, local links and manual adoption examples. Consumer tests install tarballs offline; an empty cache gives
-preparation guidance. TypeScript scripts/helpers are checked without generating JS.
+installed document indexes, local links and manual adoption examples. Consumer
+tests install tarballs offline; an empty cache gives preparation guidance.
+TypeScript scripts/helpers are checked without generating JS.
 
 With nvm: `nvm install "$(cat .node-version)"` and `nvm use "$(cat .node-version)"`.
 nvm does not read `.node-version` automatically.

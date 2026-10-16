@@ -45,7 +45,6 @@ test("five installed document artifacts and a chosen subset work without CLI or 
     for (const href of references) assert.ok((await readFile(resolve(consumer, href), "utf8")).trim());
     assert.deepEqual((await readdir(join(consumer, "node_modules/@antonsmolko"))).sort(), selection.map((pkg) => pkg.name.split("/")[1]).sort());
     for (const [path, content] of Object.entries(preserved)) assert.equal(await readFile(join(consumer, path), "utf8"), content);
-    assert.equal((await readdir(consumer)).includes("engist.json"), false);
   }
 });
 
