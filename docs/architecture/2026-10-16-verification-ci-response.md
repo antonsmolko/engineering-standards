@@ -117,3 +117,21 @@ strict OpenSpec/whitespace проходят. GitHub issue edits реализац
 Выполнено 6/6 OpenSpec tasks. Применимость/owner acceptance и реальная publication enforcement остаются
 согласованными #20/#35/#26 gates, custom I/O wrapper не возвращается. Это сохранение approved scope,
 не новое deferred finding. Merge/publication/settings/tags не выполнялись; PR передаётся на review.
+
+## Review реализации f25935a
+
+Прочитаны все семь PR comments, все страницы inline comments/reviews и GraphQL threads (пусты, hasNextPage false), все шесть comments #18. [Публичное review](https://github.com/antonsmolko/engineering-standards/pull/39#issuecomment-6225246610) подтвердило критерии #18, actual CI, отсутствие блокеров и закрытия R1–R7; эти closures сохраняются. Два minor предложения приняты без изменения runtime-контракта, gates или плана.
+
+| Source | Finding | Affected files/issues | Disposition | Evidence |
+| --- | --- | --- | --- | --- |
+| [Implementation review, Minor 1](https://github.com/antonsmolko/engineering-standards/pull/39#issuecomment-6225246610) | R8: прежний inline-code case не проверяет plain-text token filter | tests/integration/accepted-headers.test.ts | Исправлено | Case заменён на `ID: ` + inline-code value при обычном accepted status. Mutation без token filter теперь даёт exit 1 именно на «inline code ID value» (ready true вместо false); восстановленный неизменённый helper даёт GREEN. Runtime/helper не менялись. |
+| [Implementation review, Minor 2](https://github.com/antonsmolko/engineering-standards/pull/39#issuecomment-6225246610) | R9: contributor commit example привязан к #18 | CONTRIBUTING.md | Исправлено | Использован общий `[engineering-standards-<issue>]: Describe the change`, совпадающий с AGENTS.md; это исправление примера, не новое правило. |
+| [Implementation review, informational security note](https://github.com/antonsmolko/engineering-standards/pull/39#issuecomment-6225246610) | R10: private reporting выключен, условная инструкция остаётся корректной | SECURITY.md/repository settings | Изменений не требуется | Reviewer подтвердил корректность «when it is available» и fallback к владельцу. Включение reporting остаётся отдельным owner decision; настройки не менялись. |
+
+### Проверки этого раунда
+
+Runtime evidence: focused 16/16 GREEN; mutation без фильтра RED, helper восстановлен; полный npm run check на Node 26.0.0 и 26.11.1 — по 47/47, включая реальные packed artifacts/external consumers. Пакеты, версии, IDs/drafts, owner decisions, lockfile, runtime/helper и workflow сохранены.
+
+Документальные проверки отдельно: полный final PR diff повторно просмотрен; пример commit сверён с AGENTS.md, metadata boundary — с design/spec/tasks/tooling. Новых контрактов и конфликтов с неизменёнными документами/issue criteria/dependencies нет. Strict OpenSpec/whitespace проходят; 37 local links/anchors в 12 документах разрешаются. Независимая проверка полной реализации подтверждена публичным review выше; в этом раунде изменены только regression fixture, wording примера и этот ledger, требования/gates не менялись. OpenSpec остаётся 6/6.
+
+GitHub issue edits этого раунда: нет. Criteria/dependencies #18/#35/#20/#26 и handoff остаются актуальными. Merge/publication/settings не выполнялись.

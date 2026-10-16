@@ -52,7 +52,7 @@ test("installed headers require accepted IDs from each required package without 
     ["accepted draft suffix", accepted.replace("accepted.", "accepted (draft; not approved).")],
     ["code example", `# Example\n\n\`\`\`markdown\n${accepted}\n\`\`\`\n`],
     ["metadata in body", "# Requirement\n\n## Example\n\nID: FIXTURE-001.\n\nStatus: accepted.\n"],
-    ["inline code metadata", "# Requirement\n\n`ID: FIXTURE-001.`\n\n`Status: accepted.`\n"],
+    ["inline code ID value", accepted.replace("ID: FIXTURE-001.", "ID: `FIXTURE-001`.")],
   ];
   for (const [label, content] of cases) {
     await t.test(label, async () => {

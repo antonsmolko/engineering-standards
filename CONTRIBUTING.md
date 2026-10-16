@@ -17,7 +17,7 @@ pushes to `main`. Packed inventory is logged; artifact tests inspect the files.
 ## Propose a change
 
 Keep each PR focused on one verifiable outcome. Use an issue-scoped feature
-branch and commits like `[engineering-standards-18]: Describe the change`.
+branch and commits like `[engineering-standards-<issue>]: Describe the change`.
 Write a failing behavior test before runtime changes, then run the full check.
 Write public documentation and diagnostics in English.
 
