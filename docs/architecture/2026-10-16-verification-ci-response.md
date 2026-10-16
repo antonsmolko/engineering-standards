@@ -54,3 +54,18 @@ Strict OpenSpec validation и whitespace проходят. Runtime suite/Actions
 Отдельный агент без авторской рабочей переписки проверил полный итоговый PR diff, R1–R5, связанные неизменённые документы и публичные #18/#35/#20/#26, все comments/reviews PR и шесть comments #18. Actionable findings отсутствуют. Отчёт — private input, not a public basis; публичное основание правок — review PR #39 и criteria #18 выше. Прежние подтверждённые closures сохраняются, новых незакрытых findings нет.
 
 Документальное evidence отдельно: strict OpenSpec/whitespace проходят; 11 links/anchors в шести документах разрешаются, зависимости и approvals согласованы. GitHub issue edits этого раунда отсутствуют. Runtime/Actions не запускались: 0/6 implementation tasks, пакеты/скрипты/тесты/зависимости рабочего repo не менялись. Временное upstream исследование описано отдельно выше и не выдаётся за готовый CI. После независимого review изменена только эта запись evidence; draft ожидает утверждения плана/apply.
+
+## Повторное review d0a3031
+
+Прочитаны все страницы PR comments, inline comments/reviews/GraphQL threads и шесть comments #18. Новый [summary d0a3031](https://github.com/antonsmolko/engineering-standards/pull/39#issuecomment-6224882236) подтвердил закрытие R1–R5 и отсутствие блокеров; подтверждённые closures сохраняются. Два необязательных предложения приняты ниже.
+
+| Source | Finding | Affected files/issues | Disposition | Evidence |
+| --- | --- | --- | --- | --- |
+| [Repeat review, push-main](https://github.com/antonsmolko/engineering-standards/pull/39#issuecomment-6224882236) | R6: роль push-main status не названа точно | design/spec/tasks, PR | Исправлено в плане | Явно указано: чтение config и сборка pending-плана. На main HEAD=baseBranch; контроль package edits без changeset выполняется PR-шагом. Проверено по установленному Changesets versionablePackages/status: ref по умолчанию config.baseBranch. |
+| [Repeat review, optional I/O scenario](https://github.com/antonsmolko/engineering-standards/pull/39#issuecomment-6224882236) | R7: избыточный контракт недоступных данных | design/spec/tasks | Исправлено в плане | Удалены отдельный scenario «Недоступные данные», обещание custom not-ready I/O diagnostics и обязательный negative-кейс task 1.1. Проверки missing package/ID/status и реальные not-ready черновики сохранены; новый I/O wrapper не планируется. |
+
+GitHub issue edits этого раунда: нет. Критерии/зависимости #18/#35/#20/#26, handoff и отдельные content/applicability/release approvals сохраняются. Реализация 0/6; пакеты/версии/документы/owner decisions и runtime не менялись.
+
+Независимый агент без авторской рабочей переписки проверил полный PR diff с R6/R7, публичные reviews/comments, связанные неизменённые документы и criteria/dependencies #18/#35/#20/#26. Actionable findings отсутствуют; R1–R5 остаются закрытыми. Отчёт — private input, not a public basis; публичное основание — repeat review выше и criteria #18.
+
+Документальная проверка отдельно: strict OpenSpec и whitespace проходят, 11 local links/anchors в шести документах разрешаются; полный итоговый diff и неизменённые документы/issues не выявили конфликтов контрактов или зависимостей. Runtime suite/Actions не запускались в этом planning-only раунде; все шесть implementation tasks остаются открытыми. После независимого review добавлено только это evidence.

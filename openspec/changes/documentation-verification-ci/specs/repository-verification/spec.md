@@ -28,7 +28,7 @@ CI SHALL выводить штатный npm packed inventory пяти workspace
 
 ### Requirement: Changesets получает Git-контекст
 
-На PR штатный Changesets status SHALL использовать доступный base commit и историю до merge-base. Отсутствующий контекст MUST давать понятный штатный отказ Changesets, без fallback success. На push main SHALL проверяться текущие pending changesets. Локальный workspace metadata check MUST обходиться без remote refs.
+На PR штатный Changesets status SHALL использовать доступный base commit и историю до merge-base. Отсутствующий контекст MUST давать понятный штатный отказ Changesets, без fallback success. На push main SHALL проверяться чтение config и сборка pending-плана; контроль изменений пакетов без changeset выполняется на PR. Локальный workspace metadata check MUST обходиться без remote refs.
 
 #### Scenario: PR с доступным контекстом
 - **WHEN** полный checkout содержит base commit и merge-base с HEAD
@@ -57,10 +57,6 @@ CI SHALL выводить штатный npm packed inventory пяти workspace
 #### Scenario: Реальные черновые tarballs
 - **WHEN** helper проверяет реальные пакеты, установленные consumer-тестом
 - **THEN** нынешние proposed headers дают not ready, тест подтверждает отказ и technical suite проходит
-
-#### Scenario: Недоступные данные
-- **WHEN** корень пакета или проверяемый документ не читается
-- **THEN** результат not ready с пакетом/путём, без записи в файлы
 
 ### Requirement: Ограниченные права и руководство
 
