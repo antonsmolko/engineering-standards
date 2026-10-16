@@ -1,6 +1,6 @@
 # Verification CI — #18
 
-Носитель — [#18](https://github.com/antonsmolko/engineering-standards/issues/18), prefix engineering-standards-18. База 3372e96 после merge [PR #38](https://github.com/antonsmolko/engineering-standards/pull/38); #33/#34 завершены. Текущий change documentation-verification-ci содержит только planning artifacts; шесть implementation tasks открыты после review PR #39, CI ещё не реализован.
+Носитель — [#18](https://github.com/antonsmolko/engineering-standards/issues/18), prefix engineering-standards-18. База 3372e96 после merge [PR #38](https://github.com/antonsmolko/engineering-standards/pull/38); #33/#34 завершены. План documentation-verification-ci утверждён владельцем 2026-10-17; helper/workflow/guidance реализованы в PR #39. Выполнено 6/6 tasks, оба реальных GitHub jobs успешны, независимое review завершено; evidence — в разделе реализации ниже. PR ожидает явного merge approval.
 
 ## Источники и статус прежних замечаний
 
@@ -10,14 +10,16 @@ Baseline — [GitHub Node.js starter](https://github.com/actions/starter-workflo
 
 | Source | Finding | Affected files/issues | Disposition | Evidence |
 | --- | --- | --- | --- | --- |
-| [#18](https://github.com/antonsmolko/engineering-standards/issues/18), [PR #38](https://github.com/antonsmolko/engineering-standards/pull/38) | C1: существующие проверки должны работать в CI | proposal/design/spec/tasks | Запланировано | Один read-only workflow на двух Node, npm ci/check/pack, прежние real consumer tests; actual GitHub jobs обязательны для завершения реализации. |
-| [#18](https://github.com/antonsmolko/engineering-standards/issues/18) | C2: Changesets нужны base/history и понятный отказ | design/spec/tasks | Запланировано | Full checkout, PR base SHA через env, штатные event if и CLI status без preflight/parser; upstream отказ подтверждён на temporary npm/Git project. Push main читает pending changesets. |
-| [#18](https://github.com/antonsmolko/engineering-standards/issues/18), [content decisions](https://github.com/antonsmolko/engineering-standards/blob/3372e96/docs/architecture/content-approval.md) | C3: artifact prerequisite не принимает реальные документы | design/spec/tasks | Запланировано | Helper читает ID/Status установленных пакетов, positive/negative synthetic headers и not-ready реальных tarballs. Применимость/подтверждение решений остаются owner gates #20/#35/#26; новый record format не вводится. |
-| [#18](https://github.com/antonsmolko/engineering-standards/issues/18) | C4: минимальные права, guidance и manual material audit | design/spec/tasks | Запланировано | Нет publish/tag/секретов/write permissions; contributor/security/ownership docs, существующие artifact checks и отдельный ручной аудит #26. |
+| [#18](https://github.com/antonsmolko/engineering-standards/issues/18), [PR #38](https://github.com/antonsmolko/engineering-standards/pull/38) | C1: существующие проверки должны работать в CI | proposal/design/spec/tasks | Реализовано; финальная проверка ниже | Один read-only workflow на двух Node, npm ci/check/pack, прежние real consumer tests; actual GitHub jobs обязательны для завершения реализации. |
+| [#18](https://github.com/antonsmolko/engineering-standards/issues/18) | C2: Changesets нужны base/history и понятный отказ | design/spec/tasks | Реализовано; финальная проверка ниже | Full checkout, PR base SHA через env, штатные event if и CLI status без preflight/parser; upstream отказ подтверждён на temporary npm/Git project. Push main читает pending changesets. |
+| [#18](https://github.com/antonsmolko/engineering-standards/issues/18), [content decisions](https://github.com/antonsmolko/engineering-standards/blob/3372e96/docs/architecture/content-approval.md) | C3: artifact prerequisite не принимает реальные документы | design/spec/tasks | Реализовано; финальная проверка ниже | Helper читает ID/Status установленных пакетов, positive/negative synthetic headers и not-ready реальных tarballs. Применимость/подтверждение решений остаются owner gates #20/#35/#26; новый record format не вводится. |
+| [#18](https://github.com/antonsmolko/engineering-standards/issues/18) | C4: минимальные права, guidance и manual material audit | design/spec/tasks | Реализовано; финальная проверка ниже | Нет publish/tag/секретов/write permissions; contributor/security/ownership docs, существующие artifact checks и отдельный ручной аудит #26. |
 
 ## GitHub issue edits
 
 В #1 отмечена завершённая #34 после проверки merged PR #38/closed issue. Criteria/dependencies #18/#35/#20/#26 не менялись; #18 открыта, закрытая #9 не переоткрывается. Планы будущих этапов остаются требованиями, их механизмы не выбираются в #18.
+
+Таблица C1–C4 отражает текущую реализацию; последующие разделы планирования сохраняют исторические результаты своих ревизий.
 
 ## Первоначальные проверки планирования 35ca524
 
@@ -81,4 +83,37 @@ Pre-flight shared interfaces: task 1.1 fixture roots/package.json/Markdown → t
 - Task 1.1 RED: установленный через настоящие npm tarballs synthetic fixture; initial helper seam без чтения headers дал 13 failing assertions (14 tests, 1 pass), включая positive readiness и package-specific diagnostics. Это behavior assertions, не missing import/install failure. Новые tests/helper — TS.
 - Task 1.2 GREEN: lexer читает начальные plain ID/Status paragraphs после H1; README/CHANGELOG, code examples и body metadata не принимаются. Missing/empty ID, missing/proposed/unknown/draft-suffixed status и дубликат вместо обязательного пакета дают not-ready. Тот же helper на real all/subset installed tarballs даёт ожидаемые три diagnostics, suite зелёный. Optional marked paragraph.tokens учитывается после typecheck diagnostic; custom I/O handling отсутствует.
 - Tasks 2.1/2.2: один read-only workflow, прямые upstream commands, короткие contributor/security/ownership инструкции, обновлённые Changesets guide/README/tooling/handoff. Во временном npm/Git fixture с lockfile документированные команды проверены: missing SHA → exit 1 (divergence diagnostic), package README edit без changeset → exit 1, committed add --empty → exit 0; обычный push-main status → exit 0. Никаких real bumps/tags/registry writes.
-- Локальная task 3.1: полные npm run check на Node 26.0.0 и 26.11.1 — по 47/47, включая реальные packed artifacts/external consumers. npm pack --workspaces --dry-run --json --ignore-scripts вывел inventory всех пяти пакетов; packages, package.json/lockfile, версии/IDs/drafts/changelog и owner decisions не менялись. GitHub jobs и независимое review ещё ожидаются; tasks 3.1/3.2 пока открыты.
+- Локальная task 3.1: полные npm run check на Node 26.0.0 и 26.11.1 — по 47/47, включая реальные packed artifacts/external consumers. npm pack --workspaces --dry-run --json --ignore-scripts вывел inventory всех пяти пакетов; packages, package.json/lockfile, версии/IDs/drafts/changelog и owner decisions не менялись. Фактическое GitHub/review evidence приведено ниже отдельно от локальных результатов.
+
+Первый HTTPS push отклонён GitHub из-за отсутствующего OAuth workflow scope; существующий SSH успешно отправил d6ad385 без изменения credentials/settings. [Actual GitHub run](https://github.com/antonsmolko/engineering-standards/actions/runs/38969680920) успешен: оба matrix jobs завершились success, каждый с 47/47 tests и inventory всех пяти пакетов; PR Changesets step success, push-only step штатно skipped. Branch-relative status в рабочем repo проверен с полным base SHA 3372e96fe0145648a49ccd0a56ad1396c70d23f2 → exit 0. Короткий 3372e96 upstream CLI интерпретировал как число в scientific notation; workflow использует полный event SHA по design. Документальные проверки отдельно: 32 local links/anchors в 11 документах разрешаются; strict OpenSpec/whitespace проходят.
+
+
+| Source | Finding | Affected files/issues | Disposition | Evidence |
+| --- | --- | --- | --- | --- |
+| [#18 CI criteria](https://github.com/antonsmolko/engineering-standards/issues/18); independent review — private input, not a public basis | I1: текущая вводная ledger и общий design ещё называли результат planning-only/CI отсутствующим | ledger introduction/C1–C4, общий design, PR body | Исправлено | Текущий статус заменён на реализацию #18 с отдельным evidence actual jobs/review; исторические planning sections сохранены и явно обозначены как история. #35/#20/#26 gates не менялись. |
+| [PR #39 evidence links](https://github.com/antonsmolko/engineering-standards/pull/39); independent review — private input, not a public basis | I2: relative links в PR description не закрепляют repo revision | PR body | Исправлено | Canonical ledger/design/tasks используют абсолютные GitHub blob commit URLs; final body закрепляется на итоговый commit. |
+
+
+### Итоговая проверка реализации
+
+[GitHub run d6ad385](https://github.com/antonsmolko/engineering-standards/actions/runs/38969680920):
+[Node 26.0.0](https://github.com/antonsmolko/engineering-standards/actions/runs/38969680920/job/117204708856) и
+[Node 26.11.1](https://github.com/antonsmolko/engineering-standards/actions/runs/38969680920/job/117204708493) — success.
+Прочитаны реальные logs: каждый job выполнил clean npm ci, полный check 47 tests / 47 pass / 0 fail,
+вывел packed inventory всех пяти пакетов и завершил PR Changesets status успешно.
+Push-only step на PR штатно skipped; его команда отдельно проверена на temporary main fixture.
+После d6ad385 runtime/workflow не менялись, добавлены только documentation/status/evidence исправления.
+
+Независимый агент без авторской переписки проверил полный diff от 3372e96, все artifacts, код,
+контракты, прежние closures #18/R1–R7, неизменённые документы и criteria/dependencies #35/#20/#26,
+все пять PR comments и шесть comments #18; inline/reviews/threads пусты.
+Самостоятельно выполнил npm run check 47/47 на Node 26.11.1, подтвердил actual jobs и Action pins.
+I1 исправлено и независимо перепроверено; I2 исправлено в PR links. Открытых findings/deferred minors нет.
+Review report — private input, not a public basis; публичное основание — #18 и PR #39 выше.
+
+Документальные проверки отдельно: полный final diff просмотрен; конфликты с актуальными неизменёнными
+документами и issue bodies не найдены, 37 local links/anchors в 12 документах разрешаются,
+strict OpenSpec/whitespace проходят. GitHub issue edits реализации: нет; criteria/dependencies сохранены.
+Выполнено 6/6 OpenSpec tasks. Применимость/owner acceptance и реальная publication enforcement остаются
+согласованными #20/#35/#26 gates, custom I/O wrapper не возвращается. Это сохранение approved scope,
+не новое deferred finding. Merge/publication/settings/tags не выполнялись; PR передаётся на review.

@@ -14,8 +14,8 @@
 
 ## 3. Полный результат и CI evidence
 
-- [ ] 3.1 Запустить полный npm run check на 26.0.0/26.11.1, сохранить реальные packed inventories/external-consumer results, включая ожидаемый not-ready настоящих черновых артефактов. Убедиться в неизменности packages/версий/IDs/drafts/changelog/owner decisions. Запушить реализацию в текущий PR; получить оба успешных GitHub matrix jobs и записать run links/log evidence отдельно от локальных результатов. Если реальные jobs недоступны, не заявлять CI готовым.
-- [ ] 3.2 Независимо проверить полный final diff, контракты, прежние closures #18, неизменённые документы/issue criteria/dependencies, ссылки/anchors и разрешения. Зафиксировать dispositions и GitHub issue edits в canonical ledger; закрыть findings и передать PR на явное merge approval. Проверить strict OpenSpec и whitespace; merge/publish/protection не выполнять.
+- [x] 3.1 Запустить полный npm run check на 26.0.0/26.11.1, сохранить реальные packed inventories/external-consumer results, включая ожидаемый not-ready настоящих черновых артефактов. Убедиться в неизменности packages/версий/IDs/drafts/changelog/owner decisions. Запушить реализацию в текущий PR; получить оба успешных GitHub matrix jobs и записать run links/log evidence отдельно от локальных результатов. Если реальные jobs недоступны, не заявлять CI готовым.
+- [x] 3.2 Независимо проверить полный final diff, контракты, прежние closures #18, неизменённые документы/issue criteria/dependencies, ссылки/anchors и разрешения. Зафиксировать dispositions и GitHub issue edits в canonical ledger; закрыть findings и передать PR на явное merge approval. Проверить strict OpenSpec и whitespace; merge/publish/protection не выполнять.
 
 ## Workflow follow-up
 
