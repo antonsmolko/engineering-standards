@@ -2,7 +2,8 @@
 
 ID: stable ID.
 
-Declare lifecycle status and required/recommended level in manifest.json only.
+State the draft/approval status and required/recommended level in this document.
+A new requirement starts as proposed; only explicit owner review can accept it.
 
 ## Requirement
 

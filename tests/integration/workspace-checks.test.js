@@ -19,9 +19,6 @@ async function fixture(t) {
   for (const workspace of metadata.workspaces) {
     await mkdir(join(root, workspace), { recursive: true });
     await cp(join(repository, workspace, "package.json"), join(root, workspace, "package.json"));
-    if (!workspace.startsWith("packages/tooling/")) {
-      await cp(join(repository, workspace, "manifest.json"), join(root, workspace, "manifest.json"));
-    }
   }
   return root;
 }
@@ -32,13 +29,11 @@ const run = (root) => spawnSync(process.execPath, [join(repository, "scripts/che
 
 async function snapshot(root) {
   const { workspaces } = await readJson(join(root, "package.json"));
-  const paths = ["package.json", "package-lock.json", ...workspaces.flatMap((workspace) => [
-    `${workspace}/package.json`, ...(!workspace.startsWith("packages/tooling/") ? [`${workspace}/manifest.json`] : []),
-  ])];
+  const paths = ["package.json", "package-lock.json", ...workspaces.map((workspace) => `${workspace}/package.json`)];
   return Promise.all(paths.map(async (path) => [path, await readFile(join(root, path), "utf8").catch((error) => error.code)]));
 }
 
-test("workspace check accepts all eight matching lock entries and absent tooling manifests without writes", async (t) => {
+test("workspace check accepts five matching lock entries without any manifests or writes", async (t) => {
   const root = await fixture(t);
   const before = await snapshot(root);
   const result = run(root);
@@ -47,7 +42,7 @@ test("workspace check accepts all eight matching lock entries and absent tooling
   assert.deepEqual(await snapshot(root), before);
 });
 
-for (const workspace of ["packages/core", "packages/tooling/eslint-config", "packages/tooling/prettier-config", "packages/tooling/standards-cli"]) {
+for (const workspace of ["packages/core", "packages/domains/frontend", "packages/technologies/typescript", "packages/technologies/svelte", "packages/stacks/frontend/svelte-spa"]) {
   for (const missing of [false, true]) {
     test(`workspace check rejects ${missing ? "missing" : "stale"} ${workspace} lock metadata without writes`, async (t) => {
       const root = await fixture(t);
@@ -65,20 +60,7 @@ for (const workspace of ["packages/core", "packages/tooling/eslint-config", "pac
   }
 }
 
-test("workspace check rejects incompatible local requires without writes", async (t) => {
-  const root = await fixture(t);
-  const path = join(root, "packages/technologies/typescript/manifest.json");
-  const metadata = await readJson(path);
-  metadata.requires[0].range = "^0.2.0";
-  await save(path, metadata);
-  const before = await snapshot(root);
-  const result = run(root);
-  assert.notEqual(result.status, 0);
-  assert.match(result.stderr, /incompatible.*standards-core/i);
-  assert.deepEqual(await snapshot(root), before);
-});
-
-for (const path of ["package.json", "package-lock.json", "packages/core/package.json", "packages/core/manifest.json"]) {
+for (const path of ["package.json", "package-lock.json", "packages/core/package.json"]) {
   for (const mode of ["missing", "malformed", "unreadable"]) {
     test(`workspace check diagnoses ${mode} ${path} without writes`, async (t) => {
       const root = await fixture(t);
@@ -94,15 +76,6 @@ for (const path of ["package.json", "package-lock.json", "packages/core/package.
     });
   }
 }
-
-test("external semantic requires do not demand registry access", async (t) => {
-  const root = await fixture(t);
-  const path = join(root, "packages/core/manifest.json");
-  const metadata = await readJson(path);
-  metadata.requires.push({ name: "@external/standard", range: "^1.0.0" });
-  await save(path, metadata);
-  assert.equal(run(root).status, 0);
-});
 
 for (const stage of ["typecheck", "metadata"]) {
   test(`npm check stops before tests when ${stage} fails`, async (t) => {
@@ -121,7 +94,7 @@ for (const stage of ["typecheck", "metadata"]) {
     await save(join(root, "package.json"), metadata);
     if (stage === "metadata") {
       const lock = await readJson(join(root, "package-lock.json"));
-      delete lock.packages["packages/tooling/standards-cli"];
+      delete lock.packages["packages/core"];
       await save(join(root, "package-lock.json"), lock);
     }
     const result = spawnSync("npm", ["run", "check"], { cwd: root, encoding: "utf8", timeout: 30000 });

@@ -16,7 +16,7 @@ test("empty npm cache gives actionable offline preparation guidance", async (t) 
   const { installOffline } = await import("../helpers/install-offline.ts");
   assert.throws(
     () => {
-      installOffline(root, ["ajv@8.20.0"], {
+      installOffline(root, ["typescript@5.9.3"], {
         cache: join(root, "empty-cache"),
       });
     },

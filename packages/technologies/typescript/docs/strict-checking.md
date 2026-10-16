@@ -2,6 +2,8 @@
 
 ID: TS-CONFIG-001.
 
+Status: proposed (draft; not approved). Level: required.
+
 ## Requirement
 
 Each TypeScript project configuration used to check authored production code

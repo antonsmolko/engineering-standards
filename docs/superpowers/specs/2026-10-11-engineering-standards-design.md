@@ -44,6 +44,6 @@ Private root не имеет release-версии. Пакеты будут не�
 
 ## Текущее состояние и история
 
-Сейчас runtime ещё содержит восемь workspaces, manifests/схемы и catalog loader. PR #29 реализовал check, PR #31 — согласованный план; переход к пяти пакетам выполняет #33. Этот документационный этап не удаляет файлы пакетов, не меняет версии или statuses и не разрешает merge/публикацию.
+Реализация #33 содержит пять workspaces документов, check версий lockfile и проверки реальных установленных tarballs. Manifests/схемы, loader и tooling-пакеты удалены. Девять proposed статусов и levels перенесены в документы; тексты и ID сохраняются, принятия содержания не было. PR #29 реализовал исходный check, PR #31 — план, PR #36 — согласование документов. Changesets, CI и публикация ещё не реализованы; текущая работа их не разрешает.
 
 [Прежняя спецификация](https://github.com/antonsmolko/engineering-standards/blob/d483438/docs/superpowers/specs/2026-10-11-engineering-standards-design.md) и committed review-response документы сохраняют историю прежних решений. Их CLI/profile/release-engine механизмы не являются активными требованиями нового продукта.

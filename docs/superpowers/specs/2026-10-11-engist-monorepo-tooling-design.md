@@ -8,7 +8,9 @@
 
 ## Что работает сейчас
 
-После PR #29 npm run check = typecheck → scripts/check-workspaces.ts → npm test. Он read-only: сверяет восемь workspace lock versions и local manifest.requires; English diagnostics/nonzero при ошибке, дальнейшие этапы не выполняются. Схемы/identity и реальные tarball/consumer проверки находятся в полном suite. Внешняя semantic совместимость не проверяется через registry. Этот текущий контракт пока не изменён.
+В #33 npm run check = typecheck → scripts/check-workspaces.ts → npm test. Read-only скрипт сверяет версии пяти workspace-записей lockfile; missing/stale entries и I/O ошибки дают English diagnostics/nonzero, следующие этапы не выполняются. Полный suite проверяет документальные артефакты и ручное подключение во внешнем потребителе. Семантическая manifest.requires проверка и catalog/schema tests удалены вместе с их контрактом; совместимость описывается в README.
+
+Проверки Markdown используют штатный lexer [marked](https://marked.js.org/using_pro#walk-tokens), закреплённый dev-only. Конкретный пробел npm — наличие и доступность целей документальных ссылок. Test-only helper проверяет установленные файлы и локальные Markdown links, включая reference links/images, и не создаёт продуктовый каталог. Внешние ссылки не запрашиваются; проверяется существование локального файла внутри canonical package root, а не якорь заголовка. Ошибка называет пакет и путь.
 
 ## Переход и следующие этапы
 

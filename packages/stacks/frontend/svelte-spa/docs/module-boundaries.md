@@ -2,6 +2,8 @@
 
 ID: SVELTE-SPA-ARCH-001.
 
+Status: proposed (draft; not approved). Level: required.
+
 ## Requirement
 
 Projects selecting this FSD profile MUST assign modules to the ordered layers

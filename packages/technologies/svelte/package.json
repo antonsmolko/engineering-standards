@@ -15,13 +15,9 @@
     "README.md",
     "CHANGELOG.md",
     "LICENSE",
-    "manifest.json",
-    "docs",
-    "migrations",
-    "*.js"
+    "docs"
   ],
   "exports": {
-    "./manifest.json": "./manifest.json",
     "./package.json": "./package.json"
   }
 }

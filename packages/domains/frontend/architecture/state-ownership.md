@@ -2,6 +2,8 @@
 
 ID: FRONTEND-ARCH-001.
 
+Status: proposed (draft; not approved). Level: required.
+
 ## Requirement
 
 UI, state ownership and preparation of complex presentation data have explicit responsibilities. A presenter is not mandatory for a simple component.

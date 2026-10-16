@@ -7,9 +7,7 @@
   },
   "devDependencies": {
     "@types/node": "26.6.5",
-    "@types/semver": "7.8.0",
-    "ajv": "8.20.0",
-    "semver": "7.8.5",
+    "marked": "18.1.1",
     "typescript": "5.9.3"
   },
   "workspaces": [
@@ -17,10 +15,7 @@
     "packages/domains/frontend",
     "packages/technologies/typescript",
     "packages/technologies/svelte",
-    "packages/stacks/frontend/svelte-spa",
-    "packages/tooling/eslint-config",
-    "packages/tooling/prettier-config",
-    "packages/tooling/standards-cli"
+    "packages/stacks/frontend/svelte-spa"
   ],
   "scripts": {
     "test": "node --test",
