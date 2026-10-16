@@ -9,5 +9,9 @@
     "erasableSyntaxOnly": true,
     "types": ["node"]
   },
-  "include": ["tests/helpers/**/*.ts", "scripts/**/*.ts"]
+  "include": [
+    "tests/helpers/**/*.ts",
+    "tests/integration/**/*.ts",
+    "scripts/**/*.ts"
+  ]
 }

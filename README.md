@@ -40,7 +40,9 @@ TypeScript scripts/helpers are checked without generating JS.
 With nvm: `nvm install "$(cat .node-version)"` and `nvm use "$(cat .node-version)"`.
 nvm does not read `.node-version` automatically.
 
-Changesets, CI and publication preparation remain separate infrastructure work.
+[Changesets](.changeset/README.md) manages independent package versions and
+changelogs. Version preparation is verified on disposable projects; real package
+versions remain 0.1.0. CI and publication preparation remain separate work.
 The technical platform is verified with synthetic documents before actual
 standards are filled and approved. Plans/discussions use Russian; published
 standards and READMEs use English. Bilingual editions are possible future work.

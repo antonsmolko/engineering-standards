@@ -1,6 +1,6 @@
 # Changesets для пяти пакетов — #34
 
-Носитель — [#34](https://github.com/antonsmolko/engineering-standards/issues/34), prefix engineering-standards-34. База b205da3 после merge [PR #37](https://github.com/antonsmolko/engineering-standards/pull/37); #33 закрыта. Этот снимок содержит только OpenSpec planning artifacts independent-package-versioning и актуализацию handoff. Runtime ещё не реализован; все шесть implementation tasks открыты после сокращения плана по review PR #38.
+Носитель — [#34](https://github.com/antonsmolko/engineering-standards/issues/34), prefix engineering-standards-34. База b205da3 после merge [PR #37](https://github.com/antonsmolko/engineering-standards/pull/37); #33 закрыта. Текущий снимок — реализация утверждённого independent-package-versioning в PR #38: Changesets 3.0.3, минимальная конфигурация, руководство и две TS integration-проверки. Runtime/документальные проверки выполнены; финальное независимое review ещё ожидается. Ниже сохранена история planning review, её статусы не описывают текущую реализацию.
 
 ## Источники и scope
 
@@ -8,15 +8,15 @@
 
 | Source | Finding | Affected files/issues | Disposition | Evidence |
 | --- | --- | --- | --- | --- |
-| [#34](https://github.com/antonsmolko/engineering-standards/issues/34) | C1: независимые версии/changelog без собственного engine | proposal/design/spec/tasks | Запланировано | Стандартный CLI/config, прямой npm script; пять пакетов, private root, exports без изменений. Implementation 0/6. |
-| [#34](https://github.com/antonsmolko/engineering-standards/issues/34) | C2: политика bump и npm metadata проверяются на fixtures | design/spec/tasks | Запланировано | Patch, breaking 0.x minor, >=1 major, migration summary, совмещённый fixture, read-only status и штатное npm lockfile обновление. Семантику оценивает reviewer; автоматический parser не добавляется. |
-| [#1](https://github.com/antonsmolko/engineering-standards/issues/1), [PR #37](https://github.com/antonsmolko/engineering-standards/pull/37) | C3: roadmap ещё показывал #32/#33 незавершёнными | #1, handoff | Исправлено | Статусы свёрены с closed issues и merged PRs; текущий этап #34 обозначен как planning, не реализация. |
+| [#34](https://github.com/antonsmolko/engineering-standards/issues/34) | C1: независимые версии/changelog без собственного engine | proposal/design/spec/tasks | Реализовано | CLI/config и прямой npm script, реальные version/status commands на fixture. Пять пакетов/private root/exports сохранены. |
+| [#34](https://github.com/antonsmolko/engineering-standards/issues/34) | C2: политика bump и npm metadata проверяются на fixtures | design/spec/tasks | Реализовано | Один fixture: patch/minor/major, migration summary, две неизменные package trees, private root; read-only status и штатное npm lockfile обновление. Семантику оценивает reviewer. |
+| [#1](https://github.com/antonsmolko/engineering-standards/issues/1), [PR #37](https://github.com/antonsmolko/engineering-standards/pull/37) | C3: roadmap ещё показывал #32/#33 незавершёнными | #1, handoff | Исправлено | Статусы свёрены с closed issues и merged PRs; на planning-этапе #34 был обозначен как ещё не реализованный, теперь handoff отражает реализацию/review PR #38. |
 
 ## GitHub issue edits
 
 В #1 отмечены только уже закрытые #32 и #33. Критерии/зависимости #34/#18/#35/#20/#26 не менялись; #34 остаётся открытой. #9 не переоткрывается. Будущие задачи не получают новых механизмов из этого плана.
 
-## Проверки
+## Проверки планирования b349a58
 
 Strict `openspec validate independent-package-versioning --strict` проходит; все четыре artifacts готовы, шесть implementation tasks не выполнены. Проверены восемь локальных links/anchors в planning/context документах; whitespace check проходит. Product code, package metadata/lockfile и публикуемые материалы не менялись. Runtime suite не запускался в planning-only change: результаты PR #37 не выдаются за свежие проверки реализации #34.
 
@@ -24,7 +24,7 @@ Strict `openspec validate independent-package-versioning --strict` проход�
 
 Отдельный агент получил артефакты/требования без авторской рабочей переписки; проверил полный planning result, активные неизменённые документы, публичные #34/#1/#18/#35/#20/#26 и текущие upstream v3 docs/status/config/parser. Actionable findings отсутствуют. Отчёт — private input, not a public basis; публичные actionable основания — #34 и официальные источники выше. Отдельно подтверждены статусы #32/#33 и planning-only #34. Уточнение task 1.3 явно напоминает включить новые TS integration tests в существующий tsconfig; scope/контракт не расширяется. Runtime evidence на этой стадии отсутствует и не заявляется.
 
-## Review PR #38
+## Review плана PR #38
 
 Публичный источник — [review 50db66b](https://github.com/antonsmolko/engineering-standards/pull/38#issuecomment-6224004162). Прочитаны все страницы inline comments, summary reviews, PR comments и comments #34, а также GraphQL reviewThreads: один review в PR comment, inline threads/reviews и issue comments отсутствуют. Подтверждения reviewer о верной политике bump, необходимости npm lockfile step, read-only status и сохранённых release/content gates не переоткрываются. Новое evidence reviewer показало избыточный объём планируемых upstream-тестов; этот scope уточнён ниже, а не скрыт за первоначальным clean review.
 
@@ -46,3 +46,17 @@ Strict `openspec validate independent-package-versioning --strict` проход�
 Проверен полный итоговый diff относительно b205da3, включая handoff и все planning artifacts. Для изменённых требований сверены неизменённые активные design/roadmap/README/content gates и публичные #1/#34/#18/#35/#20/#26: конфликтов нет. Strict OpenSpec validation и whitespace проходят; восемь локальных links/anchors в шести документах разрешаются. Реализация — 0/6, runtime suite в этом planning-only раунде не запускался, package trees/metadata/lockfile не менялись.
 
 Отдельный агент без авторской рабочей переписки независимо проверил полный результат, R1–R6, связанные неизменённые документы и задачи: actionable findings отсутствуют. Отчёт — private input, not a public basis; публичное основание изменений — review PR #38 выше и #34, а defaults/команды подтверждены официальными config/CLI docs. Предыдущие reviewer-confirmed closures сохранены; незакрытых findings текущего review нет. После этого review добавляется только эта запись evidence; реализация по-прежнему ожидает утверждения/apply.
+
+## Реализация после утверждения плана
+
+Явное подтверждение владельца на применение получено в рабочем диалоге: private input, not a public basis. Публичный actionable контракт — [#34](https://github.com/antonsmolko/engineering-standards/issues/34) и [review PR #38](https://github.com/antonsmolko/engineering-standards/pull/38#issuecomment-6224004162). Ни один ранее закрытый finding не переоткрывается; сокращённый scope сохранён.
+
+| Source | Finding | Affected files/issues | Disposition | Evidence |
+| --- | --- | --- | --- | --- |
+| [#34](https://github.com/antonsmolko/engineering-standards/issues/34) | I1: готовый CLI вместо собственного versioning engine | root package/lock, .changeset | Реализовано | Exact CLI 3.0.3, конфигурация только baseBranch main/commit false, npm script changeset. Дополнительных runtime scripts/APIs нет. |
+| [#34](https://github.com/antonsmolko/engineering-standards/issues/34), [review](https://github.com/antonsmolko/engineering-standards/pull/38#issuecomment-6224004162) | I2: проверяемый независимый bump без upstream validation suite | tests/integration/changesets.test.ts, tsconfig.tests.json | Реализовано | RED: оба теста падают на отсутствующей root Changesets command до подключения CLI/config. GREEN: фактический npm script создаёт entries штатным add, status даёт три ожидаемых версии, один version дополняет копии реальных changelog; npm offline согласует lockfile и существующий checkWorkspaces проходит. Два пакета/root/прежние changelog entries сохранены, version не создаёт commits/tags. Второй тест проверяет read-only status snapshot. |
+| [#34](https://github.com/antonsmolko/engineering-standards/issues/34) | I3: команды/границы и версии без реального выпуска | .changeset/README.md, README, handoff/tooling design | Реализовано | Руководство create/status/version/npm lockfile, bump выбирает человек; сохранены отдельные approvals. git diff origin/main -- packages пуст: все пять реальных 0.1.0, тексты/IDs/draft labels/exports/changelog побайтно сохранены. |
+
+Свежий npm run check: Node 26.11.1 и 26.0.0, 33/33 tests, typecheck и workspace checks проходят. Два новых TS tests включены в typecheck; все прежние 31 tests сохранены. Реальные tarballs устанавливаются внешним consumer как все пять пакетов и subset; npm pack --workspaces --dry-run --json inventory просмотрен отдельно: прежние документы/metadata, без maintainer Changesets/test files. npm install --ignore-scripts добавил только CLI dev dependency и lockfile-зависимости; опубликованных материалов не менял. Test logs RED/GREEN проверены локально; публичные воспроизводимые основания — committed tests и команды этого ledger.
+
+GitHub issue edits реализации: нет; #34/#1 остаются открыты до merge, критерии/dependencies #18/#35/#20/#26 не менялись. Теги/публикация/архивирование OpenSpec не выполнялись.
