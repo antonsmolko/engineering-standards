@@ -51,10 +51,10 @@ reviewed revision here. A separate acceptance commit applies only the owner's
 confirmed decisions.
 The installed package is applied as a whole, but this does not accept all of its
 contents. Preserve stable IDs, reviewed revisions and draft labels in documents
-and this decision record. During the current transition, existing statuses still
-live in manifests; #33 must preserve their meaning and evidence before removing
-those files. This is not a requirement for consumers to load a catalog, resolve
-profiles or use generated instructions.
+and this decision record. Each standard document now carries its proposed/draft
+status and level; READMEs index the package's documents. The former manifests
+have been removed. Consumers do not load a catalog, resolve profiles or use
+generated instructions.
 Changes after review must be assessed again rather than inheriting approval.
 
 At least one accepted, applicable requirement from each of core, TypeScript and

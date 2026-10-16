@@ -2,6 +2,8 @@
 
 ID: TS-TYPES-001.
 
+Status: proposed (draft; not approved). Level: required.
+
 ## Requirement
 
 Values crossing an untrusted boundary MUST be treated as unknown until runtime

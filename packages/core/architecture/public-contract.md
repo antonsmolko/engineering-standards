@@ -2,6 +2,8 @@
 
 ID: CORE-ARCH-001.
 
+Status: proposed (draft; not approved). Level: required.
+
 ## Requirement
 
 Each module with external consumers MUST identify its public entrypoints and

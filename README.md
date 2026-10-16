@@ -11,6 +11,7 @@ validation uses local tarballs.
 
 ## Documentation
 
+- [Install and use the documents](docs/usage.md)
 - [Product design](docs/superpowers/specs/2026-10-11-engineering-standards-design.md)
 - [Implementation roadmap](docs/superpowers/plans/2026-10-11-engineering-standards-independent-packages.md)
 - [Package contract](openspec/changes/simplify-project-scope/specs/standards-packages/spec.md)
@@ -23,18 +24,18 @@ and lint/format configuration products are outside the initial product scope.
 
 ## Current implementation
 
-The five-package transition is pending. The repository currently contains eight
-workspaces, catalog manifests/schemas, a catalog loader and tooling placeholders.
-It already has read-only workspace checks and isolated packed-artifact tests.
-Existing standards remain drafts; passing infrastructure tests does not approve
-content or authorize a release.
+The repository contains five document workspaces, read-only consistency checks
+and isolated packed-artifact tests. Catalog manifests/schemas, the loader and
+tooling placeholders have been removed. Existing standards remain drafts;
+passing infrastructure tests does not approve content or authorize a release.
 
 Use Node 26. The development version in `.node-version` is `26.11.1`; verification
 also covers the supported minimum `26.0.0`. Run `npm ci --ignore-scripts` with registry
 access to prepare dependencies/cache, then `npm run check`. The current check runs
-typecheck, workspace lock/version and local `manifest.requires` checks, then the
-full suite. Consumer tests install tarballs offline; an empty cache gives
-preparation guidance. TypeScript scripts/helpers are checked without generating JS.
+typecheck, exact workspace lock/version checks, then the full suite, including
+installed document indexes, local links and manual adoption examples. Consumer
+tests install tarballs offline; an empty cache gives preparation guidance.
+TypeScript scripts/helpers are checked without generating JS.
 
 With nvm: `nvm install "$(cat .node-version)"` and `nvm use "$(cat .node-version)"`.
 nvm does not read `.node-version` automatically.

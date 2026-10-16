@@ -2,6 +2,8 @@
 
 ID: CORE-WORKFLOW-002.
 
+Status: proposed (draft; not approved). Level: required.
+
 ## Requirement
 
 Changes to a public contract or a required standard MUST receive a recorded

@@ -15,19 +15,12 @@
     "README.md",
     "CHANGELOG.md",
     "LICENSE",
-    "manifest.json",
-    "docs",
-    "migrations",
     "architecture",
     "security",
     "workflow",
-    "schemas",
     "templates"
   ],
   "exports": {
-    "./manifest.json": "./manifest.json",
-    "./schemas/manifest.json": "./schemas/manifest.schema.json",
-    "./schemas/project.json": "./schemas/project.schema.json",
     "./package.json": "./package.json"
   }
 }

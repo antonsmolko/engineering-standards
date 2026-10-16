@@ -2,6 +2,8 @@
 
 ID: CORE-WORKFLOW-001.
 
+Status: proposed (draft; not approved). Level: required.
+
 ## Requirement
 
 Before reporting a change as complete, the author MUST compare its result with

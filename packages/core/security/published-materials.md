@@ -2,6 +2,8 @@
 
 ID: CORE-SECURITY-001.
 
+Status: proposed (draft; not approved). Level: required.
+
 ## Requirement
 
 Before distributing an artifact, the author MUST inspect its actual contents
