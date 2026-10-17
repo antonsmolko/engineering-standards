@@ -1,6 +1,6 @@
 # Передача контекста разработки gost-spec
 
-Обновлено при добавлении proposed presenter-стандарта #42 в PR #41, база 4436cd6 после merge PR #44 с переименованием в GOST Spec. GitHub repository и origin используют gost-spec; отдельный gost-kit содержит начальную структуру. При возобновлении сверить снимок с GitHub и текущей веткой.
+Обновлено при пересмотре очереди #45, база 6fa4b3b после merge PR #41. Техническая платформа завершена, presenter #42 добавлен как proposed. GitHub repository и origin используют gost-spec, отдельный gost-kit содержит начальную структуру. При возобновлении сверить снимок с GitHub и текущей веткой.
 
 ## Откуда продолжать
 
@@ -21,9 +21,9 @@
 
 ## Ближайшие действия
 
-Техническая платформа завершена: #33/PR #37, #34/PR #38, #18/PR #39 и #35/PR #40. Стандарты наполняются постепенно по реальным проблемам, без обязательного массового принятия существующих drafts. Текущий результат PR #41 — [#42](https://github.com/antonsmolko/engineering-standards/issues/42): proposed FRONTEND-ARCH-002 о композиции presenter-функций. Читать [документ](../../packages/domains/frontend/architecture/presenter-composition.md) и [OpenSpec change](../../openspec/changes/presenter-composition/proposal.md). Прежний planning-only review-initial-standards отозван, его задачи не выполнены. Носитель остаётся #20 с prefix engineering-standards-20; addition #42 имеет собственные критерии. Критерии/closure #20 сохраняются, сам frontend presenter не закрывает #20 и не выполняет content gate #26. Принятие точных текстов — отдельные owner decisions; реальный выпуск #26 требует своего approval. npm-имена и версии пяти пакетов сохраняются; исторические evidence URL сохраняются, а старый GitHub URL перенаправляется.
+Текущая очередь согласуется в #45: roadmap #1, постепенное накопление первого принятого набора #20 и отдельно одобренный выпуск #26. PR #41/#42 завершены: FRONTEND-ARCH-002 остаётся proposed; merge не является content acceptance. Читать [документ](../../packages/domains/frontend/architecture/presenter-composition.md) и [content approval](content-approval.md). Новые стандарты и их ревью начинаются с конкретной проблемы; массово принимать все drafts не требуется. Не начинать реализацию по номеру старой закрытой задачи. #20 остаётся открытой до минимум одного применимого accepted ID из каждой core/TypeScript/Svelte SPA; кандидаты не предрешают решения. npm-имена/версии пяти пакетов и historical evidence URLs сохраняются, старый GitHub URL перенаправляется. Исполняемые библиотеки разрабатываются отдельно в gost-kit по собственным конкретным задачам.
 
-#10–#16/#23 deferred; #17/#19 заменены проверками #18 и подготовкой #35 / выпуском #26; #21/#22 объединены в #20; #24/#25 backlog, не блокеры релиза; #28 выполнена PR #27. Старые issue comments/review ledgers сохраняются как история; новые критерии имеют приоритет, не объявляя прежнюю runtime-работу выполненной.
+#10–#16/#23 закрыты как not planned: прежние CLI/resolver/generation/config/vertical-slice планы сняты с scope, их runtime-возможности не объявляются реализованными. Общие заготовки #24/#25 также закрыты как not planned; frontend/Svelte темы сохранены в inventory и превращаются в задачи только при конкретном use case. #17/#19 ранее заменены проверками #18, подготовкой #35 и выпуском #26; #21/#22 объединены в #20. Подтверждённые closures и исторические review ledgers сохраняются.
 
 ## Принятие и выпуск
 
