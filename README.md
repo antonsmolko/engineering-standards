@@ -1,4 +1,4 @@
-# Gold Standard Specifications (GoST Spec)
+# Gold Standard Specifications (GOST Spec)
 
 Five independently versioned npm packages of engineering documents for people
 and AI: core, frontend, TypeScript, Svelte and Svelte SPA. Consumers select whole
@@ -6,7 +6,7 @@ packages, read their READMEs and linked standards, and manually reference them i
 consumer-owned `AGENTS.md` files. No particular AI tool is required.
 
 Reusable runtime libraries are developed separately in
-[Gold Standard Kit (GoST Kit)](https://github.com/antonsmolko/gost-kit).
+[Gold Standard Kit (GOST Kit)](https://github.com/antonsmolko/gost-kit).
 
 No npm release has been published. Installation examples for registry packages
 will become usable after the first explicitly approved release; current
