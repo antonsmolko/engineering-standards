@@ -16,13 +16,14 @@ matrix is a review aid, not a second source of obligations.
 
 ## TypeScript review set
 
-| Topic                     | Proposed ID and document                                                          | Applicability                       | Rationale and verification                                                                          |
-| ------------------------- | --------------------------------------------------------------------------------- | ----------------------------------- | --------------------------------------------------------------------------------------------------- |
-| External-data boundaries  | [TS-TYPES-001](../../packages/technologies/typescript/docs/runtime-boundaries.md) | TypeScript consuming untrusted data | Static declarations cannot validate runtime data; review adapters and malformed-input failure tests |
-| Function syntax | [TS-FUNCTIONS-001](../../packages/technologies/typescript/docs/arrow-functions.md) | Authored standalone TypeScript functions and callbacks | Prefer arrows; review semantic/declaration exceptions and preserve behavior |
-| Effective strict checking | [TS-CONFIG-001](../../packages/technologies/typescript/docs/strict-checking.md)   | Authored TypeScript production code | Avoid permissive or unused configuration; inspect effective settings and real compiler errors       |
+| Topic                        | Proposed ID and document                                                           | Applicability                                          | Rationale and verification                                                                          |
+| ---------------------------- | ---------------------------------------------------------------------------------- | ------------------------------------------------------ | --------------------------------------------------------------------------------------------------- |
+| External-data boundaries     | [TS-TYPES-001](../../packages/technologies/typescript/docs/runtime-boundaries.md)  | TypeScript consuming untrusted data                    | Static declarations cannot validate runtime data; review adapters and malformed-input failure tests |
+| Consistent type declarations | [TS-TYPES-002](../../packages/technologies/typescript/docs/type-aliases.md)        | Authored TypeScript declarations                       | Use type aliases; review declaration-merging exceptions separately from type checking               |
+| Function syntax              | [TS-FUNCTIONS-001](../../packages/technologies/typescript/docs/arrow-functions.md) | Authored standalone TypeScript functions and callbacks | Prefer arrows; review semantic/declaration exceptions and preserve behavior                         |
+| Effective strict checking    | [TS-CONFIG-001](../../packages/technologies/typescript/docs/strict-checking.md)    | Authored TypeScript production code                    | Avoid permissive or unused configuration; inspect effective settings and real compiler errors       |
 
-All three remain proposed. Runtime validation is independent of a consumer's guard
+All four remain proposed. Runtime validation is independent of a consumer's guard
 names; strict checking is independent of formatting preferences.
 
 ## Svelte SPA review set

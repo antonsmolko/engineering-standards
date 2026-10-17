@@ -10,7 +10,7 @@
 - Сохранить требуемые dynamic this/собственный arguments, генераторы, constructible contracts и требуемые function declarations для overload/ambient API. Не утверждать, что стрелки вообще не могут иметь перегруженный callable type.
 - Методы объектов/классов, constructors и accessors вне требования менять синтаксис. Не заменять prototype methods arrow-полями ради соответствия. При замене standalone функций сохранять binding и initialization order.
 - Manual review получает изменённые объявления и обоснования: обычная функция без конкретной причины — нарушение; неизвестная причина требует пояснения. Typecheck проверяет корректность, не соблюдение соглашения; новый lint не нужен.
-- README/inventory/content-approval/handoff отражают один proposed документ; текущая ветка от main не включает ещё не merged #47. Здесь 11 proposed/0 accepted, версии 0.1.0. Выпуск и принятие других стандартов не разрешены.
+- README/inventory/content-approval/handoff отражают proposed TS-FUNCTIONS-001 поверх merged #47/PR #48 (TS-TYPES-002), база 956c74b. Здесь 12 proposed/0 accepted, версии 0.1.0. Выпуск и принятие других стандартов не разрешены.
 - Baseline: [TypeScript Functions](https://www.typescriptlang.org/docs/handbook/2/functions.html), [ECMAScript arrow functions](https://tc39.es/ecma262/multipage/ecmascript-language-functions-and-classes.html#sec-arrow-function-definitions). Это выбор проекта, не универсальное обещание преимуществ производительности.
 
 ## Verification
