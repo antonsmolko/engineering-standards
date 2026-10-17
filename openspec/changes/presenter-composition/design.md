@@ -22,4 +22,4 @@
 
 ## Migration Plan
 
-Одна документальная правка; existing full check/actual packs/consumers и независимое review, затем owner review. Нет runtime change — RED и новые tests текста не нужны. #24 backlog сохраняется; этот явный запрос — ограниченное исключение из прежнего порядка отложения всего frontend-набора.
+Одна документальная правка; existing full check/actual packs/consumers и независимое review, затем owner review. Нет runtime change — RED и новые tests текста не нужны. На момент PR #41 запрос #42 был ограниченным исключением из прежнего порядка отложения frontend-набора. После пересмотра #45 общая задача #24 закрыта как not planned; будущие темы сохранены в [inventory](../../../docs/architecture/requirements-inventory.md#deferred-content) до конкретного use case.
