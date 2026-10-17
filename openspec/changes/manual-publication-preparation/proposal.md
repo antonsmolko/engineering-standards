@@ -23,4 +23,4 @@
 
 ## Impact
 
-Будущая реализация: `docs/publication.md`, `.changeset/README.md`, CONTRIBUTING/README и maintainer docs; TS test-only fixture в существующем suite. Зависимости, реальные версии 0.1.0, документы/owner decisions и verification workflow не меняются. Нет release workflow, custom release engine/approval API, registry writes, настоящих tags или credential/settings changes. Этот PR пока содержит только план.
+Реализация: `docs/publication.md`, `.changeset/README.md`, CONTRIBUTING/README и maintainer docs; TS test-only fixture в существующем suite. Зависимости, реальные версии 0.1.0, документы/owner decisions и verification workflow не меняются. Нет release workflow, custom release engine/approval API, registry writes, настоящих tags или credential/settings changes. План утверждён; реализация инструкции и synthetic проверки входит в этот PR.

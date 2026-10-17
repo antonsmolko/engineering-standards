@@ -1,6 +1,6 @@
 # Manual publication preparation — #35
 
-Носитель — [#35](https://github.com/antonsmolko/engineering-standards/issues/35), prefix engineering-standards-35. База 495b1a1 после merge [PR #39](https://github.com/antonsmolko/engineering-standards/pull/39); #18 закрыта. Change [manual-publication-preparation](../../openspec/changes/manual-publication-preparation/proposal.md) утверждён владельцем 2026-10-17; инструкция и TS test реализуются в PR #40. Выполнено 4/6 tasks; actual CI и независимое final review ещё проверяются.
+Носитель — [#35](https://github.com/antonsmolko/engineering-standards/issues/35), prefix engineering-standards-35. База 495b1a1 после merge [PR #39](https://github.com/antonsmolko/engineering-standards/pull/39); #18 закрыта. Change [manual-publication-preparation](../../openspec/changes/manual-publication-preparation/proposal.md) утверждён владельцем 2026-10-17; инструкция и TS test реализованы в PR #40. Выполнено 6/6 tasks, local/actual CI — 48/48 на обеих Node; независимое final review завершено, PR ожидает явного merge approval.
 
 ## Прочитанные источники и прежние closures
 
@@ -12,15 +12,15 @@ Baseline: [Changesets CLI](https://changesets.dev/guide/cli), maintained [publis
 
 | Source | Finding | Affected files/issues | Disposition | Evidence |
 | --- | --- | --- | --- | --- |
-| [#35 upstream criterion](https://github.com/antonsmolko/engineering-standards/issues/35) | C1: поддерживаемый процесс без собственного release engine | proposal/design/spec/tasks | Запланировано | Штатные publish-plan/pack/from-pack-dir из одного закреплённого CLI; нет нового workflow/approval API/каталога. |
-| [#35 synthetic denial criterion](https://github.com/antonsmolko/engineering-standards/issues/35), [#26 gates](https://github.com/antonsmolko/engineering-standards/issues/26) | C2: отсутствие содержания/аудита/конкретного approval останавливает выпуск | design/spec/tasks | Запланировано как ручная проверка | Оператор выполняет test-only negative/positive walkthrough, фиксирует STOP до publish/tag, missing source и changed artifact. Автоматические tests отдельно проверяют реальные tarballs/integrity/consumer и один вызов headers helper. Synthetic records не заменяют owner decisions; обход прямым npm доступом не объявляется технически запрещённым. |
-| [#35 no-release criterion](https://github.com/antonsmolko/engineering-standards/issues/35) | C3: никаких настоящих registry writes/tags/bumps | design/spec/tasks | Запланировано | Synthetic fixture по пяти реальным workspaces/config и native plan, команды publish/version/tag в #35 не вызываются; packages 0.1.0/drafts/owner decisions сохраняются. |
-| [#35 evidence criterion](https://github.com/antonsmolko/engineering-standards/issues/35), [#26](https://github.com/antonsmolko/engineering-standards/issues/26) | C4: npm rights, partial failure и exact registry installs | design/spec/tasks | Запланировано | Runbook сохраняет provenance/hashes/approval/audits/logs и per-package/tag state; E404 не доказывает scope rights, unknown result → STOP. Диагностика описана в runbook: STOP → logs/exit → registry SHA-512 comparison → повтор того же каталога или новое approval; simulation удалена, actual registry installs/failure/retry остаются #26. |
-| [#35 verification criterion](https://github.com/antonsmolko/engineering-standards/issues/35) | C5: обе Node и независимое review | tasks | Запланировано | Полный check/matrix и final independent review обязательны в реализации; текущий PR только план, 0/6. |
+| [#35 upstream criterion](https://github.com/antonsmolko/engineering-standards/issues/35) | C1: поддерживаемый процесс без собственного release engine | proposal/design/spec/tasks | Реализовано; evidence ниже | Штатные publish-plan/pack/from-pack-dir из одного закреплённого CLI; нет нового workflow/approval API/каталога. |
+| [#35 synthetic denial criterion](https://github.com/antonsmolko/engineering-standards/issues/35), [#26 gates](https://github.com/antonsmolko/engineering-standards/issues/26) | C2: отсутствие содержания/аудита/конкретного approval останавливает выпуск | design/spec/tasks | Выполнено как ручная проверка | Оператор выполняет test-only negative/positive walkthrough, фиксирует STOP до publish/tag, missing source и changed artifact. Автоматические tests отдельно проверяют реальные tarballs/integrity/consumer и один вызов headers helper. Synthetic records не заменяют owner decisions; обход прямым npm доступом не объявляется технически запрещённым. |
+| [#35 no-release criterion](https://github.com/antonsmolko/engineering-standards/issues/35) | C3: никаких настоящих registry writes/tags/bumps | design/spec/tasks | Реализовано; evidence ниже | Synthetic fixture по пяти реальным workspaces/config и native plan, команды publish/version/tag в #35 не вызываются; packages 0.1.0/drafts/owner decisions сохраняются. |
+| [#35 evidence criterion](https://github.com/antonsmolko/engineering-standards/issues/35), [#26](https://github.com/antonsmolko/engineering-standards/issues/26) | C4: npm rights, partial failure и exact registry installs | design/spec/tasks | Реализовано; evidence ниже | Runbook сохраняет provenance/hashes/approval/audits/logs и per-package/tag state; E404 не доказывает scope rights, unknown result → STOP. Диагностика описана в runbook: STOP → logs/exit → registry SHA-512 comparison → повтор того же каталога или новое approval; simulation удалена, actual registry installs/failure/retry остаются #26. |
+| [#35 verification criterion](https://github.com/antonsmolko/engineering-standards/issues/35) | C5: обе Node и независимое review | tasks | Реализовано; evidence ниже | Полный local check 48/48 на обеих Node и actual matrix подтверждены ниже; independent final review/итоговый task status фиксируются отдельно. |
 
-## GitHub issue edits
+## GitHub issue edits первоначального планирования
 
-В #1 отмечена выполненная #18 после проверки merged #39/closed #18. Criteria/dependencies #35/#20/#26 не менялись, все три задачи открыты; #35 не закрывается planning PR. Контакты, credentials/protection/settings и real release approval не менялись.
+В #1 отмечена выполненная #18 после проверки merged #39/closed #18. Criteria/dependencies #35/#20/#26 не менялись, все три задачи открыты; На стадии планирования PR #35 не закрывала; реализация передаёт closure на merge. Контакты, credentials/protection/settings и real release approval не менялись.
 
 ## Историческое upstream research 749be57, отдельно от реализации
 
@@ -69,7 +69,7 @@ Pre-flight interfaces: инструкция 1.1 → links/maintainer docs 1.2 и
 
 ### Автоматическая проверка
 
-Новый TS test: реальные пять workspace metadata/config, synthetic документы с существующими версиями 0.1.0 и публичной MIT LICENSE → native fixture plan → Changesets pack → native SHA-256 = actual bytes → SHA-512 diagnostics → actual offline installed consumer metadata/documents/links → один accepted-header helper call. Workspace links отсутствуют, реальные package files/config/lockfile сохранены. Первый baseline на Node 26.11.1 — 47/47. Новые полный suite/actual CI evidence фиксируются отдельно после выполнения. Runtime/helper/workflow/package files не менялись; новые TS files проверяются существующим typecheck.
+Новый TS test: реальные пять workspace metadata/config, synthetic документы с существующими версиями 0.1.0 и публичной MIT LICENSE → native fixture plan → Changesets pack → native SHA-256 = actual bytes → SHA-512 diagnostics → actual offline installed consumer metadata/documents/links → один accepted-header helper call. Workspace links отсутствуют, реальные package files/config/lockfile сохранены. Первый baseline на Node 26.11.1 — 47/47. Результаты полного suite/actual CI приведены ниже отдельно от ручных observations. Runtime/helper/workflow/package files не менялись; новые TS files проверяются существующим typecheck.
 
 ### Ручная synthetic репетиция
 
@@ -104,4 +104,39 @@ Changed core SHA-512: approved `sha512-4PL0tO26Zg1CBx13L6rS0PL6+NF2UHHfqPpeGT5bs
 
 ### Локальная полная проверка реализации
 
-Полный npm run check на Node 26.0.0 и 26.11.1: по 48 tests / 48 pass / 0 fail, включая native packed publication fixture и прежние real-tarball/external-consumer сценарии. Root package.json/lockfile, пять packages, owner decisions и workflow не менялись. Actual GitHub jobs и независимое review полного результата ещё ожидаются; tasks 3.1/3.2 пока открыты.
+Полный npm run check на Node 26.0.0 и 26.11.1: по 48 tests / 48 pass / 0 fail, включая native packed publication fixture и прежние real-tarball/external-consumer сценарии. Root package.json/lockfile, пять packages, owner decisions и workflow не менялись. Actual GitHub jobs и независимое review полного результата приведены ниже.
+
+
+| Source | Finding | Affected files/issues | Disposition | Evidence |
+| --- | --- | --- | --- | --- |
+| [#35 implementation criteria](https://github.com/antonsmolko/engineering-standards/issues/35); independent review — private input, not a public basis | I1: current-state wording ещё называло PR только планом/подготовку будущей | proposal, ledger C1–C5/issue-edits, README, общий design, PR description | Исправлено | Current snapshot заменён на реализацию инструкции/fixture; исторические planning/review sections явно сохранены как история. Real publication/content approvals и #26 не объявлены выполненными. |
+
+
+### Итоговая проверка #35
+
+[Actual GitHub run 7b13f23](https://github.com/antonsmolko/engineering-standards/actions/runs/39013364136):
+[Node 26.0.0](https://github.com/antonsmolko/engineering-standards/actions/runs/39013364136/job/117340351927) и
+[Node 26.11.1](https://github.com/antonsmolko/engineering-standards/actions/runs/39013364136/job/117340351836) — success.
+Прочитаны реальные logs: новый native-pack/consumer test прошёл, по 48 tests / 48 pass / 0 fail,
+root checks/inventory пяти реальных пакетов/PR Changesets status успешны. В logs сохранены
+SHA-512 synthetic tarballs; это отдельные артефакты конкретного run, не real release approval.
+
+Независимый агент без авторской переписки проверил полный PR diff от 495b1a1, approved artifacts,
+новые runbook/test, реальные temporary rehearsal records/bytes/commands, relevant unchanged docs,
+live #35/#20/#26 и все PR comments/reviews/threads. Critical/Important findings нет;
+единственный Minor I1 (устаревший current-state текст) исправлен с evidence в строке выше.
+Самостоятельный check reviewer на Node 26.11.1 — 48/48; оба local logs и actual jobs проверены.
+Отчёт — private input, not a public basis; публичное основание — #35/#26 и approved PR #40 artifacts.
+R1–R10 подтверждённо закрыты публичным повторным review и сохраняются, открытых/deferred findings нет.
+После этого review изменены только wording текущего статуса и verification/task evidence;
+дополнительное independent review таких wording-only исправлений по AGENTS.md не требуется.
+
+Документальная проверка отдельно: полный final PR diff просмотрен, изменённые контракты и
+источники решений сверены с unchanged documents/issue criteria/dependencies; 50 local links/anchors
+в 12 документах разрешаются, strict OpenSpec/whitespace проходят. GitHub issue edits реализации:
+нет. Реальные packages/версии/IDs/drafts/owner decisions/lockfile/helpers/workflow не менялись.
+Новый executable файл — один TS integration test; публичная инструкция/diagnostics на английском,
+описание PR и maintainer planning/ledger на русском.
+
+Выполнено 6/6 OpenSpec tasks. #35 подтверждает подготовку процесса, не принимает содержание #20
+и не выполняет real release #26. Merge/publication/tags/credential/settings changes не выполнялись.

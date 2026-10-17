@@ -14,8 +14,8 @@
 
 ## 3. Полная проверка результата
 
-- [ ] 3.1 Полный npm run check на Node 26.0.0/26.11.1 и actual GitHub matrix jobs; сохранить tarball/integrity/external-consumer evidence отдельно от ручных observations. Проверить неизменность реальных packages/версий 0.1.0/IDs/drafts/changelog/owner decisions/lockfile и absence registry writes/настоящих tags/credentials/settings changes.
-- [ ] 3.2 Независимое review полного final diff/design/spec/tasks, требований #35/#20/#26, прежних confirmed closures и unchanged docs/issues; проверить public evidence, ссылки/anchors и complete runbook. Записать dispositions/issue edits в canonical ledger, исправить findings, проверить strict OpenSpec/whitespace и передать PR на явное merge approval; merge/publish не выполнять.
+- [x] 3.1 Полный npm run check на Node 26.0.0/26.11.1 и actual GitHub matrix jobs; сохранить tarball/integrity/external-consumer evidence отдельно от ручных observations. Проверить неизменность реальных packages/версий 0.1.0/IDs/drafts/changelog/owner decisions/lockfile и absence registry writes/настоящих tags/credentials/settings changes.
+- [x] 3.2 Независимое review полного final diff/design/spec/tasks, требований #35/#20/#26, прежних confirmed closures и unchanged docs/issues; проверить public evidence, ссылки/anchors и complete runbook. Записать dispositions/issue edits в canonical ledger, исправить findings, проверить strict OpenSpec/whitespace и передать PR на явное merge approval; merge/publish не выполнять.
 
 ## Workflow follow-up
 
