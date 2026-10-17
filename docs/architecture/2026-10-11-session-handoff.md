@@ -23,7 +23,7 @@
 
 Текущая очередь согласуется в #45: roadmap #1, постепенное накопление первого принятого набора #20 и отдельно одобренный выпуск #26. PR #41/#42 завершены: FRONTEND-ARCH-002 остаётся proposed; merge не является content acceptance. Читать [документ](../../packages/domains/frontend/architecture/presenter-composition.md) и [content approval](content-approval.md). Новые стандарты и их ревью начинаются с конкретной проблемы; массово принимать все drafts не требуется. Не начинать реализацию по номеру старой закрытой задачи. #20 остаётся открытой до минимум одного применимого accepted ID из каждой core/TypeScript/Svelte SPA; кандидаты не предрешают решения. npm-имена/версии пяти пакетов и historical evidence URLs сохраняются, старый GitHub URL перенаправляется. Исполняемые библиотеки разрабатываются отдельно в gost-kit по собственным конкретным задачам.
 
-#10–#16/#23 закрыты как not planned: прежние CLI/resolver/generation/config/vertical-slice планы сняты с scope, их runtime-возможности не объявляются реализованными. Общие заготовки #24/#25 также закрыты как not planned; frontend/Svelte темы сохранены в inventory и превращаются в задачи только при конкретном use case. #17/#19 ранее заменены проверками #18, подготовкой #35 и выпуском #26; #21/#22 объединены в #20. Подтверждённые closures и исторические review ledgers сохраняются.
+Неактуальные задачи закрыты как not planned; причины и история замен — в [roadmap](../superpowers/plans/2026-10-11-engineering-standards-independent-packages.md#отложенные-работы).
 
 ## Принятие и выпуск
 
