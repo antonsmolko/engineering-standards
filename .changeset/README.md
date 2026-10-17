@@ -86,5 +86,8 @@ format and exclusion of private packages; automatic commits are disabled.
 These steps do not publish or tag packages. Content acceptance, material audits
 and explicit publication approval remain separate requirements.
 
+For artifact preparation and a separately approved real release, follow the
+[manual publication runbook](../docs/publication.md).
+
 Command reference: [Changesets CLI](https://changesets.dev/guide/cli).
 Configuration reference: [Changesets config](https://changesets.dev/guide/config).

@@ -41,6 +41,24 @@ Read-only TS test helper читает существующие ID/Status headers
 каждого реального release tarball. [Security reporting](../../../SECURITY.md) указывает
 владельца и приватный способ сообщения без публикации чувствительных данных.
 
+## Подготовка ручной публикации (#35)
+
+[Инструкция](../../publication.md) использует штатные publish-plan/pack/from-pack-dir
+Changesets 3.0.3 и отдельный pack directory. Native plan experimental; CLI закреплён
+lockfile. Один TS integration test копирует metadata пяти workspaces/config в temporary
+synthetic fixture, проверяет реальные tarballs/native SHA-256/SHA-512, offline consumer,
+documents/links и один вызов existing accepted-header helper. Нового approval API,
+release engine, registry isolation или дублирования header negatives нет.
+
+Оператор отдельно проверяет content/applicability decisions, аудит каждого tarball,
+точное owner approval имён/версий/revision/артефактов и SHA-512 перед publish. Manual
+synthetic stop-point observations записываются отдельно от tests и не принимают
+реальные документы. Полный synthetic результат заканчивается до publish. Инструкция
+описывает actual #26 registry rights, tags, integrity/exact installs и partial failure:
+STOP → logs/exit → npm view exact integrity → повтор того же одобренного каталога либо
+новое approval. Эти реальные side effects в #35 не выполняются/не симулируются;
+автоматического enforcement человеческих решений CLI/CI не обещают.
+
 ## Переход и следующие этапы
 
 - [#33](https://github.com/antonsmolko/engineering-standards/issues/33): пять workspaces документов, README-указатели и реальный внешний consumer. Catalog-зависимые проверки заменяются проверками сохранённого документационного контракта. Семантическая совместимость становится текстом README. Подробности реализации выбираются в этом PR.
@@ -48,6 +66,6 @@ Read-only TS test helper читает существующие ID/Status headers
 - [#18](https://github.com/antonsmolko/engineering-standards/issues/18): verification CI, состав артефактов и content gate на fixtures; без публикации и CLI/config prerequisites.
 - [#35](https://github.com/antonsmolko/engineering-standards/issues/35): подготовка процесса публикации на synthetic данных без выпуска. Затем #20 принимает содержание и [#26](https://github.com/antonsmolko/engineering-standards/issues/26) выполняет отдельно одобренную публикацию реальных пакетов.
 
-Changesets настроен по плану #34; verification CI реализуется по утверждённому плану #18, подготовка выпуска выбирается в плане #35; старый version:prepare и projected-release engine не возвращаются.
+Changesets настроен по плану #34; verification CI реализуется по утверждённому плану #18, подготовка ручного выпуска реализуется по утверждённому плану #35; старый version:prepare и projected-release engine не возвращаются.
 
 Node-политика — [handoff](../../architecture/2026-10-11-session-handoff.md#проверки-и-рабочий-процесс). Content approval, ручной аудит и explicit publication approval независимы от настройки инструментов. [Прежний tooling design](https://github.com/antonsmolko/engineering-standards/blob/d483438/docs/superpowers/specs/2026-10-11-engist-monorepo-tooling-design.md) сохраняется в истории, не как новый implementation plan.
