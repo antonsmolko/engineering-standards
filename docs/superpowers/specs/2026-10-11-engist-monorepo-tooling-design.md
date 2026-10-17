@@ -1,6 +1,6 @@
 # npm workspaces и инструменты пакетов документов
 
-Текущие границы — [#30 / PR #31](https://github.com/antonsmolko/engineering-standards/pull/31) и [OpenSpec design](../../../openspec/changes/simplify-project-scope/design.md). Согласование дизайна, реализация, merge и публикация — отдельные действия.
+Текущие границы — [#30 / PR #31](https://github.com/antonsmolko/gost-spec/pull/31) и [OpenSpec design](../../../openspec/changes/simplify-project-scope/design.md). Согласование дизайна, реализация, merge и публикация — отдельные действия.
 
 ## Базовые инструменты
 
@@ -61,11 +61,11 @@ STOP → logs/exit → npm view exact integrity → повтор того же �
 
 ## Переход и следующие этапы
 
-- [#33](https://github.com/antonsmolko/engineering-standards/issues/33): пять workspaces документов, README-указатели и реальный внешний consumer. Catalog-зависимые проверки заменяются проверками сохранённого документационного контракта. Семантическая совместимость становится текстом README. Подробности реализации выбираются в этом PR.
-- [#34](https://github.com/antonsmolko/engineering-standards/issues/34): штатный [Changesets](https://changesets.dev/guide/getting-started), независимые версии/changelog и private root вне версионирования. Это оставшаяся часть закрытой #9, не реализованная merge PR #29; завершена PR #38 по отдельному утверждённому OpenSpec design. Рабочие версии до отдельно одобренного выпуска остаются 0.1.0.
-- [#18](https://github.com/antonsmolko/engineering-standards/issues/18): verification CI, состав артефактов и content gate на fixtures; без публикации и CLI/config prerequisites.
-- [#35](https://github.com/antonsmolko/engineering-standards/issues/35): подготовка процесса публикации на synthetic данных без выпуска. Затем #20 принимает содержание и [#26](https://github.com/antonsmolko/engineering-standards/issues/26) выполняет отдельно одобренную публикацию реальных пакетов.
+- [#33](https://github.com/antonsmolko/gost-spec/issues/33): пять workspaces документов, README-указатели и реальный внешний consumer. Catalog-зависимые проверки заменяются проверками сохранённого документационного контракта. Семантическая совместимость становится текстом README. Подробности реализации выбираются в этом PR.
+- [#34](https://github.com/antonsmolko/gost-spec/issues/34): штатный [Changesets](https://changesets.dev/guide/getting-started), независимые версии/changelog и private root вне версионирования. Это оставшаяся часть закрытой #9, не реализованная merge PR #29; завершена PR #38 по отдельному утверждённому OpenSpec design. Рабочие версии до отдельно одобренного выпуска остаются 0.1.0.
+- [#18](https://github.com/antonsmolko/gost-spec/issues/18): verification CI, состав артефактов и content gate на fixtures; без публикации и CLI/config prerequisites.
+- [#35](https://github.com/antonsmolko/gost-spec/issues/35): подготовка процесса публикации на synthetic данных без выпуска. Затем #20 принимает содержание и [#26](https://github.com/antonsmolko/gost-spec/issues/26) выполняет отдельно одобренную публикацию реальных пакетов.
 
 Changesets настроен по плану #34; verification CI реализуется по утверждённому плану #18, подготовка ручного выпуска реализуется по утверждённому плану #35; старый version:prepare и projected-release engine не возвращаются.
 
-Node-политика — [handoff](../../architecture/2026-10-11-session-handoff.md#проверки-и-рабочий-процесс). Content approval, ручной аудит и explicit publication approval независимы от настройки инструментов. [Прежний tooling design](https://github.com/antonsmolko/engineering-standards/blob/d483438/docs/superpowers/specs/2026-10-11-engist-monorepo-tooling-design.md) сохраняется в истории, не как новый implementation plan.
+Node-политика — [handoff](../../architecture/2026-10-11-session-handoff.md#проверки-и-рабочий-процесс). Content approval, ручной аудит и explicit publication approval независимы от настройки инструментов. [Прежний tooling design](https://github.com/antonsmolko/gost-spec/blob/d483438/docs/superpowers/specs/2026-10-11-engist-monorepo-tooling-design.md) сохраняется в истории, не как новый implementation plan.

@@ -1,6 +1,8 @@
 # План реализации пакетов стандартов
 
-Основание: [#30](https://github.com/antonsmolko/engineering-standards/issues/30), merge [PR #31](https://github.com/antonsmolko/engineering-standards/pull/31), [актуальный дизайн](../specs/2026-10-11-engineering-standards-design.md). Подробные задачи перехода — [OpenSpec tasks](../../../openspec/changes/simplify-project-scope/tasks.md). Новые механизмы будущих работ выбираются в их собственных design/implementation PR.
+Основание: [#30](https://github.com/antonsmolko/gost-spec/issues/30), merge [PR #31](https://github.com/antonsmolko/gost-spec/pull/31), [актуальный дизайн](../specs/2026-10-11-engineering-standards-design.md). Подробные задачи перехода — [OpenSpec tasks](../../../openspec/changes/simplify-project-scope/tasks.md). Новые механизмы будущих работ выбираются в их собственных design/implementation PR.
+
+Проект переименован в `gost-spec` (Gold Standard Specifications) по #43; исполняемые библиотеки принадлежат отдельной монорепе [gost-kit](https://github.com/antonsmolko/gost-kit). Существующие имена/версии npm-пакетов и gates сохраняются.
 
 ## Завершённая база
 
@@ -37,4 +39,4 @@ Workspaces, документы/ID, npm-метаданные и tarball/consumer 
 
 ## История
 
-[Прежний подробный план](https://github.com/antonsmolko/engineering-standards/blob/d483438/docs/superpowers/plans/2026-10-11-engineering-standards-independent-packages.md), review-response документы и [план выполненного check](2026-10-13-workspace-checks.md) — исторические свидетельства. Старые номера Tasks и release-engine APIs не задают текущую реализацию.
+[Прежний подробный план](https://github.com/antonsmolko/gost-spec/blob/d483438/docs/superpowers/plans/2026-10-11-engineering-standards-independent-packages.md), review-response документы и [план выполненного check](2026-10-13-workspace-checks.md) — исторические свидетельства. Старые номера Tasks и release-engine APIs не задают текущую реализацию.

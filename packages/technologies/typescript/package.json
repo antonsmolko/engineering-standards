@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/antonsmolko/engineering-standards.git",
+    "url": "git+https://github.com/antonsmolko/gost-spec.git",
     "directory": "packages/technologies/typescript"
   },
   "files": [
