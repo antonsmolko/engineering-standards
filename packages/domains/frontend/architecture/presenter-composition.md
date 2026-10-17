@@ -10,8 +10,7 @@ When presentation calculations need testing separately from a component, extract
 them into pure functions with explicit inputs. These functions MUST NOT mutate
 their inputs, access application stores through hidden dependencies or perform
 effects. Pass any context that influences the result, such as locale, explicitly.
-The same inputs MUST produce
-the same result.
+The same inputs MUST produce the same result.
 
 Group related calculations when they share meaningful intermediate work or form
 a cohesive result. Independent calculations may remain separate functions,
@@ -39,8 +38,7 @@ local interaction state can remain in the UI.
 
 Inputs follow an explicit application contract. Validation of untrusted data
 and domain decisions retain their own boundaries; this rule does not move them
-into presentation code. Pure functions can also return explicit failure values
-when required by their documented contract.
+into presentation code.
 
 No UI framework, factory, object layout, function name or file suffix is
 required. A collection of independent functions and a single function returning
@@ -55,22 +53,15 @@ example policy, not a universal naming rule.
 type Name = { firstName: string; lastName: string };
 type Status = "idle" | "loading";
 
-export function presentIdentity({ firstName, lastName }: Name) {
+export const presentIdentity = ({ firstName, lastName }: Name) => {
   const parts = [firstName.trim(), lastName.trim()].filter(Boolean);
   return {
     fullName: parts.join(" "),
     initials: parts.map((part) => Array.from(part)[0]).join(""),
   };
-}
-
-export function isLoading({ status }: { status: Status }) {
-  return status === "loading";
-}
-
-export const userPresenter = {
-  identity: presentIdentity,
-  isLoading,
 };
+
+export const isLoading = ({ status }: { status: Status }) => status === "loading";
 ```
 
 `fullName` and `initials` share normalized name parts. `isLoading` uses only the
@@ -78,12 +69,10 @@ status. A component can bind these calculations independently to its reactive
 data. When a single view model is useful, compose the same functions:
 
 ```ts
-export function presentUserCard({ firstName, lastName, status }: Name & { status: Status }) {
-  return {
-    ...userPresenter.identity({ firstName, lastName }),
-    isLoading: userPresenter.isLoading({ status }),
-  };
-}
+export const presentUserCard = ({ firstName, lastName, status }: Name & { status: Status }) => ({
+  ...presentIdentity({ firstName, lastName }),
+  isLoading: isLoading({ status }),
+});
 ```
 
 The combined form computes the complete result when called. Use independent
@@ -94,9 +83,8 @@ requires a stateful presenter instance.
 
 Review each calculation's inputs, output and dependencies. Test related outputs
 together and independent calculations separately, including relevant boundary
-cases and any documented failure result. For a combining presenter, check that
-its composed result is correct. Check that inputs remain unchanged and effects
-are absent.
+cases. For a combining presenter, check that its composed result is correct.
+Check that inputs remain unchanged and effects are absent.
 
 Verify the UI binding separately: relevant input changes update the displayed
 result. Pure-function tests do not establish reactive integration. The document

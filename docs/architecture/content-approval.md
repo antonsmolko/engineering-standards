@@ -15,12 +15,12 @@ release-process tests may use synthetic accepted requirements. They do not chang
 
 ## Content decisions
 
-| Package              | Requirement ID      | Owner decision | Reviewed revision / decision link |
-| -------------------- | ------------------- | -------------- | --------------------------------- |
-| standards-core       | CORE-ARCH-001       | Pending        | No content approval recorded      |
-| standards-typescript | TS-TYPES-001        | Pending        | No content approval recorded      |
-| standards-svelte-spa | SVELTE-SPA-ARCH-001 | Pending        | No content approval recorded      |
-| standards-frontend | FRONTEND-ARCH-002 | Pending | Proposed text; no content approval recorded |
+| Package              | Requirement ID      | Owner decision | Reviewed revision / decision link           |
+| -------------------- | ------------------- | -------------- | ------------------------------------------- |
+| standards-core       | CORE-ARCH-001       | Pending        | No content approval recorded                |
+| standards-typescript | TS-TYPES-001        | Pending        | No content approval recorded                |
+| standards-svelte-spa | SVELTE-SPA-ARCH-001 | Pending        | No content approval recorded                |
+| standards-frontend   | FRONTEND-ARCH-002   | Pending        | Proposed text; no content approval recorded |
 
 The initial core, TypeScript and Svelte SPA rows are candidates for the first accepted-content set, not
 predetermined decisions. Its content gate is defined under

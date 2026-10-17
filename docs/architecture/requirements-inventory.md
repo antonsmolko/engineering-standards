@@ -36,8 +36,8 @@ application alias is implied. The proposed import checker is not implemented.
 
 ## Frontend presentation
 
-| Topic | Proposed ID and document | Applicability | Rationale and verification |
-| --- | --- | --- | --- |
+| Topic                                          | Proposed ID and document                                                                   | Applicability                                                     | Rationale and verification                                                                                                     |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | Pure presentation calculations and composition | [FRONTEND-ARCH-002](../../packages/domains/frontend/architecture/presenter-composition.md) | Frontend calculations that benefit from tests outside a component | Group shared work, keep independent inputs explicit, compose pure functions; test outputs separately from reactive UI bindings |
 
 ## Local-only topics
