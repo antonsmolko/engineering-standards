@@ -1,6 +1,6 @@
-# Передача контекста разработки engineering-standards
+# Передача контекста разработки gost-spec
 
-Обновлено при реализации утверждённого плана #35 после merge [PR #39](https://github.com/antonsmolko/engineering-standards/pull/39), база 495b1a1. При возобновлении сверить снимок с GitHub и текущей веткой.
+Обновлено при переименовании проекта в gost-spec по #43, база 1e2f251 после merge PR #40. GitHub repository и origin переименованы; новый gost-kit содержит только начальную структуру. При возобновлении сверить снимок с GitHub и текущей веткой.
 
 ## Откуда продолжать
 
@@ -21,7 +21,7 @@
 
 ## Ближайшие действия
 
-#32/PR #36 завершили согласование документов и задач. #33/PR #37 завершили переход (OpenSpec tasks 2–4). #34/PR #38 завершили настройку Changesets ([change](../../openspec/changes/independent-package-versioning/proposal.md)). #18/PR #39 завершили verification CI ([evidence](2026-10-16-verification-ci-response.md#итоговая-проверка-реализации)). Текущий этап — реализация утверждённого владельцем 2026-10-17 плана #35 [manual-publication-preparation](../../openspec/changes/manual-publication-preparation/proposal.md): владелец выбрал ручной выпуск по инструкции, штатный Changesets и synthetic репетицию; инструкция и TS packing test реализованы в PR #40 (6/6 tasks), local/actual CI дают 48/48 на обеих Node, manual observations и независимое review записаны в ledger; ожидается review/merge. Читать [design](../../openspec/changes/manual-publication-preparation/design.md), [spec](../../openspec/changes/manual-publication-preparation/specs/manual-package-publication/spec.md), [tasks](../../openspec/changes/manual-publication-preparation/tasks.md) и [ledger](2026-10-17-publication-preparation-response.md). Автоматические artifact checks и ручные stop points различаются; своего approval API/release engine нет. После технической готовности — #20 (core/TypeScript/Svelte SPA acceptance), затем отдельно одобренная реальная публикация #26. В #18 входит verification; подготовка публикации и реальный выпуск остаются отдельными этапами.
+Техническая платформа #33/#34/#18/#35 завершена PR #37/#38/#39/#40. PR #41 открыт: отдельный proposed presenter-стандарт #42, носитель #20; он ещё не в main. Текущее изменение #43 переименовывает проект в Gold Standard Specifications (`gost-spec`) и создаёт отдельный Gold Standard Kit (`gost-kit`) для исполняемых библиотек. npm-имена/версии пяти пакетов сохраняются, публикации нет. #20 content gate и отдельно одобренный выпуск #26 остаются невыполненными. Новые issue branches/commits используют gost-spec, существующие carrier branches сохраняют старый prefix. Исторические пути документов и публичные evidence URLs сохраняются; старый GitHub URL перенаправляется.
 
 #10–#16/#23 deferred; #17/#19 заменены проверками #18 и подготовкой #35 / выпуском #26; #21/#22 объединены в #20; #24/#25 backlog, не блокеры релиза; #28 выполнена PR #27. Старые issue comments/review ledgers сохраняются как история; новые критерии имеют приоритет, не объявляя прежнюю runtime-работу выполненной.
 
@@ -33,7 +33,7 @@
 
 Только Node ^26.0.0. Проверяются нижняя граница 26.0.0 и закреплённая .node-version 26.11.1. Старые Node не поддерживаются. npm ci --ignore-scripts подготавливает зависимости/cache; npm run check проверяет типы, текущую согласованность и весь suite, включая настоящие packed artifacts/external consumers. Пустой offline cache даёт guidance. Исторические результаты нельзя выдавать за свежие.
 
-Изменения в issue-scoped ветках от main, commits [engineering-standards-<issue>]: <English description>. Читать AGENTS.md, при behavior changes запускать RED до реализации, после — GREEN/full suite. Перед завершением независимо проверять полный результат и согласованность документов/задач отдельно от runtime-тестов. Без merge/publish, tags или credentials/protection без явного разрешения. Потребитель и staff-ветка asc-admin не меняются.
+Изменения в issue-scoped ветках от main, commits [gost-spec-<issue>]: <English description>. Читать AGENTS.md, при behavior changes запускать RED до реализации, после — GREEN/full suite. Перед завершением независимо проверять полный результат и согласованность документов/задач отдельно от runtime-тестов. Без merge/publish, tags или credentials/protection без явного разрешения. Потребитель и staff-ветка asc-admin не меняются.
 
 ## История
 

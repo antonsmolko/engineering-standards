@@ -2,7 +2,7 @@
 
 Read the linked design and implementation plan before changing this repository.
 
-When resuming engineering-standards work, start with the
+When resuming gost-spec work, start with the
 [session handoff](docs/architecture/2026-10-11-session-handoff.md), then verify
 its snapshot against the current branch and GitHub state.
 
@@ -10,7 +10,8 @@ its snapshot against the current branch and GitHub state.
   or CLI packages require their own scope and independent versions.
 - Put shared architectural principles in core and domain-specific architecture in its domain.
 - Never copy product-specific or private materials into published packages.
-- Work on an issue-scoped feature branch; commits use `[engineering-standards-<issue>]: <English description>`.
+- Work on an issue-scoped feature branch; commits use `[gost-spec-<issue>]: <English description>`.
+  Existing carrier branches retain their established issue prefix.
   The branch's issue is the carrier; each related owner-requested addition needs
   its own linked issue, recorded with the request and retained prefix in the
   carrier issue, added issue and PR; carrier criteria and closure are unaffected.
