@@ -35,6 +35,9 @@ status against the PR base commit and fails on package edits without one.
 On pushes to `main`, status reads config and assembles the pending plan; it does
 not check package changes against the previous push.
 
+See the [manual publication runbook](docs/publication.md) for release preparation,
+artifact review, approval and recovery steps.
+
 ## Review and publication
 
 Contact the repository owner, [@antonsmolko](https://github.com/antonsmolko), for

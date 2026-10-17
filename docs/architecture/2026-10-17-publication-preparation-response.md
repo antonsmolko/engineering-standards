@@ -1,6 +1,6 @@
 # Manual publication preparation — #35
 
-Носитель — [#35](https://github.com/antonsmolko/engineering-standards/issues/35), prefix engineering-standards-35. База 495b1a1 после merge [PR #39](https://github.com/antonsmolko/engineering-standards/pull/39); #18 закрыта. Change [manual-publication-preparation](../../openspec/changes/manual-publication-preparation/proposal.md) содержит только planning artifacts; все шесть implementation tasks открыты.
+Носитель — [#35](https://github.com/antonsmolko/engineering-standards/issues/35), prefix engineering-standards-35. База 495b1a1 после merge [PR #39](https://github.com/antonsmolko/engineering-standards/pull/39); #18 закрыта. Change [manual-publication-preparation](../../openspec/changes/manual-publication-preparation/proposal.md) утверждён владельцем 2026-10-17; инструкция и TS test реализуются в PR #40. Выполнено 4/6 tasks; actual CI и независимое final review ещё проверяются.
 
 ## Прочитанные источники и прежние closures
 
@@ -59,3 +59,49 @@ Baseline: [Changesets CLI](https://changesets.dev/guide/cli), maintained [publis
 Отдельный агент без авторской рабочей переписки проверил полный PR diff с правками к 749be57, все artifacts/ledger/handoff, актуальные issue bodies/comments #35/#20/#26, summary #40, public owner decision и relevant unchanged docs. Подтвердил все R1–R10, native CLI поведение и сохранение content/audit/exact-approval/registry gates. Actionable findings отсутствуют. Отчёт — private input, not a public basis; публичное основание исправлений — review #40 выше и criteria #35/#26. Прежние closures PR #39 сохранены, новых открытых findings нет.
 
 Документальные проверки отдельно: полный итоговый diff просмотрен, контракты и issue dependencies сверены с неизменёнными документами; 17 local links/anchors в шести документах разрешаются, strict OpenSpec и whitespace проходят. После независимого review добавлено только это evidence. GitHub issue edits этого раунда отсутствуют; runtime suite/Actions completion #35 не заявляются. План остаётся 0/6, draft ожидает утверждения/apply. Пакеты, версии, owner decisions, lockfile, scripts/tests/workflow не менялись.
+
+
+## Реализация утверждённого плана
+
+Владелец утвердил план в рабочем диалоге 2026-10-17 (private input, not a public basis для findings); публичное основание реализации — #35 и согласованные artifacts выше. Прочитан [повторный review a813d1a](https://github.com/antonsmolko/engineering-standards/pull/40#issuecomment-6231077591): все R1–R10 reviewer-confirmed closed, новых замечаний нет. Closures сохраняются. Scope не расширен, GitHub issue edits реализации отсутствуют.
+
+Pre-flight interfaces: инструкция 1.1 → links/maintainer docs 1.2 и manual observations 2.2; native plan/pack → один test 2.1 → full Node/CI 3.1; полный результат → independent review 3.2. Конфликтов со spec нет. OpenSpec checkboxes — tracking согласованного плана. Нового runtime/helper/approval API нет, поэтому искусственный RED для уже поддерживаемой upstream команды не вводился. Первый test run выявил fixture setup error: без lockfile manypkg не распознаёт npm workspace; inspected NpmTool.isMonorepoRoot подтвердил требование package-lock.json. Добавлено штатное offline npm install --package-lock-only по baseline существующего changesets.test.ts, затем GREEN. Это исправление fixture, не runtime RED/feature fix.
+
+### Автоматическая проверка
+
+Новый TS test: реальные пять workspace metadata/config, synthetic документы с существующими версиями 0.1.0 и публичной MIT LICENSE → native fixture plan → Changesets pack → native SHA-256 = actual bytes → SHA-512 diagnostics → actual offline installed consumer metadata/documents/links → один accepted-header helper call. Workspace links отсутствуют, реальные package files/config/lockfile сохранены. Первый baseline на Node 26.11.1 — 47/47. Новые полный suite/actual CI evidence фиксируются отдельно после выполнения. Runtime/helper/workflow/package files не менялись; новые TS files проверяются существующим typecheck.
+
+### Ручная synthetic репетиция
+
+Исполнитель: Codex как оператор test-only процедуры, 2026-10-17. Synthetic owner/auditor labels в материалах не являются реальными owner decisions, audit или permission to publish. Запущена ephemeral копия integration fixture с сохранением temporary artifacts для осмотра; committed test всегда удаляет fixture. Затем буквально выполнены безопасные команды digest, offline install и Node consumer-check из docs/publication.md; каждая дала exit 0. Existing AGENTS.md с примером из docs/usage.md, ESLint и Prettier files были созданы перед установкой и сохранились byte-for-byte; ссылки core/TypeScript README разрешились и прочитаны. Все пять tarball inventories и synthetic standard headers/публичная LICENSE осмотрены.
+
+Fixture Git revision: `82870cd6b446805a62dd001ec5442c40b9e07b92`; source base: `a813d1ad4a262cb4a89462ecf251e66fe62ffe04` плюс текущая реализация. SHA-256 проверенных файлов: test `3122448a6a9be7878cec071ec2642f167c032473a21a0ec6a52416458221e5ef`, runbook `69c34c70f6eb3e8dd4243f5b0e2092b75a45d18361a4bf06decb828c797c85b8`. Native pack plan и exact synthetic tarballs связаны SHA-512 в synthetic audit/approval; ни один реальный registry не запрашивался.
+
+| Synthetic package/version | SHA-512 одобренных test-only bytes |
+| --- | --- |
+| @antonsmolko/standards-core@0.1.0 | `sha512-4PL0tO26Zg1CBx13L6rS0PL6+NF2UHHfqPpeGT5bshAsWgdx6fbKFRH7vYAuvPdQRr2VVmnzTQNzBrJ2oCi2jg==` |
+| @antonsmolko/standards-frontend@0.1.0 | `sha512-CW8U6MLDCuyi1v+5/Nc1M/BNosH/ulPnjhTOf3ddvkNg27IuC+KNeFBCKI+LAXTZzN2ARN2uBpobSCFbQ5R46w==` |
+| @antonsmolko/standards-typescript@0.1.0 | `sha512-WBl6cJ5EC0VrRcbHqqhZFL1lVHGgZhheWjVWNDNmqId+xfhrtRRcmSI73OQJCdUCYhELqnZYkBn3VveX1TEbnA==` |
+| @antonsmolko/standards-svelte@0.1.0 | `sha512-94f+w1k0D+SaRXS3Czu2NuWeqdt3/kUof4Ke+z80X/0ppmp6dNEUM/kgpGKetiF36yH7tBANQnbbTl1zXe6PJA==` |
+| @antonsmolko/standards-svelte-spa@0.1.0 | `sha512-gGEexiKr4Nn14dpg9HhDlXiR8UQ0sxu1t4ZsCf3qtD+NuNCMwKMm3UQZgWhPvGC+QiCPD/G4XneBRjOa9jP/7w==` |
+
+Материалы — реальные temporary Markdown content.md/audit.md/approval.md с явной пометкой SYNTHETIC TEST ONLY, fixture revision и per-package digests; не boolean flags и не новый runtime формат. Читались непосредственно файлы/headers/bytes; решения ниже — ручные observations оператора, не автоматически выданные разрешения.
+
+| Случай | Наблюдаемый источник | Ручной результат |
+| --- | --- | --- |
+| Missing accepted content | Отдельный native pack с core `Status: proposed. Level: required.` вместо accepted; заголовок прочитан прямо из tarball | STOP до publish: нет accepted core requirement; прежняя synthetic content запись не переносится на новый текст |
+| Missing owner decision | В case missing-owner-decision файл content.md отсутствует | STOP: нет источника принятия |
+| Missing applicability | Content records для SYNTHETIC-1…5 содержат «applicability not reviewed» | STOP: применимость owner не подтверждена |
+| Missing per-artifact audit | В case missing-one-audit отсутствует строка standards-svelte, остальные четыре присутствуют | STOP: аудит одного артефакта отсутствует |
+| Missing approval | В case missing-approval файл approval.md отсутствует | STOP: отдельного разрешения нет |
+| Mismatched approval | В case mismatched-approval revision approval = 40 нулей, content/audit указывают fixture revision выше | STOP: revision не совпадает |
+| Artifact changed after approval | В case changed-artifact копия core tarball дополнена test-only bytes, native/approved digests остались исходными | STOP: current SHA-512 отличается от одобренного |
+| Complete synthetic set | Все пять inspected artifacts, matching fixture revision/plan/digests и synthetic content/applicability/audits/approval доступны | Все stop points пройдены, publish не вызывался |
+
+Changed core SHA-512: approved `sha512-4PL0tO26Zg1CBx13L6rS0PL6+NF2UHHfqPpeGT5bshAsWgdx6fbKFRH7vYAuvPdQRr2VVmnzTQNzBrJ2oCi2jg==`, actual `sha512-Qhdf9YRtzygW/VZ//0cogXFU50pqp7D56S/DlVFu+ei8qxPW7GkQDJgK08J9aXUneHyPr2XTQpbwdjurLqEzww==`. Изменён только temporary duplicate; исходный approved каталог сохранён.
+
+Реальные publish/tag/npm-auth/settings/credential команды не выполнялись. Partial failure/retry не симулировались: для #26 написан runbook STOP → logs/exit/package/tag state → registry integrity → same approved directory retry либо новое approval. Future npm identity/rights, native real publish-plan query, publish, tags и exact registry installs здесь не выдаются за выполненные проверки.
+
+### Локальная полная проверка реализации
+
+Полный npm run check на Node 26.0.0 и 26.11.1: по 48 tests / 48 pass / 0 fail, включая native packed publication fixture и прежние real-tarball/external-consumer сценарии. Root package.json/lockfile, пять packages, owner decisions и workflow не менялись. Actual GitHub jobs и независимое review полного результата ещё ожидаются; tasks 3.1/3.2 пока открыты.

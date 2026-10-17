@@ -11,6 +11,7 @@ validation uses local tarballs.
 
 ## Documentation
 
+- [Manual publication](docs/publication.md)
 - [Contributing](CONTRIBUTING.md)
 - [Security reporting](SECURITY.md)
 - [Install and use the documents](docs/usage.md)
