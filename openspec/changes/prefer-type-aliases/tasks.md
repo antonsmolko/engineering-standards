@@ -7,4 +7,4 @@
 ## 2. Проверка
 
 - [x] 2.1 Проверить примеры, полный check на Node 26.0.0/26.11.1 и реальные artifacts/consumers; отдельно проверить ссылки, OpenSpec, final diff и противоречия.
-- [ ] 2.2 Независимо проверить полный результат, устранить findings и оформить PR с evidence/issue edits без merge/publication/content acceptance.
+- [x] 2.2 Независимо проверить полный результат, устранить findings и оформить PR с evidence/issue edits без merge/publication/content acceptance.
