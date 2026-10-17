@@ -33,7 +33,7 @@ test("Changesets packs the five synthetic workspaces into verified installable r
     const source = await json(join(repository, path, "package.json"));
     const root = join(project, path);
     await mkdir(join(root, "standards"), { recursive: true });
-    await writeFile(join(root, "package.json"), JSON.stringify({ ...source, version: source.version, files: ["README.md", "LICENSE", "CHANGELOG.md", "standards"] }));
+    await writeFile(join(root, "package.json"), JSON.stringify({ ...source, files: ["README.md", "LICENSE", "CHANGELOG.md", "standards"] }));
     await writeFile(join(root, "README.md"), "# Synthetic package\n\n[Requirement](standards/requirement.md)\n");
     await copyFile(join(repository, "LICENSE"), join(root, "LICENSE"));
     await writeFile(join(root, "CHANGELOG.md"), "# Synthetic changes\n\n## 0.0.0\n\nTest only.\n");

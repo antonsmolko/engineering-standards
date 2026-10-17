@@ -30,10 +30,10 @@ Keep release evidence outside the checkout. In the same shell:
 
 ```sh
 release_repo_dir=$(pwd -P)
-release_revision=$(git rev-parse HEAD)
 release_registry=https://registry.npmjs.org/
 release_evidence_dir=$(mktemp -d "${TMPDIR:-/tmp}/standards-release-evidence.XXXXXX")
 release_evidence_dir=$(cd "$release_evidence_dir" && pwd -P)
+git rev-parse HEAD > "$release_evidence_dir/revision"
 release_pack_dir="$release_evidence_dir/packed"
 release_consumer_dir="$release_evidence_dir/consumer"
 ```
@@ -76,7 +76,8 @@ npm_config_ignore_scripts=true npm run changeset -- pack --from-publish-plan "$r
 
 Inspect the raw and enriched `publish-plan.json`, each tarball's `package.json`
 and inventory (`tar -tzf <absolute-tarball-path>`). Require exactly the five names
-above at the intended versions, public access and the intended dist-tag/registry.
+above at the intended versions, public access and tag `latest` in the plan;
+check the registry as described in step 1.
 Require tarball paths inside this pack directory. Private root, extra entries,
 unexpected tag-only entries, mismatched metadata or another registry mean
 **STOP**. A native plan is data, not approval. Do not edit it or add `--tag` to
@@ -106,13 +107,14 @@ Install those tarballs into a new external consumer:
 ```sh
 mkdir "$release_consumer_dir"
 printf '%s\n' '{"private":true}' > "$release_consumer_dir/package.json"
-npm install --prefix "$release_consumer_dir" --offline --ignore-scripts --no-audit --no-fund --save-exact "$release_pack_dir"/packages/*.tgz
+npm install --prefix "$release_consumer_dir" --offline --ignore-scripts --no-audit --no-fund "$release_pack_dir"/packages/*.tgz
 ```
 
 From the repository root, use the existing development checks on the installed
 files, not workspace imports. Set the consumer path for this invocation:
 
 ```sh
+cd "$release_repo_dir"
 RELEASE_CONSUMER_DIR="$release_consumer_dir" node --input-type=module <<'NODE'
 import assert from "node:assert/strict";
 import {readFile, realpath} from "node:fs/promises";
@@ -182,6 +184,7 @@ npm_config_registry="$release_registry" npm_config_ignore_scripts=true npm run c
 
 Capture stdout/stderr and the actual exit code, including failures; do not hide
 an error with a successful pipeline command. Keep logs without credentials/OTP.
+Changesets creates annotated package tags locally; it does not push them.
 Publication is not transactional: tags for successful packages may exist even
 when the overall command fails. Inspect every expected fully qualified tag,
 its target revision and the remote state. For example:
