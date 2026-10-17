@@ -19,9 +19,10 @@ matrix is a review aid, not a second source of obligations.
 | Topic                     | Proposed ID and document                                                          | Applicability                       | Rationale and verification                                                                          |
 | ------------------------- | --------------------------------------------------------------------------------- | ----------------------------------- | --------------------------------------------------------------------------------------------------- |
 | External-data boundaries  | [TS-TYPES-001](../../packages/technologies/typescript/docs/runtime-boundaries.md) | TypeScript consuming untrusted data | Static declarations cannot validate runtime data; review adapters and malformed-input failure tests |
+| Function syntax | [TS-FUNCTIONS-001](../../packages/technologies/typescript/docs/arrow-functions.md) | Authored standalone TypeScript functions and callbacks | Prefer arrows; review semantic/declaration exceptions and preserve behavior |
 | Effective strict checking | [TS-CONFIG-001](../../packages/technologies/typescript/docs/strict-checking.md)   | Authored TypeScript production code | Avoid permissive or unused configuration; inspect effective settings and real compiler errors       |
 
-Both remain proposed. Runtime validation is independent of a consumer's guard
+All three remain proposed. Runtime validation is independent of a consumer's guard
 names; strict checking is independent of formatting preferences.
 
 ## Svelte SPA review set
