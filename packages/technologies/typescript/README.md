@@ -1,6 +1,6 @@
 # @antonsmolko/standards-typescript
 
-TypeScript declarations, checking and runtime data boundaries for any application domain.
+TypeScript checking and runtime data boundaries for any application domain.
 
 ## Status and application
 
