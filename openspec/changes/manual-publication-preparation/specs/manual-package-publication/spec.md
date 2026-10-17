@@ -8,11 +8,11 @@
 
 ### Requirement: Поддерживаемая подготовка артефактов
 
-Процесс SHALL использовать штатные средства version/plan/pack/publish и публиковать проверенные tarballs. Набор имён/версий, registry и revision MUST совпадать с конкретным owner approval. Новый release engine или caller-supplied approval shortcut MUST NOT вводиться.
+Процесс SHALL использовать штатные средства plan/pack/publish и публиковать проверенные tarballs. Набор имён/версий, registry и revision MUST совпадать с конкретным owner approval. Новый release engine или caller-supplied approval shortcut MUST NOT вводиться.
 
 #### Scenario: Проверенные tarballs
 - **WHEN** оператор подготавливает выпуск
-- **THEN** он сверяет plan и tarballs с пятью ожидаемыми пакетами, проверяет их во внешнем consumer и сохраняет hashes/evidence до разрешения публикации
+- **THEN** он сверяет plan и tarballs с пятью ожидаемыми пакетами, проверяет их во внешнем consumer и сохраняет npm-style SHA-512 integrity/evidence до разрешения публикации
 
 #### Scenario: Расхождение артефактов
 - **WHEN** состав, bytes, registry или revision отличаются от проверенного и одобренного набора
@@ -36,7 +36,7 @@
 
 #### Scenario: Полный synthetic набор
 - **WHEN** технические проверки и все synthetic ручные контрольные точки пройдены
-- **THEN** оператор доходит только до dry-run и сохраняет test-only evidence, не публикуя пакет
+- **THEN** оператор записывает «все stop points пройдены, publish не вызывался» и сохраняет test-only evidence
 
 #### Scenario: Неполный synthetic набор
 - **WHEN** поочерёдно удалены acceptance/applicability, аудит либо конкретное approval или подменён проверенный артефакт
@@ -48,16 +48,12 @@
 
 #### Scenario: Часть пакетов опубликована
 - **WHEN** фактический #26 завершается частичным успехом или неясным сетевым результатом
-- **THEN** оператор останавливается, сохраняет logs/exit и состояние каждого пакета/тега; без read-only сверки registry и разрешённого remaining subset повтор не выполняется
+- **THEN** оператор останавливается, сохраняет logs/exit и состояние каждого пакета/тега; сверяет registry dist.integrity с одобренным SHA-512; затем повторяет ту же команду с тем же одобренным каталогом в рамках актуального approval либо получает новое approval
 
 ### Requirement: Проверка реального выпуска отдельно
 
-#26 SHALL сохранять revision, одобренные версии/артефакты, owner/audit links, hashes, результаты публикации/тегов и exact registry consumer installs. Завершение #35 MUST означать только готовность процедуры; content acceptance #20 и реальная публикация требуют отдельных решений.
+Инструкция SHALL перечислять evidence для #26: revision, одобренные версии/артефакты, owner/audit links, SHA-512, результаты публикации/тегов и exact registry consumer installs. Завершение #35 MUST означать только готовность процедуры; content acceptance #20 и реальная публикация требуют отдельных решений.
 
 #### Scenario: Репетиция завершена
 - **WHEN** synthetic проверки и независимое review #35 успешны
 - **THEN** реальные стандарты остаются proposed до owner acceptance, а выпуск #26 остаётся открытым
-
-#### Scenario: Реальная публикация заявляется завершённой
-- **WHEN** владелец выполняет #26
-- **THEN** evidence включает установку exact опубликованных версий из registry и проверку документов/manual adoption во внешнем consumer
