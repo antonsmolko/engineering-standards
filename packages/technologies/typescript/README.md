@@ -1,6 +1,6 @@
 # @antonsmolko/standards-typescript
 
-TypeScript checking and runtime data boundaries for any application domain.
+TypeScript function conventions, checking and runtime data boundaries for any application domain.
 
 ## Status and application
 
@@ -14,6 +14,7 @@ No particular AI tool, catalog loader or rule-selection configuration is needed.
 
 - [TS-TYPES-001 — Validate external values](docs/runtime-boundaries.md)
 - [TS-TYPES-002 — Use type aliases for authored types](docs/type-aliases.md)
+- [TS-FUNCTIONS-001 — Prefer const-bound arrow functions](docs/arrow-functions.md)
 - [TS-CONFIG-001 — Strict compiler checking](docs/strict-checking.md)
 
 ## Applicability and compatibility

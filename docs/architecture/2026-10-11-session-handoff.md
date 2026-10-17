@@ -1,6 +1,6 @@
 # Передача контекста разработки gost-spec
 
-Обновлено при добавлении proposed TS-TYPES-002 в #47, база 0f878eb после merge PR #46. Техническая платформа завершена, presenter #42 добавлен как proposed. GitHub repository и origin используют gost-spec, отдельный gost-kit содержит начальную структуру. При возобновлении сверить снимок с GitHub и текущей веткой.
+Обновлено при добавлении proposed TS-FUNCTIONS-001 в #49, база 956c74b после merge PR #48 с TS-TYPES-002. Техническая платформа завершена, presenter #42 добавлен как proposed. GitHub repository и origin используют gost-spec, отдельный gost-kit содержит начальную структуру. При возобновлении сверить снимок с GitHub и текущей веткой.
 
 ## Откуда продолжать
 
@@ -16,7 +16,7 @@
 - PR #31 и #30 завершили только согласование плана.
 - #33 завершена PR #37: репозиторий переведён на пять документальных workspaces; каталоги/схемы/loader и tooling-заглушки удалены; README индексируют документы, statuses/levels перенесены в их заголовки без принятия содержания.
 - Есть реальные tarball и offline-consumer tests; install-offline.ts используется только тестами.
-- Версии всех пяти пакетов — 0.1.0. Одиннадцать требований proposed, ноль accepted; публикации нет.
+- Версии всех пяти пакетов — 0.1.0. Двенадцать требований proposed, ноль accepted; публикации нет.
 - #34 завершена PR #38: Changesets 3.0.3, штатные команды, независимые версии/changelog и две TS integration-проверки на временных fixtures. [Руководство](../../.changeset/README.md). #18 завершена PR #39: verification CI работает, оба Node jobs успешны; инструкция подготовки/ручного выпуска завершена #35/PR #40; реальной публикации нет. Зелёные тесты/merge плана не принимают стандарты и не разрешают публикацию.
 
 ## Ближайшие действия
@@ -25,7 +25,9 @@
 
 Неактуальные задачи закрыты как not planned; причины и история замен — в [roadmap](../superpowers/plans/2026-10-11-engineering-standards-independent-packages.md#отложенные-работы).
 
-В #47 добавляется [TS-TYPES-002](../../packages/technologies/typescript/docs/type-aliases.md): type по умолчанию, interface для требуемого declaration merging. Точный текст остаётся proposed; реализация #47 не закрывает #20 и не разрешает выпуск. OpenSpec change — [prefer-type-aliases](../../openspec/changes/prefer-type-aliases/proposal.md).
+PR #48/#47 добавил [TS-TYPES-002](../../packages/technologies/typescript/docs/type-aliases.md): type по умолчанию, interface для требуемого declaration merging. Точный текст остаётся proposed; реализация #47 не закрывает #20 и не разрешает выпуск. OpenSpec change — [prefer-type-aliases](../../openspec/changes/prefer-type-aliases/proposal.md).
+
+В #49 добавляется [TS-FUNCTIONS-001](../../packages/technologies/typescript/docs/arrow-functions.md): предпочтение const-bound arrow functions ради единообразия, уровень recommended; обычные функции допустимы без обоснования. OpenSpec — [prefer-arrow-functions](../../openspec/changes/prefer-arrow-functions/proposal.md). Оба новых стандарта остаются proposed; принятия содержания и закрытия #20 нет.
 
 ## Принятие и выпуск
 
