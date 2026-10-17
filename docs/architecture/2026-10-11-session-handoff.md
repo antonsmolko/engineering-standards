@@ -27,7 +27,7 @@
 
 PR #48/#47 добавил [TS-TYPES-002](../../packages/technologies/typescript/docs/type-aliases.md): type по умолчанию, interface для требуемого declaration merging. Точный текст остаётся proposed; реализация #47 не закрывает #20 и не разрешает выпуск. OpenSpec change — [prefer-type-aliases](../../openspec/changes/prefer-type-aliases/proposal.md).
 
-В #49 добавляется [TS-FUNCTIONS-001](../../packages/technologies/typescript/docs/arrow-functions.md): arrow functions по умолчанию с обоснованными исключениями. OpenSpec — [prefer-arrow-functions](../../openspec/changes/prefer-arrow-functions/proposal.md). Оба новых стандарта остаются proposed; принятия содержания и закрытия #20 нет.
+В #49 добавляется [TS-FUNCTIONS-001](../../packages/technologies/typescript/docs/arrow-functions.md): предпочтение const-bound arrow functions ради единообразия, уровень recommended; обычные функции допустимы без обоснования. OpenSpec — [prefer-arrow-functions](../../openspec/changes/prefer-arrow-functions/proposal.md). Оба новых стандарта остаются proposed; принятия содержания и закрытия #20 нет.
 
 ## Принятие и выпуск
 
