@@ -13,6 +13,7 @@ No particular AI tool, catalog loader or rule-selection configuration is needed.
 ## Standards (proposed)
 
 - [TS-TYPES-001 — Validate external values](docs/runtime-boundaries.md)
+- [TS-TYPES-002 — Use type aliases for authored types](docs/type-aliases.md)
 - [TS-CONFIG-001 — Strict compiler checking](docs/strict-checking.md)
 
 ## Applicability and compatibility
