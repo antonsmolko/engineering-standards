@@ -1,6 +1,6 @@
 # Передача контекста разработки engineering-standards
 
-Обновлено при реализации утверждённого плана #35 после merge [PR #39](https://github.com/antonsmolko/engineering-standards/pull/39), база 495b1a1. При возобновлении сверить снимок с GitHub и текущей веткой.
+Обновлено при добавлении proposed presenter-стандарта #42 в PR #41, база 1e2f251 после merge [PR #40](https://github.com/antonsmolko/engineering-standards/pull/40). При возобновлении сверить снимок с GitHub и текущей веткой.
 
 ## Откуда продолжать
 
@@ -16,12 +16,12 @@
 - PR #31 и #30 завершили только согласование плана.
 - #33 завершена PR #37: репозиторий переведён на пять документальных workspaces; каталоги/схемы/loader и tooling-заглушки удалены; README индексируют документы, statuses/levels перенесены в их заголовки без принятия содержания.
 - Есть реальные tarball и offline-consumer tests; install-offline.ts используется только тестами.
-- Версии всех пяти пакетов — 0.1.0. Девять требований proposed, ноль accepted; публикации нет.
-- #34 завершена PR #38: Changesets 3.0.3, штатные команды, независимые версии/changelog и две TS integration-проверки на временных fixtures. [Руководство](../../.changeset/README.md). #18 завершена PR #39: verification CI работает, оба Node jobs успешны; процесс публикации не реализован. Зелёные тесты/merge плана не принимают стандарты и не разрешают публикацию.
+- Версии всех пяти пакетов — 0.1.0. Десять требований proposed, ноль accepted; публикации нет.
+- #34 завершена PR #38: Changesets 3.0.3, штатные команды, независимые версии/changelog и две TS integration-проверки на временных fixtures. [Руководство](../../.changeset/README.md). #18 завершена PR #39: verification CI работает, оба Node jobs успешны; инструкция подготовки/ручного выпуска завершена #35/PR #40; реальной публикации нет. Зелёные тесты/merge плана не принимают стандарты и не разрешают публикацию.
 
 ## Ближайшие действия
 
-#32/PR #36 завершили согласование документов и задач. #33/PR #37 завершили переход (OpenSpec tasks 2–4). #34/PR #38 завершили настройку Changesets ([change](../../openspec/changes/independent-package-versioning/proposal.md)). #18/PR #39 завершили verification CI ([evidence](2026-10-16-verification-ci-response.md#итоговая-проверка-реализации)). Текущий этап — реализация утверждённого владельцем 2026-10-17 плана #35 [manual-publication-preparation](../../openspec/changes/manual-publication-preparation/proposal.md): владелец выбрал ручной выпуск по инструкции, штатный Changesets и synthetic репетицию; инструкция и TS packing test реализованы в PR #40 (6/6 tasks), local/actual CI дают 48/48 на обеих Node, manual observations и независимое review записаны в ledger; ожидается review/merge. Читать [design](../../openspec/changes/manual-publication-preparation/design.md), [spec](../../openspec/changes/manual-publication-preparation/specs/manual-package-publication/spec.md), [tasks](../../openspec/changes/manual-publication-preparation/tasks.md) и [ledger](2026-10-17-publication-preparation-response.md). Автоматические artifact checks и ручные stop points различаются; своего approval API/release engine нет. После технической готовности — #20 (core/TypeScript/Svelte SPA acceptance), затем отдельно одобренная реальная публикация #26. В #18 входит verification; подготовка публикации и реальный выпуск остаются отдельными этапами.
+Техническая платформа завершена: #33/PR #37, #34/PR #38, #18/PR #39 и #35/PR #40. Стандарты наполняются постепенно по реальным проблемам, без обязательного массового принятия существующих drafts. Текущий результат PR #41 — [#42](https://github.com/antonsmolko/engineering-standards/issues/42): proposed FRONTEND-ARCH-002 о композиции presenter-функций. Читать [документ](../../packages/domains/frontend/architecture/presenter-composition.md) и [OpenSpec change](../../openspec/changes/presenter-composition/proposal.md). Прежний planning-only review-initial-standards отозван, его задачи не выполнены. Носитель остаётся #20 с prefix engineering-standards-20; addition #42 имеет собственные критерии. Критерии/closure #20 сохраняются, сам frontend presenter не закрывает #20 и не выполняет content gate #26. Принятие точных текстов — отдельные owner decisions; реальный выпуск #26 требует своего approval.
 
 #10–#16/#23 deferred; #17/#19 заменены проверками #18 и подготовкой #35 / выпуском #26; #21/#22 объединены в #20; #24/#25 backlog, не блокеры релиза; #28 выполнена PR #27. Старые issue comments/review ledgers сохраняются как история; новые критерии имеют приоритет, не объявляя прежнюю runtime-работу выполненной.
 

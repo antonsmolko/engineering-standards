@@ -13,6 +13,7 @@ No particular AI tool, catalog loader or rule-selection configuration is needed.
 ## Standards (proposed)
 
 - [FRONTEND-ARCH-001 — Explicit UI state ownership](architecture/state-ownership.md)
+- [FRONTEND-ARCH-002 — Compose pure presentation calculations](architecture/presenter-composition.md)
 
 ## Applicability and compatibility
 

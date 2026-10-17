@@ -34,6 +34,12 @@ FSD is a selected stack policy, not universal core architecture. App and Shared
 segments are not business slices. No presenter, state library, guard API or
 application alias is implied. The proposed import checker is not implemented.
 
+## Frontend presentation
+
+| Topic | Proposed ID and document | Applicability | Rationale and verification |
+| --- | --- | --- | --- |
+| Pure presentation calculations and composition | [FRONTEND-ARCH-002](../../packages/domains/frontend/architecture/presenter-composition.md) | Frontend calculations that benefit from tests outside a component | Group shared work, keep independent inputs explicit, compose pure functions; test outputs separately from reactive UI bindings |
+
 ## Local-only topics
 
 | Topic                                                   | Disposition             | Reason                                                                                       |
@@ -43,12 +49,13 @@ application alias is implied. The proposed import checker is not implemented.
 | Alias names and project paths                           | Local-only              | Consumer-specific imports are not universal architecture                                     |
 | Authentication and API business contracts               | Product-local           | Product identities, session policies and endpoint payloads are not engineering standards     |
 | Mandatory Superpowers or another agent tool             | Local-only              | Standards must be usable without a particular agent or plugin                                |
-| Store/presenter conventions, forms and API error models | Separate design pending | State ownership and failure policies need explicit applicability and their own module review |
+| Stateful store/presenter conventions, forms and API error models | Separate design pending | State ownership and failure policies need explicit applicability and their own module review |
 
 ## Deferred content
 
-Frontend state ownership, accessibility and form states, and Svelte reactivity
-and lifecycle form separate review sets after the first accepted-content set. Existing
+Standards are developed incrementally from concrete problems. Presenter composition
+is a proposed addition; frontend state ownership, accessibility/form states and
+Svelte reactivity/lifecycle remain separate future review topics. Existing
 FRONTEND-ARCH-001 and SVELTE-STATE-001 are proposed seeds, not complete packages
 of accepted conventions. Authentication, authorization, API-client and
 frontend-state modules require separate designs; no module package is created
