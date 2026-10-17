@@ -1,6 +1,6 @@
-# Передача контекста разработки engineering-standards
+# Передача контекста разработки gost-spec
 
-Обновлено при добавлении proposed presenter-стандарта #42 в PR #41, база 1e2f251 после merge [PR #40](https://github.com/antonsmolko/engineering-standards/pull/40). При возобновлении сверить снимок с GitHub и текущей веткой.
+Обновлено при добавлении proposed presenter-стандарта #42 в PR #41, база 4436cd6 после merge PR #44 с переименованием в GOST Spec. GitHub repository и origin используют gost-spec; отдельный gost-kit содержит начальную структуру. При возобновлении сверить снимок с GitHub и текущей веткой.
 
 ## Откуда продолжать
 
@@ -33,7 +33,7 @@
 
 Только Node ^26.0.0. Проверяются нижняя граница 26.0.0 и закреплённая .node-version 26.11.1. Старые Node не поддерживаются. npm ci --ignore-scripts подготавливает зависимости/cache; npm run check проверяет типы, текущую согласованность и весь suite, включая настоящие packed artifacts/external consumers. Пустой offline cache даёт guidance. Исторические результаты нельзя выдавать за свежие.
 
-Изменения в issue-scoped ветках от main, commits [engineering-standards-<issue>]: <English description>. Читать AGENTS.md, при behavior changes запускать RED до реализации, после — GREEN/full suite. Перед завершением независимо проверять полный результат и согласованность документов/задач отдельно от runtime-тестов. Без merge/publish, tags или credentials/protection без явного разрешения. Потребитель и staff-ветка asc-admin не меняются.
+Изменения в issue-scoped ветках от main, commits [gost-spec-<issue>]: <English description>. Читать AGENTS.md, при behavior changes запускать RED до реализации, после — GREEN/full suite. Перед завершением независимо проверять полный результат и согласованность документов/задач отдельно от runtime-тестов. Без merge/publish, tags или credentials/protection без явного разрешения. Потребитель и staff-ветка asc-admin не меняются.
 
 ## История
 
